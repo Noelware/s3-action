@@ -1,0 +1,29 @@
+{
+  "name": "@noelware/s3-gh-action",
+  "description": "☕ Simple GitHub action to upload contents from a GitHub repository to a S3 bucket",
+  "version": "1.0.0",
+  "main": "build/main.js",
+  "license": "GPL-3.0",
+  "repository": "https://github.com/Noelware/s3-gh-action",
+  "bugs": "https://github.com/Noelware/s3-gh-action/issues",
+  "scripts": {
+    "build": "npm run lint && rm -rf build && node ./scripts/build.js",
+    "lint": "eslint src --ext .ts --fix"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.17.0",
+    "@octokit/core": "3.4.0",
+    "@octokit/rest": "18.5.6",
+    "globby": "11.0.3"
+  },
+  "devDependencies": {
+    "@augu/eslint-config": "2.1.0",
+    "@augu/tsconfig": "1.1.0",
+    "@types/node": "15.9.0",
+    "@typescript-eslint/eslint-plugin": "4.26.0",
+    "@typescript-eslint/parser": "4.26.0",
+    "@vercel/ncc": "0.28.6",
+    "eslint": "7.27.0",
+    "typescript": "4.3.2"
+  }
+}
