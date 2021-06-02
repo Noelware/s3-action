@@ -1,1 +1,2903 @@
-(()=>{var e={351:function(e,t,r){"use strict";var n=this&&this.__createBinding||(Object.create?function(e,t,r,n){if(n===undefined)n=r;Object.defineProperty(e,n,{enumerable:true,get:function(){return t[r]}})}:function(e,t,r,n){if(n===undefined)n=r;e[n]=t[r]});var i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:true,value:t})}:function(e,t){e["default"]=t});var a=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(e!=null)for(var r in e)if(r!=="default"&&Object.hasOwnProperty.call(e,r))n(t,e,r);i(t,e);return t};Object.defineProperty(t,"__esModule",{value:true});t.issue=t.issueCommand=void 0;const s=a(r(87));const o=r(278);function issueCommand(e,t,r){const n=new Command(e,t,r);process.stdout.write(n.toString()+s.EOL)}t.issueCommand=issueCommand;function issue(e,t=""){issueCommand(e,{},t)}t.issue=issue;const u="::";class Command{constructor(e,t,r){if(!e){e="missing.command"}this.command=e;this.properties=t;this.message=r}toString(){let e=u+this.command;if(this.properties&&Object.keys(this.properties).length>0){e+=" ";let t=true;for(const r in this.properties){if(this.properties.hasOwnProperty(r)){const n=this.properties[r];if(n){if(t){t=false}else{e+=","}e+=`${r}=${escapeProperty(n)}`}}}}e+=`${u}${escapeData(this.message)}`;return e}}function escapeData(e){return o.toCommandValue(e).replace(/%/g,"%25").replace(/\r/g,"%0D").replace(/\n/g,"%0A")}function escapeProperty(e){return o.toCommandValue(e).replace(/%/g,"%25").replace(/\r/g,"%0D").replace(/\n/g,"%0A").replace(/:/g,"%3A").replace(/,/g,"%2C")}},186:function(e,t,r){"use strict";var n=this&&this.__createBinding||(Object.create?function(e,t,r,n){if(n===undefined)n=r;Object.defineProperty(e,n,{enumerable:true,get:function(){return t[r]}})}:function(e,t,r,n){if(n===undefined)n=r;e[n]=t[r]});var i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:true,value:t})}:function(e,t){e["default"]=t});var a=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(e!=null)for(var r in e)if(r!=="default"&&Object.hasOwnProperty.call(e,r))n(t,e,r);i(t,e);return t};var s=this&&this.__awaiter||function(e,t,r,n){function adopt(e){return e instanceof r?e:new r((function(t){t(e)}))}return new(r||(r=Promise))((function(r,i){function fulfilled(e){try{step(n.next(e))}catch(e){i(e)}}function rejected(e){try{step(n["throw"](e))}catch(e){i(e)}}function step(e){e.done?r(e.value):adopt(e.value).then(fulfilled,rejected)}step((n=n.apply(e,t||[])).next())}))};Object.defineProperty(t,"__esModule",{value:true});t.getState=t.saveState=t.group=t.endGroup=t.startGroup=t.info=t.warning=t.error=t.debug=t.isDebug=t.setFailed=t.setCommandEcho=t.setOutput=t.getBooleanInput=t.getInput=t.addPath=t.setSecret=t.exportVariable=t.ExitCode=void 0;const o=r(351);const u=r(717);const c=r(278);const l=a(r(87));const f=a(r(622));var h;(function(e){e[e["Success"]=0]="Success";e[e["Failure"]=1]="Failure"})(h=t.ExitCode||(t.ExitCode={}));function exportVariable(e,t){const r=c.toCommandValue(t);process.env[e]=r;const n=process.env["GITHUB_ENV"]||"";if(n){const t="_GitHubActionsFileCommandDelimeter_";const n=`${e}<<${t}${l.EOL}${r}${l.EOL}${t}`;u.issueCommand("ENV",n)}else{o.issueCommand("set-env",{name:e},r)}}t.exportVariable=exportVariable;function setSecret(e){o.issueCommand("add-mask",{},e)}t.setSecret=setSecret;function addPath(e){const t=process.env["GITHUB_PATH"]||"";if(t){u.issueCommand("PATH",e)}else{o.issueCommand("add-path",{},e)}process.env["PATH"]=`${e}${f.delimiter}${process.env["PATH"]}`}t.addPath=addPath;function getInput(e,t){const r=process.env[`INPUT_${e.replace(/ /g,"_").toUpperCase()}`]||"";if(t&&t.required&&!r){throw new Error(`Input required and not supplied: ${e}`)}if(t&&t.trimWhitespace===false){return r}return r.trim()}t.getInput=getInput;function getBooleanInput(e,t){const r=["true","True","TRUE"];const n=["false","False","FALSE"];const i=getInput(e,t);if(r.includes(i))return true;if(n.includes(i))return false;throw new TypeError(`Input does not meet YAML 1.2 "Core Schema" specification: ${e}\n`+`Support boolean input list: \`true | True | TRUE | false | False | FALSE\``)}t.getBooleanInput=getBooleanInput;function setOutput(e,t){process.stdout.write(l.EOL);o.issueCommand("set-output",{name:e},t)}t.setOutput=setOutput;function setCommandEcho(e){o.issue("echo",e?"on":"off")}t.setCommandEcho=setCommandEcho;function setFailed(e){process.exitCode=h.Failure;error(e)}t.setFailed=setFailed;function isDebug(){return process.env["RUNNER_DEBUG"]==="1"}t.isDebug=isDebug;function debug(e){o.issueCommand("debug",{},e)}t.debug=debug;function error(e){o.issue("error",e instanceof Error?e.toString():e)}t.error=error;function warning(e){o.issue("warning",e instanceof Error?e.toString():e)}t.warning=warning;function info(e){process.stdout.write(e+l.EOL)}t.info=info;function startGroup(e){o.issue("group",e)}t.startGroup=startGroup;function endGroup(){o.issue("endgroup")}t.endGroup=endGroup;function group(e,t){return s(this,void 0,void 0,(function*(){startGroup(e);let r;try{r=yield t()}finally{endGroup()}return r}))}t.group=group;function saveState(e,t){o.issueCommand("save-state",{name:e},t)}t.saveState=saveState;function getState(e){return process.env[`STATE_${e}`]||""}t.getState=getState},717:function(e,t,r){"use strict";var n=this&&this.__createBinding||(Object.create?function(e,t,r,n){if(n===undefined)n=r;Object.defineProperty(e,n,{enumerable:true,get:function(){return t[r]}})}:function(e,t,r,n){if(n===undefined)n=r;e[n]=t[r]});var i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:true,value:t})}:function(e,t){e["default"]=t});var a=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(e!=null)for(var r in e)if(r!=="default"&&Object.hasOwnProperty.call(e,r))n(t,e,r);i(t,e);return t};Object.defineProperty(t,"__esModule",{value:true});t.issueCommand=void 0;const s=a(r(747));const o=a(r(87));const u=r(278);function issueCommand(e,t){const r=process.env[`GITHUB_${e}`];if(!r){throw new Error(`Unable to find environment variable for file command ${e}`)}if(!s.existsSync(r)){throw new Error(`Missing file at path: ${r}`)}s.appendFileSync(r,`${u.toCommandValue(t)}${o.EOL}`,{encoding:"utf8"})}t.issueCommand=issueCommand},278:(e,t)=>{"use strict";Object.defineProperty(t,"__esModule",{value:true});t.toCommandValue=void 0;function toCommandValue(e){if(e===null||e===undefined){return""}else if(typeof e==="string"||e instanceof String){return e}return JSON.stringify(e)}t.toCommandValue=toCommandValue},90:function(e,t,r){"use strict";var n=this&&this.__awaiter||function(e,t,r,n){function adopt(e){return e instanceof r?e:new r((function(t){t(e)}))}return new(r||(r=Promise))((function(r,i){function fulfilled(e){try{step(n.next(e))}catch(e){i(e)}}function rejected(e){try{step(n["throw"](e))}catch(e){i(e)}}function step(e){e.done?r(e.value):adopt(e.value).then(fulfilled,rejected)}step((n=n.apply(e,t||[])).next())}))};Object.defineProperty(t,"__esModule",{value:true});t.create=void 0;const i=r(298);function create(e,t){return n(this,void 0,void 0,(function*(){return yield i.DefaultGlobber.create(e,t)}))}t.create=create},26:function(e,t,r){"use strict";var n=this&&this.__createBinding||(Object.create?function(e,t,r,n){if(n===undefined)n=r;Object.defineProperty(e,n,{enumerable:true,get:function(){return t[r]}})}:function(e,t,r,n){if(n===undefined)n=r;e[n]=t[r]});var i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:true,value:t})}:function(e,t){e["default"]=t});var a=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(e!=null)for(var r in e)if(r!=="default"&&Object.hasOwnProperty.call(e,r))n(t,e,r);i(t,e);return t};Object.defineProperty(t,"__esModule",{value:true});t.getOptions=void 0;const s=a(r(186));function getOptions(e){const t={followSymbolicLinks:true,implicitDescendants:true,omitBrokenSymbolicLinks:true};if(e){if(typeof e.followSymbolicLinks==="boolean"){t.followSymbolicLinks=e.followSymbolicLinks;s.debug(`followSymbolicLinks '${t.followSymbolicLinks}'`)}if(typeof e.implicitDescendants==="boolean"){t.implicitDescendants=e.implicitDescendants;s.debug(`implicitDescendants '${t.implicitDescendants}'`)}if(typeof e.omitBrokenSymbolicLinks==="boolean"){t.omitBrokenSymbolicLinks=e.omitBrokenSymbolicLinks;s.debug(`omitBrokenSymbolicLinks '${t.omitBrokenSymbolicLinks}'`)}}return t}t.getOptions=getOptions},298:function(e,t,r){"use strict";var n=this&&this.__createBinding||(Object.create?function(e,t,r,n){if(n===undefined)n=r;Object.defineProperty(e,n,{enumerable:true,get:function(){return t[r]}})}:function(e,t,r,n){if(n===undefined)n=r;e[n]=t[r]});var i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:true,value:t})}:function(e,t){e["default"]=t});var a=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(e!=null)for(var r in e)if(r!=="default"&&Object.hasOwnProperty.call(e,r))n(t,e,r);i(t,e);return t};var s=this&&this.__awaiter||function(e,t,r,n){function adopt(e){return e instanceof r?e:new r((function(t){t(e)}))}return new(r||(r=Promise))((function(r,i){function fulfilled(e){try{step(n.next(e))}catch(e){i(e)}}function rejected(e){try{step(n["throw"](e))}catch(e){i(e)}}function step(e){e.done?r(e.value):adopt(e.value).then(fulfilled,rejected)}step((n=n.apply(e,t||[])).next())}))};var o=this&&this.__asyncValues||function(e){if(!Symbol.asyncIterator)throw new TypeError("Symbol.asyncIterator is not defined.");var t=e[Symbol.asyncIterator],r;return t?t.call(e):(e=typeof __values==="function"?__values(e):e[Symbol.iterator](),r={},verb("next"),verb("throw"),verb("return"),r[Symbol.asyncIterator]=function(){return this},r);function verb(t){r[t]=e[t]&&function(r){return new Promise((function(n,i){r=e[t](r),settle(n,i,r.done,r.value)}))}}function settle(e,t,r,n){Promise.resolve(n).then((function(t){e({value:t,done:r})}),t)}};var u=this&&this.__await||function(e){return this instanceof u?(this.v=e,this):new u(e)};var c=this&&this.__asyncGenerator||function(e,t,r){if(!Symbol.asyncIterator)throw new TypeError("Symbol.asyncIterator is not defined.");var n=r.apply(e,t||[]),i,a=[];return i={},verb("next"),verb("throw"),verb("return"),i[Symbol.asyncIterator]=function(){return this},i;function verb(e){if(n[e])i[e]=function(t){return new Promise((function(r,n){a.push([e,t,r,n])>1||resume(e,t)}))}}function resume(e,t){try{step(n[e](t))}catch(e){settle(a[0][3],e)}}function step(e){e.value instanceof u?Promise.resolve(e.value.v).then(fulfill,reject):settle(a[0][2],e)}function fulfill(e){resume("next",e)}function reject(e){resume("throw",e)}function settle(e,t){if(e(t),a.shift(),a.length)resume(a[0][0],a[0][1])}};Object.defineProperty(t,"__esModule",{value:true});t.DefaultGlobber=void 0;const l=a(r(186));const f=a(r(747));const h=a(r(26));const p=a(r(622));const d=a(r(5));const m=r(63);const g=r(536);const b=r(117);const v=process.platform==="win32";class DefaultGlobber{constructor(e){this.patterns=[];this.searchPaths=[];this.options=h.getOptions(e)}getSearchPaths(){return this.searchPaths.slice()}glob(){var e,t;return s(this,void 0,void 0,(function*(){const r=[];try{for(var n=o(this.globGenerator()),i;i=yield n.next(),!i.done;){const e=i.value;r.push(e)}}catch(t){e={error:t}}finally{try{if(i&&!i.done&&(t=n.return))yield t.call(n)}finally{if(e)throw e.error}}return r}))}globGenerator(){return c(this,arguments,(function*globGenerator_1(){const e=h.getOptions(this.options);const t=[];for(const r of this.patterns){t.push(r);if(e.implicitDescendants&&(r.trailingSeparator||r.segments[r.segments.length-1]!=="**")){t.push(new g.Pattern(r.negate,true,r.segments.concat("**")))}}const r=[];for(const e of d.getSearchPaths(t)){l.debug(`Search path '${e}'`);try{yield u(f.promises.lstat(e))}catch(e){if(e.code==="ENOENT"){continue}throw e}r.unshift(new b.SearchState(e,1))}const n=[];while(r.length){const i=r.pop();const a=d.match(t,i.path);const s=!!a||d.partialMatch(t,i.path);if(!a&&!s){continue}const o=yield u(DefaultGlobber.stat(i,e,n));if(!o){continue}if(o.isDirectory()){if(a&m.MatchKind.Directory){yield yield u(i.path)}else if(!s){continue}const e=i.level+1;const t=(yield u(f.promises.readdir(i.path))).map((t=>new b.SearchState(p.join(i.path,t),e)));r.push(...t.reverse())}else if(a&m.MatchKind.File){yield yield u(i.path)}}}))}static create(e,t){return s(this,void 0,void 0,(function*(){const r=new DefaultGlobber(t);if(v){e=e.replace(/\r\n/g,"\n");e=e.replace(/\r/g,"\n")}const n=e.split("\n").map((e=>e.trim()));for(const e of n){if(!e||e.startsWith("#")){continue}else{r.patterns.push(new g.Pattern(e))}}r.searchPaths.push(...d.getSearchPaths(r.patterns));return r}))}static stat(e,t,r){return s(this,void 0,void 0,(function*(){let n;if(t.followSymbolicLinks){try{n=yield f.promises.stat(e.path)}catch(r){if(r.code==="ENOENT"){if(t.omitBrokenSymbolicLinks){l.debug(`Broken symlink '${e.path}'`);return undefined}throw new Error(`No information found for the path '${e.path}'. This may indicate a broken symbolic link.`)}throw r}}else{n=yield f.promises.lstat(e.path)}if(n.isDirectory()&&t.followSymbolicLinks){const t=yield f.promises.realpath(e.path);while(r.length>=e.level){r.pop()}if(r.some((e=>e===t))){l.debug(`Symlink cycle detected for path '${e.path}' and realpath '${t}'`);return undefined}r.push(t)}return n}))}}t.DefaultGlobber=DefaultGlobber},63:(e,t)=>{"use strict";Object.defineProperty(t,"__esModule",{value:true});t.MatchKind=void 0;var r;(function(e){e[e["None"]=0]="None";e[e["Directory"]=1]="Directory";e[e["File"]=2]="File";e[e["All"]=3]="All"})(r=t.MatchKind||(t.MatchKind={}))},849:function(e,t,r){"use strict";var n=this&&this.__createBinding||(Object.create?function(e,t,r,n){if(n===undefined)n=r;Object.defineProperty(e,n,{enumerable:true,get:function(){return t[r]}})}:function(e,t,r,n){if(n===undefined)n=r;e[n]=t[r]});var i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:true,value:t})}:function(e,t){e["default"]=t});var a=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(e!=null)for(var r in e)if(r!=="default"&&Object.hasOwnProperty.call(e,r))n(t,e,r);i(t,e);return t};var s=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(t,"__esModule",{value:true});t.safeTrimTrailingSeparator=t.normalizeSeparators=t.hasRoot=t.hasAbsoluteRoot=t.ensureAbsoluteRoot=t.dirname=void 0;const o=a(r(622));const u=s(r(357));const c=process.platform==="win32";function dirname(e){e=safeTrimTrailingSeparator(e);if(c&&/^\\\\[^\\]+(\\[^\\]+)?$/.test(e)){return e}let t=o.dirname(e);if(c&&/^\\\\[^\\]+\\[^\\]+\\$/.test(t)){t=safeTrimTrailingSeparator(t)}return t}t.dirname=dirname;function ensureAbsoluteRoot(e,t){u.default(e,`ensureAbsoluteRoot parameter 'root' must not be empty`);u.default(t,`ensureAbsoluteRoot parameter 'itemPath' must not be empty`);if(hasAbsoluteRoot(t)){return t}if(c){if(t.match(/^[A-Z]:[^\\/]|^[A-Z]:$/i)){let e=process.cwd();u.default(e.match(/^[A-Z]:\\/i),`Expected current directory to start with an absolute drive root. Actual '${e}'`);if(t[0].toUpperCase()===e[0].toUpperCase()){if(t.length===2){return`${t[0]}:\\${e.substr(3)}`}else{if(!e.endsWith("\\")){e+="\\"}return`${t[0]}:\\${e.substr(3)}${t.substr(2)}`}}else{return`${t[0]}:\\${t.substr(2)}`}}else if(normalizeSeparators(t).match(/^\\$|^\\[^\\]/)){const e=process.cwd();u.default(e.match(/^[A-Z]:\\/i),`Expected current directory to start with an absolute drive root. Actual '${e}'`);return`${e[0]}:\\${t.substr(1)}`}}u.default(hasAbsoluteRoot(e),`ensureAbsoluteRoot parameter 'root' must have an absolute root`);if(e.endsWith("/")||c&&e.endsWith("\\")){}else{e+=o.sep}return e+t}t.ensureAbsoluteRoot=ensureAbsoluteRoot;function hasAbsoluteRoot(e){u.default(e,`hasAbsoluteRoot parameter 'itemPath' must not be empty`);e=normalizeSeparators(e);if(c){return e.startsWith("\\\\")||/^[A-Z]:\\/i.test(e)}return e.startsWith("/")}t.hasAbsoluteRoot=hasAbsoluteRoot;function hasRoot(e){u.default(e,`isRooted parameter 'itemPath' must not be empty`);e=normalizeSeparators(e);if(c){return e.startsWith("\\")||/^[A-Z]:/i.test(e)}return e.startsWith("/")}t.hasRoot=hasRoot;function normalizeSeparators(e){e=e||"";if(c){e=e.replace(/\//g,"\\");const t=/^\\\\+[^\\]/.test(e);return(t?"\\":"")+e.replace(/\\\\+/g,"\\")}return e.replace(/\/\/+/g,"/")}t.normalizeSeparators=normalizeSeparators;function safeTrimTrailingSeparator(e){if(!e){return""}e=normalizeSeparators(e);if(!e.endsWith(o.sep)){return e}if(e===o.sep){return e}if(c&&/^[A-Z]:\\$/i.test(e)){return e}return e.substr(0,e.length-1)}t.safeTrimTrailingSeparator=safeTrimTrailingSeparator},836:function(e,t,r){"use strict";var n=this&&this.__createBinding||(Object.create?function(e,t,r,n){if(n===undefined)n=r;Object.defineProperty(e,n,{enumerable:true,get:function(){return t[r]}})}:function(e,t,r,n){if(n===undefined)n=r;e[n]=t[r]});var i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:true,value:t})}:function(e,t){e["default"]=t});var a=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(e!=null)for(var r in e)if(r!=="default"&&Object.hasOwnProperty.call(e,r))n(t,e,r);i(t,e);return t};var s=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(t,"__esModule",{value:true});t.Path=void 0;const o=a(r(622));const u=a(r(849));const c=s(r(357));const l=process.platform==="win32";class Path{constructor(e){this.segments=[];if(typeof e==="string"){c.default(e,`Parameter 'itemPath' must not be empty`);e=u.safeTrimTrailingSeparator(e);if(!u.hasRoot(e)){this.segments=e.split(o.sep)}else{let t=e;let r=u.dirname(t);while(r!==t){const e=o.basename(t);this.segments.unshift(e);t=r;r=u.dirname(t)}this.segments.unshift(t)}}else{c.default(e.length>0,`Parameter 'itemPath' must not be an empty array`);for(let t=0;t<e.length;t++){let r=e[t];c.default(r,`Parameter 'itemPath' must not contain any empty segments`);r=u.normalizeSeparators(e[t]);if(t===0&&u.hasRoot(r)){r=u.safeTrimTrailingSeparator(r);c.default(r===u.dirname(r),`Parameter 'itemPath' root segment contains information for multiple segments`);this.segments.push(r)}else{c.default(!r.includes(o.sep),`Parameter 'itemPath' contains unexpected path separators`);this.segments.push(r)}}}}toString(){let e=this.segments[0];let t=e.endsWith(o.sep)||l&&/^[A-Z]:$/i.test(e);for(let r=1;r<this.segments.length;r++){if(t){t=false}else{e+=o.sep}e+=this.segments[r]}return e}}t.Path=Path},5:function(e,t,r){"use strict";var n=this&&this.__createBinding||(Object.create?function(e,t,r,n){if(n===undefined)n=r;Object.defineProperty(e,n,{enumerable:true,get:function(){return t[r]}})}:function(e,t,r,n){if(n===undefined)n=r;e[n]=t[r]});var i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:true,value:t})}:function(e,t){e["default"]=t});var a=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(e!=null)for(var r in e)if(r!=="default"&&Object.hasOwnProperty.call(e,r))n(t,e,r);i(t,e);return t};Object.defineProperty(t,"__esModule",{value:true});t.partialMatch=t.match=t.getSearchPaths=void 0;const s=a(r(849));const o=r(63);const u=process.platform==="win32";function getSearchPaths(e){e=e.filter((e=>!e.negate));const t={};for(const r of e){const e=u?r.searchPath.toUpperCase():r.searchPath;t[e]="candidate"}const r=[];for(const n of e){const e=u?n.searchPath.toUpperCase():n.searchPath;if(t[e]==="included"){continue}let i=false;let a=e;let o=s.dirname(a);while(o!==a){if(t[o]){i=true;break}a=o;o=s.dirname(a)}if(!i){r.push(n.searchPath);t[e]="included"}}return r}t.getSearchPaths=getSearchPaths;function match(e,t){let r=o.MatchKind.None;for(const n of e){if(n.negate){r&=~n.match(t)}else{r|=n.match(t)}}return r}t.match=match;function partialMatch(e,t){return e.some((e=>!e.negate&&e.partialMatch(t)))}t.partialMatch=partialMatch},536:function(e,t,r){"use strict";var n=this&&this.__createBinding||(Object.create?function(e,t,r,n){if(n===undefined)n=r;Object.defineProperty(e,n,{enumerable:true,get:function(){return t[r]}})}:function(e,t,r,n){if(n===undefined)n=r;e[n]=t[r]});var i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:true,value:t})}:function(e,t){e["default"]=t});var a=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(e!=null)for(var r in e)if(r!=="default"&&Object.hasOwnProperty.call(e,r))n(t,e,r);i(t,e);return t};var s=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(t,"__esModule",{value:true});t.Pattern=void 0;const o=a(r(87));const u=a(r(622));const c=a(r(849));const l=s(r(357));const f=r(973);const h=r(63);const p=r(836);const d=process.platform==="win32";class Pattern{constructor(e,t=false,r,n){this.negate=false;let i;if(typeof e==="string"){i=e.trim()}else{r=r||[];l.default(r.length,`Parameter 'segments' must not empty`);const t=Pattern.getLiteral(r[0]);l.default(t&&c.hasAbsoluteRoot(t),`Parameter 'segments' first element must be a root path`);i=new p.Path(r).toString().trim();if(e){i=`!${i}`}}while(i.startsWith("!")){this.negate=!this.negate;i=i.substr(1).trim()}i=Pattern.fixupPattern(i,n);this.segments=new p.Path(i).segments;this.trailingSeparator=c.normalizeSeparators(i).endsWith(u.sep);i=c.safeTrimTrailingSeparator(i);let a=false;const s=this.segments.map((e=>Pattern.getLiteral(e))).filter((e=>!a&&!(a=e==="")));this.searchPath=new p.Path(s).toString();this.rootRegExp=new RegExp(Pattern.regExpEscape(s[0]),d?"i":"");this.isImplicitPattern=t;const o={dot:true,nobrace:true,nocase:d,nocomment:true,noext:true,nonegate:true};i=d?i.replace(/\\/g,"/"):i;this.minimatch=new f.Minimatch(i,o)}match(e){if(this.segments[this.segments.length-1]==="**"){e=c.normalizeSeparators(e);if(!e.endsWith(u.sep)&&this.isImplicitPattern===false){e=`${e}${u.sep}`}}else{e=c.safeTrimTrailingSeparator(e)}if(this.minimatch.match(e)){return this.trailingSeparator?h.MatchKind.Directory:h.MatchKind.All}return h.MatchKind.None}partialMatch(e){e=c.safeTrimTrailingSeparator(e);if(c.dirname(e)===e){return this.rootRegExp.test(e)}return this.minimatch.matchOne(e.split(d?/\\+/:/\/+/),this.minimatch.set[0],true)}static globEscape(e){return(d?e:e.replace(/\\/g,"\\\\")).replace(/(\[)(?=[^/]+\])/g,"[[]").replace(/\?/g,"[?]").replace(/\*/g,"[*]")}static fixupPattern(e,t){l.default(e,"pattern cannot be empty");const r=new p.Path(e).segments.map((e=>Pattern.getLiteral(e)));l.default(r.every(((e,t)=>(e!=="."||t===0)&&e!=="..")),`Invalid pattern '${e}'. Relative pathing '.' and '..' is not allowed.`);l.default(!c.hasRoot(e)||r[0],`Invalid pattern '${e}'. Root segment must not contain globs.`);e=c.normalizeSeparators(e);if(e==="."||e.startsWith(`.${u.sep}`)){e=Pattern.globEscape(process.cwd())+e.substr(1)}else if(e==="~"||e.startsWith(`~${u.sep}`)){t=t||o.homedir();l.default(t,"Unable to determine HOME directory");l.default(c.hasAbsoluteRoot(t),`Expected HOME directory to be a rooted path. Actual '${t}'`);e=Pattern.globEscape(t)+e.substr(1)}else if(d&&(e.match(/^[A-Z]:$/i)||e.match(/^[A-Z]:[^\\]/i))){let t=c.ensureAbsoluteRoot("C:\\dummy-root",e.substr(0,2));if(e.length>2&&!t.endsWith("\\")){t+="\\"}e=Pattern.globEscape(t)+e.substr(2)}else if(d&&(e==="\\"||e.match(/^\\[^\\]/))){let t=c.ensureAbsoluteRoot("C:\\dummy-root","\\");if(!t.endsWith("\\")){t+="\\"}e=Pattern.globEscape(t)+e.substr(1)}else{e=c.ensureAbsoluteRoot(Pattern.globEscape(process.cwd()),e)}return c.normalizeSeparators(e)}static getLiteral(e){let t="";for(let r=0;r<e.length;r++){const n=e[r];if(n==="\\"&&!d&&r+1<e.length){t+=e[++r];continue}else if(n==="*"||n==="?"){return""}else if(n==="["&&r+1<e.length){let n="";let i=-1;for(let t=r+1;t<e.length;t++){const r=e[t];if(r==="\\"&&!d&&t+1<e.length){n+=e[++t];continue}else if(r==="]"){i=t;break}else{n+=r}}if(i>=0){if(n.length>1){return""}if(n){t+=n;r=i;continue}}}t+=n}return t}static regExpEscape(e){return e.replace(/[[\\^$.|?*+()]/g,"\\$&")}}t.Pattern=Pattern},117:(e,t)=>{"use strict";Object.defineProperty(t,"__esModule",{value:true});t.SearchState=void 0;class SearchState{constructor(e,t){this.path=e;this.level=t}}t.SearchState=SearchState},417:e=>{"use strict";e.exports=balanced;function balanced(e,t,r){if(e instanceof RegExp)e=maybeMatch(e,r);if(t instanceof RegExp)t=maybeMatch(t,r);var n=range(e,t,r);return n&&{start:n[0],end:n[1],pre:r.slice(0,n[0]),body:r.slice(n[0]+e.length,n[1]),post:r.slice(n[1]+t.length)}}function maybeMatch(e,t){var r=t.match(e);return r?r[0]:null}balanced.range=range;function range(e,t,r){var n,i,a,s,o;var u=r.indexOf(e);var c=r.indexOf(t,u+1);var l=u;if(u>=0&&c>0){if(e===t){return[u,c]}n=[];a=r.length;while(l>=0&&!o){if(l==u){n.push(l);u=r.indexOf(e,l+1)}else if(n.length==1){o=[n.pop(),c]}else{i=n.pop();if(i<a){a=i;s=c}c=r.indexOf(t,l+1)}l=u<c&&u>=0?u:c}if(n.length){o=[a,s]}}return o}},850:(e,t,r)=>{var n=r(891);var i=r(417);e.exports=expandTop;var a="\0SLASH"+Math.random()+"\0";var s="\0OPEN"+Math.random()+"\0";var o="\0CLOSE"+Math.random()+"\0";var u="\0COMMA"+Math.random()+"\0";var c="\0PERIOD"+Math.random()+"\0";function numeric(e){return parseInt(e,10)==e?parseInt(e,10):e.charCodeAt(0)}function escapeBraces(e){return e.split("\\\\").join(a).split("\\{").join(s).split("\\}").join(o).split("\\,").join(u).split("\\.").join(c)}function unescapeBraces(e){return e.split(a).join("\\").split(s).join("{").split(o).join("}").split(u).join(",").split(c).join(".")}function parseCommaParts(e){if(!e)return[""];var t=[];var r=i("{","}",e);if(!r)return e.split(",");var n=r.pre;var a=r.body;var s=r.post;var o=n.split(",");o[o.length-1]+="{"+a+"}";var u=parseCommaParts(s);if(s.length){o[o.length-1]+=u.shift();o.push.apply(o,u)}t.push.apply(t,o);return t}function expandTop(e){if(!e)return[];if(e.substr(0,2)==="{}"){e="\\{\\}"+e.substr(2)}return expand(escapeBraces(e),true).map(unescapeBraces)}function identity(e){return e}function embrace(e){return"{"+e+"}"}function isPadded(e){return/^-?0\d/.test(e)}function lte(e,t){return e<=t}function gte(e,t){return e>=t}function expand(e,t){var r=[];var a=i("{","}",e);if(!a||/\$$/.test(a.pre))return[e];var s=/^-?\d+\.\.-?\d+(?:\.\.-?\d+)?$/.test(a.body);var u=/^[a-zA-Z]\.\.[a-zA-Z](?:\.\.-?\d+)?$/.test(a.body);var c=s||u;var l=a.body.indexOf(",")>=0;if(!c&&!l){if(a.post.match(/,.*\}/)){e=a.pre+"{"+a.body+o+a.post;return expand(e)}return[e]}var f;if(c){f=a.body.split(/\.\./)}else{f=parseCommaParts(a.body);if(f.length===1){f=expand(f[0],false).map(embrace);if(f.length===1){var h=a.post.length?expand(a.post,false):[""];return h.map((function(e){return a.pre+f[0]+e}))}}}var p=a.pre;var h=a.post.length?expand(a.post,false):[""];var d;if(c){var m=numeric(f[0]);var g=numeric(f[1]);var b=Math.max(f[0].length,f[1].length);var v=f.length==3?Math.abs(numeric(f[2])):1;var _=lte;var y=g<m;if(y){v*=-1;_=gte}var S=f.some(isPadded);d=[];for(var w=m;_(w,g);w+=v){var P;if(u){P=String.fromCharCode(w);if(P==="\\")P=""}else{P=String(w);if(S){var O=b-P.length;if(O>0){var j=new Array(O+1).join("0");if(w<0)P="-"+j+P.slice(1);else P=j+P}}}d.push(P)}}else{d=n(f,(function(e){return expand(e,false)}))}for(var M=0;M<d.length;M++){for(var x=0;x<h.length;x++){var E=p+d[M]+h[x];if(!t||c||E)r.push(E)}}return r}},891:e=>{e.exports=function(e,r){var n=[];for(var i=0;i<e.length;i++){var a=r(e[i],i);if(t(a))n.push.apply(n,a);else n.push(a)}return n};var t=Array.isArray||function(e){return Object.prototype.toString.call(e)==="[object Array]"}},973:(e,t,r)=>{e.exports=minimatch;minimatch.Minimatch=Minimatch;var n={sep:"/"};try{n=r(622)}catch(e){}var i=minimatch.GLOBSTAR=Minimatch.GLOBSTAR={};var a=r(850);var s={"!":{open:"(?:(?!(?:",close:"))[^/]*?)"},"?":{open:"(?:",close:")?"},"+":{open:"(?:",close:")+"},"*":{open:"(?:",close:")*"},"@":{open:"(?:",close:")"}};var o="[^/]";var u=o+"*?";var c="(?:(?!(?:\\/|^)(?:\\.{1,2})($|\\/)).)*?";var l="(?:(?!(?:\\/|^)\\.).)*?";var f=charSet("().*{}+?[]^$\\!");function charSet(e){return e.split("").reduce((function(e,t){e[t]=true;return e}),{})}var h=/\/+/;minimatch.filter=filter;function filter(e,t){t=t||{};return function(r,n,i){return minimatch(r,e,t)}}function ext(e,t){e=e||{};t=t||{};var r={};Object.keys(t).forEach((function(e){r[e]=t[e]}));Object.keys(e).forEach((function(t){r[t]=e[t]}));return r}minimatch.defaults=function(e){if(!e||!Object.keys(e).length)return minimatch;var t=minimatch;var r=function minimatch(r,n,i){return t.minimatch(r,n,ext(e,i))};r.Minimatch=function Minimatch(r,n){return new t.Minimatch(r,ext(e,n))};return r};Minimatch.defaults=function(e){if(!e||!Object.keys(e).length)return Minimatch;return minimatch.defaults(e).Minimatch};function minimatch(e,t,r){if(typeof t!=="string"){throw new TypeError("glob pattern string required")}if(!r)r={};if(!r.nocomment&&t.charAt(0)==="#"){return false}if(t.trim()==="")return e==="";return new Minimatch(t,r).match(e)}function Minimatch(e,t){if(!(this instanceof Minimatch)){return new Minimatch(e,t)}if(typeof e!=="string"){throw new TypeError("glob pattern string required")}if(!t)t={};e=e.trim();if(n.sep!=="/"){e=e.split(n.sep).join("/")}this.options=t;this.set=[];this.pattern=e;this.regexp=null;this.negate=false;this.comment=false;this.empty=false;this.make()}Minimatch.prototype.debug=function(){};Minimatch.prototype.make=make;function make(){if(this._made)return;var e=this.pattern;var t=this.options;if(!t.nocomment&&e.charAt(0)==="#"){this.comment=true;return}if(!e){this.empty=true;return}this.parseNegate();var r=this.globSet=this.braceExpand();if(t.debug)this.debug=console.error;this.debug(this.pattern,r);r=this.globParts=r.map((function(e){return e.split(h)}));this.debug(this.pattern,r);r=r.map((function(e,t,r){return e.map(this.parse,this)}),this);this.debug(this.pattern,r);r=r.filter((function(e){return e.indexOf(false)===-1}));this.debug(this.pattern,r);this.set=r}Minimatch.prototype.parseNegate=parseNegate;function parseNegate(){var e=this.pattern;var t=false;var r=this.options;var n=0;if(r.nonegate)return;for(var i=0,a=e.length;i<a&&e.charAt(i)==="!";i++){t=!t;n++}if(n)this.pattern=e.substr(n);this.negate=t}minimatch.braceExpand=function(e,t){return braceExpand(e,t)};Minimatch.prototype.braceExpand=braceExpand;function braceExpand(e,t){if(!t){if(this instanceof Minimatch){t=this.options}else{t={}}}e=typeof e==="undefined"?this.pattern:e;if(typeof e==="undefined"){throw new TypeError("undefined pattern")}if(t.nobrace||!e.match(/\{.*\}/)){return[e]}return a(e)}Minimatch.prototype.parse=parse;var p={};function parse(e,t){if(e.length>1024*64){throw new TypeError("pattern is too long")}var r=this.options;if(!r.noglobstar&&e==="**")return i;if(e==="")return"";var n="";var a=!!r.nocase;var c=false;var l=[];var h=[];var d;var m=false;var g=-1;var b=-1;var v=e.charAt(0)==="."?"":r.dot?"(?!(?:^|\\/)\\.{1,2}(?:$|\\/))":"(?!\\.)";var _=this;function clearStateChar(){if(d){switch(d){case"*":n+=u;a=true;break;case"?":n+=o;a=true;break;default:n+="\\"+d;break}_.debug("clearStateChar %j %j",d,n);d=false}}for(var y=0,S=e.length,w;y<S&&(w=e.charAt(y));y++){this.debug("%s\t%s %s %j",e,y,n,w);if(c&&f[w]){n+="\\"+w;c=false;continue}switch(w){case"/":return false;case"\\":clearStateChar();c=true;continue;case"?":case"*":case"+":case"@":case"!":this.debug("%s\t%s %s %j <-- stateChar",e,y,n,w);if(m){this.debug("  in class");if(w==="!"&&y===b+1)w="^";n+=w;continue}_.debug("call clearStateChar %j",d);clearStateChar();d=w;if(r.noext)clearStateChar();continue;case"(":if(m){n+="(";continue}if(!d){n+="\\(";continue}l.push({type:d,start:y-1,reStart:n.length,open:s[d].open,close:s[d].close});n+=d==="!"?"(?:(?!(?:":"(?:";this.debug("plType %j %j",d,n);d=false;continue;case")":if(m||!l.length){n+="\\)";continue}clearStateChar();a=true;var P=l.pop();n+=P.close;if(P.type==="!"){h.push(P)}P.reEnd=n.length;continue;case"|":if(m||!l.length||c){n+="\\|";c=false;continue}clearStateChar();n+="|";continue;case"[":clearStateChar();if(m){n+="\\"+w;continue}m=true;b=y;g=n.length;n+=w;continue;case"]":if(y===b+1||!m){n+="\\"+w;c=false;continue}if(m){var O=e.substring(b+1,y);try{RegExp("["+O+"]")}catch(e){var j=this.parse(O,p);n=n.substr(0,g)+"\\["+j[0]+"\\]";a=a||j[1];m=false;continue}}a=true;m=false;n+=w;continue;default:clearStateChar();if(c){c=false}else if(f[w]&&!(w==="^"&&m)){n+="\\"}n+=w}}if(m){O=e.substr(b+1);j=this.parse(O,p);n=n.substr(0,g)+"\\["+j[0];a=a||j[1]}for(P=l.pop();P;P=l.pop()){var M=n.slice(P.reStart+P.open.length);this.debug("setting tail",n,P);M=M.replace(/((?:\\{2}){0,64})(\\?)\|/g,(function(e,t,r){if(!r){r="\\"}return t+t+r+"|"}));this.debug("tail=%j\n   %s",M,M,P,n);var x=P.type==="*"?u:P.type==="?"?o:"\\"+P.type;a=true;n=n.slice(0,P.reStart)+x+"\\("+M}clearStateChar();if(c){n+="\\\\"}var E=false;switch(n.charAt(0)){case".":case"[":case"(":E=true}for(var $=h.length-1;$>-1;$--){var k=h[$];var A=n.slice(0,k.reStart);var C=n.slice(k.reStart,k.reEnd-8);var T=n.slice(k.reEnd-8,k.reEnd);var R=n.slice(k.reEnd);T+=R;var D=A.split("(").length-1;var I=R;for(y=0;y<D;y++){I=I.replace(/\)[+*?]?/,"")}R=I;var L="";if(R===""&&t!==p){L="$"}var B=A+C+R+L+T;n=B}if(n!==""&&a){n="(?=.)"+n}if(E){n=v+n}if(t===p){return[n,a]}if(!a){return globUnescape(e)}var G=r.nocase?"i":"";try{var W=new RegExp("^"+n+"$",G)}catch(e){return new RegExp("$.")}W._glob=e;W._src=n;return W}minimatch.makeRe=function(e,t){return new Minimatch(e,t||{}).makeRe()};Minimatch.prototype.makeRe=makeRe;function makeRe(){if(this.regexp||this.regexp===false)return this.regexp;var e=this.set;if(!e.length){this.regexp=false;return this.regexp}var t=this.options;var r=t.noglobstar?u:t.dot?c:l;var n=t.nocase?"i":"";var a=e.map((function(e){return e.map((function(e){return e===i?r:typeof e==="string"?regExpEscape(e):e._src})).join("\\/")})).join("|");a="^(?:"+a+")$";if(this.negate)a="^(?!"+a+").*$";try{this.regexp=new RegExp(a,n)}catch(e){this.regexp=false}return this.regexp}minimatch.match=function(e,t,r){r=r||{};var n=new Minimatch(t,r);e=e.filter((function(e){return n.match(e)}));if(n.options.nonull&&!e.length){e.push(t)}return e};Minimatch.prototype.match=match;function match(e,t){this.debug("match",e,this.pattern);if(this.comment)return false;if(this.empty)return e==="";if(e==="/"&&t)return true;var r=this.options;if(n.sep!=="/"){e=e.split(n.sep).join("/")}e=e.split(h);this.debug(this.pattern,"split",e);var i=this.set;this.debug(this.pattern,"set",i);var a;var s;for(s=e.length-1;s>=0;s--){a=e[s];if(a)break}for(s=0;s<i.length;s++){var o=i[s];var u=e;if(r.matchBase&&o.length===1){u=[a]}var c=this.matchOne(u,o,t);if(c){if(r.flipNegate)return true;return!this.negate}}if(r.flipNegate)return false;return this.negate}Minimatch.prototype.matchOne=function(e,t,r){var n=this.options;this.debug("matchOne",{this:this,file:e,pattern:t});this.debug("matchOne",e.length,t.length);for(var a=0,s=0,o=e.length,u=t.length;a<o&&s<u;a++,s++){this.debug("matchOne loop");var c=t[s];var l=e[a];this.debug(t,c,l);if(c===false)return false;if(c===i){this.debug("GLOBSTAR",[t,c,l]);var f=a;var h=s+1;if(h===u){this.debug("** at the end");for(;a<o;a++){if(e[a]==="."||e[a]===".."||!n.dot&&e[a].charAt(0)===".")return false}return true}while(f<o){var p=e[f];this.debug("\nglobstar while",e,f,t,h,p);if(this.matchOne(e.slice(f),t.slice(h),r)){this.debug("globstar found match!",f,o,p);return true}else{if(p==="."||p===".."||!n.dot&&p.charAt(0)==="."){this.debug("dot detected!",e,f,t,h);break}this.debug("globstar swallow a segment, and continue");f++}}if(r){this.debug("\n>>> no match, partial?",e,f,t,h);if(f===o)return true}return false}var d;if(typeof c==="string"){if(n.nocase){d=l.toLowerCase()===c.toLowerCase()}else{d=l===c}this.debug("string match",c,l,d)}else{d=l.match(c);this.debug("pattern match",c,l,d)}if(!d)return false}if(a===o&&s===u){return true}else if(a===o){return r}else if(s===u){var m=a===o-1&&e[a]==="";return m}throw new Error("wtf?")};function globUnescape(e){return e.replace(/\\(.)/g,"$1")}function regExpEscape(e){return e.replace(/[-[\]{}()*+?.,\\^$|#\s]/g,"\\$&")}},357:e=>{"use strict";e.exports=require("assert")},747:e=>{"use strict";e.exports=require("fs")},87:e=>{"use strict";e.exports=require("os")},622:e=>{"use strict";e.exports=require("path")}};var t={};function __nccwpck_require__(r){var n=t[r];if(n!==undefined){return n.exports}var i=t[r]={exports:{}};var a=true;try{e[r].call(i.exports,i,i.exports,__nccwpck_require__);a=false}finally{if(a)delete t[r]}return i.exports}(()=>{__nccwpck_require__.n=e=>{var t=e&&e.__esModule?()=>e["default"]:()=>e;__nccwpck_require__.d(t,{a:t});return t}})();(()=>{__nccwpck_require__.d=(e,t)=>{for(var r in t){if(__nccwpck_require__.o(t,r)&&!__nccwpck_require__.o(e,r)){Object.defineProperty(e,r,{enumerable:true,get:t[r]})}}}})();(()=>{__nccwpck_require__.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t)})();(()=>{__nccwpck_require__.r=e=>{if(typeof Symbol!=="undefined"&&Symbol.toStringTag){Object.defineProperty(e,Symbol.toStringTag,{value:"Module"})}Object.defineProperty(e,"__esModule",{value:true})}})();if(typeof __nccwpck_require__!=="undefined")__nccwpck_require__.ab=__dirname+"/";var r={};(()=>{"use strict";__nccwpck_require__.r(r);var e=__nccwpck_require__(186);var t=__nccwpck_require__.n(e);var n=__nccwpck_require__(90);var i=__nccwpck_require__.n(n);(async()=>{const t=e.getInput("directories",{trimWhitespace:true})??"";const r=e.getInput("access-key",{trimWhitespace:true})??"";const i=e.getInput("secret-key",{trimWhitespace:true})??"";const a=e.getBooleanInput("use-wasabi",{trimWhitespace:true});const s=e.getInput("region",{trimWhitespace:true})??"us-east-1";const o=e.getInput("bucket",{trimWhitespace:true})??"";if(t===""||r===""||i===""||o===""){e.setFailed("Missing one or more configuration inputs: `directories`, `accessKey`, `secretKey`, `bucket`.")}const u=t.split(";");e.debug(`Using Wasabi: ${a?"Yes":"No"}`);e.debug(`Directories : ${u.join(", ")}`);e.debug(`Region:     : ${s}`);for(let e=0;e<u.length;e++){const t=await n.create(u[e]);console.log(t)}})()})();module.exports=r})();
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 351:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.issue = exports.issueCommand = void 0;
+const os = __importStar(__nccwpck_require__(87));
+const utils_1 = __nccwpck_require__(278);
+/**
+ * Commands
+ *
+ * Command Format:
+ *   ::name key=value,key=value::message
+ *
+ * Examples:
+ *   ::warning::This is the message
+ *   ::set-env name=MY_VAR::some value
+ */
+function issueCommand(command, properties, message) {
+    const cmd = new Command(command, properties, message);
+    process.stdout.write(cmd.toString() + os.EOL);
+}
+exports.issueCommand = issueCommand;
+function issue(name, message = '') {
+    issueCommand(name, {}, message);
+}
+exports.issue = issue;
+const CMD_STRING = '::';
+class Command {
+    constructor(command, properties, message) {
+        if (!command) {
+            command = 'missing.command';
+        }
+        this.command = command;
+        this.properties = properties;
+        this.message = message;
+    }
+    toString() {
+        let cmdStr = CMD_STRING + this.command;
+        if (this.properties && Object.keys(this.properties).length > 0) {
+            cmdStr += ' ';
+            let first = true;
+            for (const key in this.properties) {
+                if (this.properties.hasOwnProperty(key)) {
+                    const val = this.properties[key];
+                    if (val) {
+                        if (first) {
+                            first = false;
+                        }
+                        else {
+                            cmdStr += ',';
+                        }
+                        cmdStr += `${key}=${escapeProperty(val)}`;
+                    }
+                }
+            }
+        }
+        cmdStr += `${CMD_STRING}${escapeData(this.message)}`;
+        return cmdStr;
+    }
+}
+function escapeData(s) {
+    return utils_1.toCommandValue(s)
+        .replace(/%/g, '%25')
+        .replace(/\r/g, '%0D')
+        .replace(/\n/g, '%0A');
+}
+function escapeProperty(s) {
+    return utils_1.toCommandValue(s)
+        .replace(/%/g, '%25')
+        .replace(/\r/g, '%0D')
+        .replace(/\n/g, '%0A')
+        .replace(/:/g, '%3A')
+        .replace(/,/g, '%2C');
+}
+//# sourceMappingURL=command.js.map
+
+/***/ }),
+
+/***/ 186:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
+const command_1 = __nccwpck_require__(351);
+const file_command_1 = __nccwpck_require__(717);
+const utils_1 = __nccwpck_require__(278);
+const os = __importStar(__nccwpck_require__(87));
+const path = __importStar(__nccwpck_require__(622));
+/**
+ * The code to exit an action
+ */
+var ExitCode;
+(function (ExitCode) {
+    /**
+     * A code indicating that the action was successful
+     */
+    ExitCode[ExitCode["Success"] = 0] = "Success";
+    /**
+     * A code indicating that the action was a failure
+     */
+    ExitCode[ExitCode["Failure"] = 1] = "Failure";
+})(ExitCode = exports.ExitCode || (exports.ExitCode = {}));
+//-----------------------------------------------------------------------
+// Variables
+//-----------------------------------------------------------------------
+/**
+ * Sets env variable for this action and future actions in the job
+ * @param name the name of the variable to set
+ * @param val the value of the variable. Non-string values will be converted to a string via JSON.stringify
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function exportVariable(name, val) {
+    const convertedVal = utils_1.toCommandValue(val);
+    process.env[name] = convertedVal;
+    const filePath = process.env['GITHUB_ENV'] || '';
+    if (filePath) {
+        const delimiter = '_GitHubActionsFileCommandDelimeter_';
+        const commandValue = `${name}<<${delimiter}${os.EOL}${convertedVal}${os.EOL}${delimiter}`;
+        file_command_1.issueCommand('ENV', commandValue);
+    }
+    else {
+        command_1.issueCommand('set-env', { name }, convertedVal);
+    }
+}
+exports.exportVariable = exportVariable;
+/**
+ * Registers a secret which will get masked from logs
+ * @param secret value of the secret
+ */
+function setSecret(secret) {
+    command_1.issueCommand('add-mask', {}, secret);
+}
+exports.setSecret = setSecret;
+/**
+ * Prepends inputPath to the PATH (for this action and future actions)
+ * @param inputPath
+ */
+function addPath(inputPath) {
+    const filePath = process.env['GITHUB_PATH'] || '';
+    if (filePath) {
+        file_command_1.issueCommand('PATH', inputPath);
+    }
+    else {
+        command_1.issueCommand('add-path', {}, inputPath);
+    }
+    process.env['PATH'] = `${inputPath}${path.delimiter}${process.env['PATH']}`;
+}
+exports.addPath = addPath;
+/**
+ * Gets the value of an input.
+ * Unless trimWhitespace is set to false in InputOptions, the value is also trimmed.
+ * Returns an empty string if the value is not defined.
+ *
+ * @param     name     name of the input to get
+ * @param     options  optional. See InputOptions.
+ * @returns   string
+ */
+function getInput(name, options) {
+    const val = process.env[`INPUT_${name.replace(/ /g, '_').toUpperCase()}`] || '';
+    if (options && options.required && !val) {
+        throw new Error(`Input required and not supplied: ${name}`);
+    }
+    if (options && options.trimWhitespace === false) {
+        return val;
+    }
+    return val.trim();
+}
+exports.getInput = getInput;
+/**
+ * Gets the input value of the boolean type in the YAML 1.2 "core schema" specification.
+ * Support boolean input list: `true | True | TRUE | false | False | FALSE` .
+ * The return value is also in boolean type.
+ * ref: https://yaml.org/spec/1.2/spec.html#id2804923
+ *
+ * @param     name     name of the input to get
+ * @param     options  optional. See InputOptions.
+ * @returns   boolean
+ */
+function getBooleanInput(name, options) {
+    const trueValue = ['true', 'True', 'TRUE'];
+    const falseValue = ['false', 'False', 'FALSE'];
+    const val = getInput(name, options);
+    if (trueValue.includes(val))
+        return true;
+    if (falseValue.includes(val))
+        return false;
+    throw new TypeError(`Input does not meet YAML 1.2 "Core Schema" specification: ${name}\n` +
+        `Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
+}
+exports.getBooleanInput = getBooleanInput;
+/**
+ * Sets the value of an output.
+ *
+ * @param     name     name of the output to set
+ * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function setOutput(name, value) {
+    process.stdout.write(os.EOL);
+    command_1.issueCommand('set-output', { name }, value);
+}
+exports.setOutput = setOutput;
+/**
+ * Enables or disables the echoing of commands into stdout for the rest of the step.
+ * Echoing is disabled by default if ACTIONS_STEP_DEBUG is not set.
+ *
+ */
+function setCommandEcho(enabled) {
+    command_1.issue('echo', enabled ? 'on' : 'off');
+}
+exports.setCommandEcho = setCommandEcho;
+//-----------------------------------------------------------------------
+// Results
+//-----------------------------------------------------------------------
+/**
+ * Sets the action status to failed.
+ * When the action exits it will be with an exit code of 1
+ * @param message add error issue message
+ */
+function setFailed(message) {
+    process.exitCode = ExitCode.Failure;
+    error(message);
+}
+exports.setFailed = setFailed;
+//-----------------------------------------------------------------------
+// Logging Commands
+//-----------------------------------------------------------------------
+/**
+ * Gets whether Actions Step Debug is on or not
+ */
+function isDebug() {
+    return process.env['RUNNER_DEBUG'] === '1';
+}
+exports.isDebug = isDebug;
+/**
+ * Writes debug message to user log
+ * @param message debug message
+ */
+function debug(message) {
+    command_1.issueCommand('debug', {}, message);
+}
+exports.debug = debug;
+/**
+ * Adds an error issue
+ * @param message error issue message. Errors will be converted to string via toString()
+ */
+function error(message) {
+    command_1.issue('error', message instanceof Error ? message.toString() : message);
+}
+exports.error = error;
+/**
+ * Adds an warning issue
+ * @param message warning issue message. Errors will be converted to string via toString()
+ */
+function warning(message) {
+    command_1.issue('warning', message instanceof Error ? message.toString() : message);
+}
+exports.warning = warning;
+/**
+ * Writes info to log with console.log.
+ * @param message info message
+ */
+function info(message) {
+    process.stdout.write(message + os.EOL);
+}
+exports.info = info;
+/**
+ * Begin an output group.
+ *
+ * Output until the next `groupEnd` will be foldable in this group
+ *
+ * @param name The name of the output group
+ */
+function startGroup(name) {
+    command_1.issue('group', name);
+}
+exports.startGroup = startGroup;
+/**
+ * End an output group.
+ */
+function endGroup() {
+    command_1.issue('endgroup');
+}
+exports.endGroup = endGroup;
+/**
+ * Wrap an asynchronous function call in a group.
+ *
+ * Returns the same type as the function itself.
+ *
+ * @param name The name of the group
+ * @param fn The function to wrap in the group
+ */
+function group(name, fn) {
+    return __awaiter(this, void 0, void 0, function* () {
+        startGroup(name);
+        let result;
+        try {
+            result = yield fn();
+        }
+        finally {
+            endGroup();
+        }
+        return result;
+    });
+}
+exports.group = group;
+//-----------------------------------------------------------------------
+// Wrapper action state
+//-----------------------------------------------------------------------
+/**
+ * Saves state for current action, the state can only be retrieved by this action's post job execution.
+ *
+ * @param     name     name of the state to store
+ * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function saveState(name, value) {
+    command_1.issueCommand('save-state', { name }, value);
+}
+exports.saveState = saveState;
+/**
+ * Gets the value of an state set by this action's main execution.
+ *
+ * @param     name     name of the state to get
+ * @returns   string
+ */
+function getState(name) {
+    return process.env[`STATE_${name}`] || '';
+}
+exports.getState = getState;
+//# sourceMappingURL=core.js.map
+
+/***/ }),
+
+/***/ 717:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+// For internal use, subject to change.
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.issueCommand = void 0;
+// We use any as a valid input type
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const fs = __importStar(__nccwpck_require__(747));
+const os = __importStar(__nccwpck_require__(87));
+const utils_1 = __nccwpck_require__(278);
+function issueCommand(command, message) {
+    const filePath = process.env[`GITHUB_${command}`];
+    if (!filePath) {
+        throw new Error(`Unable to find environment variable for file command ${command}`);
+    }
+    if (!fs.existsSync(filePath)) {
+        throw new Error(`Missing file at path: ${filePath}`);
+    }
+    fs.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os.EOL}`, {
+        encoding: 'utf8'
+    });
+}
+exports.issueCommand = issueCommand;
+//# sourceMappingURL=file-command.js.map
+
+/***/ }),
+
+/***/ 278:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+// We use any as a valid input type
+/* eslint-disable @typescript-eslint/no-explicit-any */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.toCommandValue = void 0;
+/**
+ * Sanitizes an input into a string so it can be passed into issueCommand safely
+ * @param input input to sanitize into a string
+ */
+function toCommandValue(input) {
+    if (input === null || input === undefined) {
+        return '';
+    }
+    else if (typeof input === 'string' || input instanceof String) {
+        return input;
+    }
+    return JSON.stringify(input);
+}
+exports.toCommandValue = toCommandValue;
+//# sourceMappingURL=utils.js.map
+
+/***/ }),
+
+/***/ 90:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.create = void 0;
+const internal_globber_1 = __nccwpck_require__(298);
+/**
+ * Constructs a globber
+ *
+ * @param patterns  Patterns separated by newlines
+ * @param options   Glob options
+ */
+function create(patterns, options) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield internal_globber_1.DefaultGlobber.create(patterns, options);
+    });
+}
+exports.create = create;
+//# sourceMappingURL=glob.js.map
+
+/***/ }),
+
+/***/ 26:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getOptions = void 0;
+const core = __importStar(__nccwpck_require__(186));
+/**
+ * Returns a copy with defaults filled in.
+ */
+function getOptions(copy) {
+    const result = {
+        followSymbolicLinks: true,
+        implicitDescendants: true,
+        omitBrokenSymbolicLinks: true
+    };
+    if (copy) {
+        if (typeof copy.followSymbolicLinks === 'boolean') {
+            result.followSymbolicLinks = copy.followSymbolicLinks;
+            core.debug(`followSymbolicLinks '${result.followSymbolicLinks}'`);
+        }
+        if (typeof copy.implicitDescendants === 'boolean') {
+            result.implicitDescendants = copy.implicitDescendants;
+            core.debug(`implicitDescendants '${result.implicitDescendants}'`);
+        }
+        if (typeof copy.omitBrokenSymbolicLinks === 'boolean') {
+            result.omitBrokenSymbolicLinks = copy.omitBrokenSymbolicLinks;
+            core.debug(`omitBrokenSymbolicLinks '${result.omitBrokenSymbolicLinks}'`);
+        }
+    }
+    return result;
+}
+exports.getOptions = getOptions;
+//# sourceMappingURL=internal-glob-options-helper.js.map
+
+/***/ }),
+
+/***/ 298:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
+var __await = (this && this.__await) || function (v) { return this instanceof __await ? (this.v = v, this) : new __await(v); }
+var __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _arguments, generator) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var g = generator.apply(thisArg, _arguments || []), i, q = [];
+    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
+    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
+    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
+    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
+    function fulfill(value) { resume("next", value); }
+    function reject(value) { resume("throw", value); }
+    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DefaultGlobber = void 0;
+const core = __importStar(__nccwpck_require__(186));
+const fs = __importStar(__nccwpck_require__(747));
+const globOptionsHelper = __importStar(__nccwpck_require__(26));
+const path = __importStar(__nccwpck_require__(622));
+const patternHelper = __importStar(__nccwpck_require__(5));
+const internal_match_kind_1 = __nccwpck_require__(63);
+const internal_pattern_1 = __nccwpck_require__(536);
+const internal_search_state_1 = __nccwpck_require__(117);
+const IS_WINDOWS = process.platform === 'win32';
+class DefaultGlobber {
+    constructor(options) {
+        this.patterns = [];
+        this.searchPaths = [];
+        this.options = globOptionsHelper.getOptions(options);
+    }
+    getSearchPaths() {
+        // Return a copy
+        return this.searchPaths.slice();
+    }
+    glob() {
+        var e_1, _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = [];
+            try {
+                for (var _b = __asyncValues(this.globGenerator()), _c; _c = yield _b.next(), !_c.done;) {
+                    const itemPath = _c.value;
+                    result.push(itemPath);
+                }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) yield _a.call(_b);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
+            return result;
+        });
+    }
+    globGenerator() {
+        return __asyncGenerator(this, arguments, function* globGenerator_1() {
+            // Fill in defaults options
+            const options = globOptionsHelper.getOptions(this.options);
+            // Implicit descendants?
+            const patterns = [];
+            for (const pattern of this.patterns) {
+                patterns.push(pattern);
+                if (options.implicitDescendants &&
+                    (pattern.trailingSeparator ||
+                        pattern.segments[pattern.segments.length - 1] !== '**')) {
+                    patterns.push(new internal_pattern_1.Pattern(pattern.negate, true, pattern.segments.concat('**')));
+                }
+            }
+            // Push the search paths
+            const stack = [];
+            for (const searchPath of patternHelper.getSearchPaths(patterns)) {
+                core.debug(`Search path '${searchPath}'`);
+                // Exists?
+                try {
+                    // Intentionally using lstat. Detection for broken symlink
+                    // will be performed later (if following symlinks).
+                    yield __await(fs.promises.lstat(searchPath));
+                }
+                catch (err) {
+                    if (err.code === 'ENOENT') {
+                        continue;
+                    }
+                    throw err;
+                }
+                stack.unshift(new internal_search_state_1.SearchState(searchPath, 1));
+            }
+            // Search
+            const traversalChain = []; // used to detect cycles
+            while (stack.length) {
+                // Pop
+                const item = stack.pop();
+                // Match?
+                const match = patternHelper.match(patterns, item.path);
+                const partialMatch = !!match || patternHelper.partialMatch(patterns, item.path);
+                if (!match && !partialMatch) {
+                    continue;
+                }
+                // Stat
+                const stats = yield __await(DefaultGlobber.stat(item, options, traversalChain)
+                // Broken symlink, or symlink cycle detected, or no longer exists
+                );
+                // Broken symlink, or symlink cycle detected, or no longer exists
+                if (!stats) {
+                    continue;
+                }
+                // Directory
+                if (stats.isDirectory()) {
+                    // Matched
+                    if (match & internal_match_kind_1.MatchKind.Directory) {
+                        yield yield __await(item.path);
+                    }
+                    // Descend?
+                    else if (!partialMatch) {
+                        continue;
+                    }
+                    // Push the child items in reverse
+                    const childLevel = item.level + 1;
+                    const childItems = (yield __await(fs.promises.readdir(item.path))).map(x => new internal_search_state_1.SearchState(path.join(item.path, x), childLevel));
+                    stack.push(...childItems.reverse());
+                }
+                // File
+                else if (match & internal_match_kind_1.MatchKind.File) {
+                    yield yield __await(item.path);
+                }
+            }
+        });
+    }
+    /**
+     * Constructs a DefaultGlobber
+     */
+    static create(patterns, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = new DefaultGlobber(options);
+            if (IS_WINDOWS) {
+                patterns = patterns.replace(/\r\n/g, '\n');
+                patterns = patterns.replace(/\r/g, '\n');
+            }
+            const lines = patterns.split('\n').map(x => x.trim());
+            for (const line of lines) {
+                // Empty or comment
+                if (!line || line.startsWith('#')) {
+                    continue;
+                }
+                // Pattern
+                else {
+                    result.patterns.push(new internal_pattern_1.Pattern(line));
+                }
+            }
+            result.searchPaths.push(...patternHelper.getSearchPaths(result.patterns));
+            return result;
+        });
+    }
+    static stat(item, options, traversalChain) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Note:
+            // `stat` returns info about the target of a symlink (or symlink chain)
+            // `lstat` returns info about a symlink itself
+            let stats;
+            if (options.followSymbolicLinks) {
+                try {
+                    // Use `stat` (following symlinks)
+                    stats = yield fs.promises.stat(item.path);
+                }
+                catch (err) {
+                    if (err.code === 'ENOENT') {
+                        if (options.omitBrokenSymbolicLinks) {
+                            core.debug(`Broken symlink '${item.path}'`);
+                            return undefined;
+                        }
+                        throw new Error(`No information found for the path '${item.path}'. This may indicate a broken symbolic link.`);
+                    }
+                    throw err;
+                }
+            }
+            else {
+                // Use `lstat` (not following symlinks)
+                stats = yield fs.promises.lstat(item.path);
+            }
+            // Note, isDirectory() returns false for the lstat of a symlink
+            if (stats.isDirectory() && options.followSymbolicLinks) {
+                // Get the realpath
+                const realPath = yield fs.promises.realpath(item.path);
+                // Fixup the traversal chain to match the item level
+                while (traversalChain.length >= item.level) {
+                    traversalChain.pop();
+                }
+                // Test for a cycle
+                if (traversalChain.some((x) => x === realPath)) {
+                    core.debug(`Symlink cycle detected for path '${item.path}' and realpath '${realPath}'`);
+                    return undefined;
+                }
+                // Update the traversal chain
+                traversalChain.push(realPath);
+            }
+            return stats;
+        });
+    }
+}
+exports.DefaultGlobber = DefaultGlobber;
+//# sourceMappingURL=internal-globber.js.map
+
+/***/ }),
+
+/***/ 63:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MatchKind = void 0;
+/**
+ * Indicates whether a pattern matches a path
+ */
+var MatchKind;
+(function (MatchKind) {
+    /** Not matched */
+    MatchKind[MatchKind["None"] = 0] = "None";
+    /** Matched if the path is a directory */
+    MatchKind[MatchKind["Directory"] = 1] = "Directory";
+    /** Matched if the path is a regular file */
+    MatchKind[MatchKind["File"] = 2] = "File";
+    /** Matched */
+    MatchKind[MatchKind["All"] = 3] = "All";
+})(MatchKind = exports.MatchKind || (exports.MatchKind = {}));
+//# sourceMappingURL=internal-match-kind.js.map
+
+/***/ }),
+
+/***/ 849:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.safeTrimTrailingSeparator = exports.normalizeSeparators = exports.hasRoot = exports.hasAbsoluteRoot = exports.ensureAbsoluteRoot = exports.dirname = void 0;
+const path = __importStar(__nccwpck_require__(622));
+const assert_1 = __importDefault(__nccwpck_require__(357));
+const IS_WINDOWS = process.platform === 'win32';
+/**
+ * Similar to path.dirname except normalizes the path separators and slightly better handling for Windows UNC paths.
+ *
+ * For example, on Linux/macOS:
+ * - `/               => /`
+ * - `/hello          => /`
+ *
+ * For example, on Windows:
+ * - `C:\             => C:\`
+ * - `C:\hello        => C:\`
+ * - `C:              => C:`
+ * - `C:hello         => C:`
+ * - `\               => \`
+ * - `\hello          => \`
+ * - `\\hello         => \\hello`
+ * - `\\hello\world   => \\hello\world`
+ */
+function dirname(p) {
+    // Normalize slashes and trim unnecessary trailing slash
+    p = safeTrimTrailingSeparator(p);
+    // Windows UNC root, e.g. \\hello or \\hello\world
+    if (IS_WINDOWS && /^\\\\[^\\]+(\\[^\\]+)?$/.test(p)) {
+        return p;
+    }
+    // Get dirname
+    let result = path.dirname(p);
+    // Trim trailing slash for Windows UNC root, e.g. \\hello\world\
+    if (IS_WINDOWS && /^\\\\[^\\]+\\[^\\]+\\$/.test(result)) {
+        result = safeTrimTrailingSeparator(result);
+    }
+    return result;
+}
+exports.dirname = dirname;
+/**
+ * Roots the path if not already rooted. On Windows, relative roots like `\`
+ * or `C:` are expanded based on the current working directory.
+ */
+function ensureAbsoluteRoot(root, itemPath) {
+    assert_1.default(root, `ensureAbsoluteRoot parameter 'root' must not be empty`);
+    assert_1.default(itemPath, `ensureAbsoluteRoot parameter 'itemPath' must not be empty`);
+    // Already rooted
+    if (hasAbsoluteRoot(itemPath)) {
+        return itemPath;
+    }
+    // Windows
+    if (IS_WINDOWS) {
+        // Check for itemPath like C: or C:foo
+        if (itemPath.match(/^[A-Z]:[^\\/]|^[A-Z]:$/i)) {
+            let cwd = process.cwd();
+            assert_1.default(cwd.match(/^[A-Z]:\\/i), `Expected current directory to start with an absolute drive root. Actual '${cwd}'`);
+            // Drive letter matches cwd? Expand to cwd
+            if (itemPath[0].toUpperCase() === cwd[0].toUpperCase()) {
+                // Drive only, e.g. C:
+                if (itemPath.length === 2) {
+                    // Preserve specified drive letter case (upper or lower)
+                    return `${itemPath[0]}:\\${cwd.substr(3)}`;
+                }
+                // Drive + path, e.g. C:foo
+                else {
+                    if (!cwd.endsWith('\\')) {
+                        cwd += '\\';
+                    }
+                    // Preserve specified drive letter case (upper or lower)
+                    return `${itemPath[0]}:\\${cwd.substr(3)}${itemPath.substr(2)}`;
+                }
+            }
+            // Different drive
+            else {
+                return `${itemPath[0]}:\\${itemPath.substr(2)}`;
+            }
+        }
+        // Check for itemPath like \ or \foo
+        else if (normalizeSeparators(itemPath).match(/^\\$|^\\[^\\]/)) {
+            const cwd = process.cwd();
+            assert_1.default(cwd.match(/^[A-Z]:\\/i), `Expected current directory to start with an absolute drive root. Actual '${cwd}'`);
+            return `${cwd[0]}:\\${itemPath.substr(1)}`;
+        }
+    }
+    assert_1.default(hasAbsoluteRoot(root), `ensureAbsoluteRoot parameter 'root' must have an absolute root`);
+    // Otherwise ensure root ends with a separator
+    if (root.endsWith('/') || (IS_WINDOWS && root.endsWith('\\'))) {
+        // Intentionally empty
+    }
+    else {
+        // Append separator
+        root += path.sep;
+    }
+    return root + itemPath;
+}
+exports.ensureAbsoluteRoot = ensureAbsoluteRoot;
+/**
+ * On Linux/macOS, true if path starts with `/`. On Windows, true for paths like:
+ * `\\hello\share` and `C:\hello` (and using alternate separator).
+ */
+function hasAbsoluteRoot(itemPath) {
+    assert_1.default(itemPath, `hasAbsoluteRoot parameter 'itemPath' must not be empty`);
+    // Normalize separators
+    itemPath = normalizeSeparators(itemPath);
+    // Windows
+    if (IS_WINDOWS) {
+        // E.g. \\hello\share or C:\hello
+        return itemPath.startsWith('\\\\') || /^[A-Z]:\\/i.test(itemPath);
+    }
+    // E.g. /hello
+    return itemPath.startsWith('/');
+}
+exports.hasAbsoluteRoot = hasAbsoluteRoot;
+/**
+ * On Linux/macOS, true if path starts with `/`. On Windows, true for paths like:
+ * `\`, `\hello`, `\\hello\share`, `C:`, and `C:\hello` (and using alternate separator).
+ */
+function hasRoot(itemPath) {
+    assert_1.default(itemPath, `isRooted parameter 'itemPath' must not be empty`);
+    // Normalize separators
+    itemPath = normalizeSeparators(itemPath);
+    // Windows
+    if (IS_WINDOWS) {
+        // E.g. \ or \hello or \\hello
+        // E.g. C: or C:\hello
+        return itemPath.startsWith('\\') || /^[A-Z]:/i.test(itemPath);
+    }
+    // E.g. /hello
+    return itemPath.startsWith('/');
+}
+exports.hasRoot = hasRoot;
+/**
+ * Removes redundant slashes and converts `/` to `\` on Windows
+ */
+function normalizeSeparators(p) {
+    p = p || '';
+    // Windows
+    if (IS_WINDOWS) {
+        // Convert slashes on Windows
+        p = p.replace(/\//g, '\\');
+        // Remove redundant slashes
+        const isUnc = /^\\\\+[^\\]/.test(p); // e.g. \\hello
+        return (isUnc ? '\\' : '') + p.replace(/\\\\+/g, '\\'); // preserve leading \\ for UNC
+    }
+    // Remove redundant slashes
+    return p.replace(/\/\/+/g, '/');
+}
+exports.normalizeSeparators = normalizeSeparators;
+/**
+ * Normalizes the path separators and trims the trailing separator (when safe).
+ * For example, `/foo/ => /foo` but `/ => /`
+ */
+function safeTrimTrailingSeparator(p) {
+    // Short-circuit if empty
+    if (!p) {
+        return '';
+    }
+    // Normalize separators
+    p = normalizeSeparators(p);
+    // No trailing slash
+    if (!p.endsWith(path.sep)) {
+        return p;
+    }
+    // Check '/' on Linux/macOS and '\' on Windows
+    if (p === path.sep) {
+        return p;
+    }
+    // On Windows check if drive root. E.g. C:\
+    if (IS_WINDOWS && /^[A-Z]:\\$/i.test(p)) {
+        return p;
+    }
+    // Otherwise trim trailing slash
+    return p.substr(0, p.length - 1);
+}
+exports.safeTrimTrailingSeparator = safeTrimTrailingSeparator;
+//# sourceMappingURL=internal-path-helper.js.map
+
+/***/ }),
+
+/***/ 836:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Path = void 0;
+const path = __importStar(__nccwpck_require__(622));
+const pathHelper = __importStar(__nccwpck_require__(849));
+const assert_1 = __importDefault(__nccwpck_require__(357));
+const IS_WINDOWS = process.platform === 'win32';
+/**
+ * Helper class for parsing paths into segments
+ */
+class Path {
+    /**
+     * Constructs a Path
+     * @param itemPath Path or array of segments
+     */
+    constructor(itemPath) {
+        this.segments = [];
+        // String
+        if (typeof itemPath === 'string') {
+            assert_1.default(itemPath, `Parameter 'itemPath' must not be empty`);
+            // Normalize slashes and trim unnecessary trailing slash
+            itemPath = pathHelper.safeTrimTrailingSeparator(itemPath);
+            // Not rooted
+            if (!pathHelper.hasRoot(itemPath)) {
+                this.segments = itemPath.split(path.sep);
+            }
+            // Rooted
+            else {
+                // Add all segments, while not at the root
+                let remaining = itemPath;
+                let dir = pathHelper.dirname(remaining);
+                while (dir !== remaining) {
+                    // Add the segment
+                    const basename = path.basename(remaining);
+                    this.segments.unshift(basename);
+                    // Truncate the last segment
+                    remaining = dir;
+                    dir = pathHelper.dirname(remaining);
+                }
+                // Remainder is the root
+                this.segments.unshift(remaining);
+            }
+        }
+        // Array
+        else {
+            // Must not be empty
+            assert_1.default(itemPath.length > 0, `Parameter 'itemPath' must not be an empty array`);
+            // Each segment
+            for (let i = 0; i < itemPath.length; i++) {
+                let segment = itemPath[i];
+                // Must not be empty
+                assert_1.default(segment, `Parameter 'itemPath' must not contain any empty segments`);
+                // Normalize slashes
+                segment = pathHelper.normalizeSeparators(itemPath[i]);
+                // Root segment
+                if (i === 0 && pathHelper.hasRoot(segment)) {
+                    segment = pathHelper.safeTrimTrailingSeparator(segment);
+                    assert_1.default(segment === pathHelper.dirname(segment), `Parameter 'itemPath' root segment contains information for multiple segments`);
+                    this.segments.push(segment);
+                }
+                // All other segments
+                else {
+                    // Must not contain slash
+                    assert_1.default(!segment.includes(path.sep), `Parameter 'itemPath' contains unexpected path separators`);
+                    this.segments.push(segment);
+                }
+            }
+        }
+    }
+    /**
+     * Converts the path to it's string representation
+     */
+    toString() {
+        // First segment
+        let result = this.segments[0];
+        // All others
+        let skipSlash = result.endsWith(path.sep) || (IS_WINDOWS && /^[A-Z]:$/i.test(result));
+        for (let i = 1; i < this.segments.length; i++) {
+            if (skipSlash) {
+                skipSlash = false;
+            }
+            else {
+                result += path.sep;
+            }
+            result += this.segments[i];
+        }
+        return result;
+    }
+}
+exports.Path = Path;
+//# sourceMappingURL=internal-path.js.map
+
+/***/ }),
+
+/***/ 5:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.partialMatch = exports.match = exports.getSearchPaths = void 0;
+const pathHelper = __importStar(__nccwpck_require__(849));
+const internal_match_kind_1 = __nccwpck_require__(63);
+const IS_WINDOWS = process.platform === 'win32';
+/**
+ * Given an array of patterns, returns an array of paths to search.
+ * Duplicates and paths under other included paths are filtered out.
+ */
+function getSearchPaths(patterns) {
+    // Ignore negate patterns
+    patterns = patterns.filter(x => !x.negate);
+    // Create a map of all search paths
+    const searchPathMap = {};
+    for (const pattern of patterns) {
+        const key = IS_WINDOWS
+            ? pattern.searchPath.toUpperCase()
+            : pattern.searchPath;
+        searchPathMap[key] = 'candidate';
+    }
+    const result = [];
+    for (const pattern of patterns) {
+        // Check if already included
+        const key = IS_WINDOWS
+            ? pattern.searchPath.toUpperCase()
+            : pattern.searchPath;
+        if (searchPathMap[key] === 'included') {
+            continue;
+        }
+        // Check for an ancestor search path
+        let foundAncestor = false;
+        let tempKey = key;
+        let parent = pathHelper.dirname(tempKey);
+        while (parent !== tempKey) {
+            if (searchPathMap[parent]) {
+                foundAncestor = true;
+                break;
+            }
+            tempKey = parent;
+            parent = pathHelper.dirname(tempKey);
+        }
+        // Include the search pattern in the result
+        if (!foundAncestor) {
+            result.push(pattern.searchPath);
+            searchPathMap[key] = 'included';
+        }
+    }
+    return result;
+}
+exports.getSearchPaths = getSearchPaths;
+/**
+ * Matches the patterns against the path
+ */
+function match(patterns, itemPath) {
+    let result = internal_match_kind_1.MatchKind.None;
+    for (const pattern of patterns) {
+        if (pattern.negate) {
+            result &= ~pattern.match(itemPath);
+        }
+        else {
+            result |= pattern.match(itemPath);
+        }
+    }
+    return result;
+}
+exports.match = match;
+/**
+ * Checks whether to descend further into the directory
+ */
+function partialMatch(patterns, itemPath) {
+    return patterns.some(x => !x.negate && x.partialMatch(itemPath));
+}
+exports.partialMatch = partialMatch;
+//# sourceMappingURL=internal-pattern-helper.js.map
+
+/***/ }),
+
+/***/ 536:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Pattern = void 0;
+const os = __importStar(__nccwpck_require__(87));
+const path = __importStar(__nccwpck_require__(622));
+const pathHelper = __importStar(__nccwpck_require__(849));
+const assert_1 = __importDefault(__nccwpck_require__(357));
+const minimatch_1 = __nccwpck_require__(973);
+const internal_match_kind_1 = __nccwpck_require__(63);
+const internal_path_1 = __nccwpck_require__(836);
+const IS_WINDOWS = process.platform === 'win32';
+class Pattern {
+    constructor(patternOrNegate, isImplicitPattern = false, segments, homedir) {
+        /**
+         * Indicates whether matches should be excluded from the result set
+         */
+        this.negate = false;
+        // Pattern overload
+        let pattern;
+        if (typeof patternOrNegate === 'string') {
+            pattern = patternOrNegate.trim();
+        }
+        // Segments overload
+        else {
+            // Convert to pattern
+            segments = segments || [];
+            assert_1.default(segments.length, `Parameter 'segments' must not empty`);
+            const root = Pattern.getLiteral(segments[0]);
+            assert_1.default(root && pathHelper.hasAbsoluteRoot(root), `Parameter 'segments' first element must be a root path`);
+            pattern = new internal_path_1.Path(segments).toString().trim();
+            if (patternOrNegate) {
+                pattern = `!${pattern}`;
+            }
+        }
+        // Negate
+        while (pattern.startsWith('!')) {
+            this.negate = !this.negate;
+            pattern = pattern.substr(1).trim();
+        }
+        // Normalize slashes and ensures absolute root
+        pattern = Pattern.fixupPattern(pattern, homedir);
+        // Segments
+        this.segments = new internal_path_1.Path(pattern).segments;
+        // Trailing slash indicates the pattern should only match directories, not regular files
+        this.trailingSeparator = pathHelper
+            .normalizeSeparators(pattern)
+            .endsWith(path.sep);
+        pattern = pathHelper.safeTrimTrailingSeparator(pattern);
+        // Search path (literal path prior to the first glob segment)
+        let foundGlob = false;
+        const searchSegments = this.segments
+            .map(x => Pattern.getLiteral(x))
+            .filter(x => !foundGlob && !(foundGlob = x === ''));
+        this.searchPath = new internal_path_1.Path(searchSegments).toString();
+        // Root RegExp (required when determining partial match)
+        this.rootRegExp = new RegExp(Pattern.regExpEscape(searchSegments[0]), IS_WINDOWS ? 'i' : '');
+        this.isImplicitPattern = isImplicitPattern;
+        // Create minimatch
+        const minimatchOptions = {
+            dot: true,
+            nobrace: true,
+            nocase: IS_WINDOWS,
+            nocomment: true,
+            noext: true,
+            nonegate: true
+        };
+        pattern = IS_WINDOWS ? pattern.replace(/\\/g, '/') : pattern;
+        this.minimatch = new minimatch_1.Minimatch(pattern, minimatchOptions);
+    }
+    /**
+     * Matches the pattern against the specified path
+     */
+    match(itemPath) {
+        // Last segment is globstar?
+        if (this.segments[this.segments.length - 1] === '**') {
+            // Normalize slashes
+            itemPath = pathHelper.normalizeSeparators(itemPath);
+            // Append a trailing slash. Otherwise Minimatch will not match the directory immediately
+            // preceding the globstar. For example, given the pattern `/foo/**`, Minimatch returns
+            // false for `/foo` but returns true for `/foo/`. Append a trailing slash to handle that quirk.
+            if (!itemPath.endsWith(path.sep) && this.isImplicitPattern === false) {
+                // Note, this is safe because the constructor ensures the pattern has an absolute root.
+                // For example, formats like C: and C:foo on Windows are resolved to an absolute root.
+                itemPath = `${itemPath}${path.sep}`;
+            }
+        }
+        else {
+            // Normalize slashes and trim unnecessary trailing slash
+            itemPath = pathHelper.safeTrimTrailingSeparator(itemPath);
+        }
+        // Match
+        if (this.minimatch.match(itemPath)) {
+            return this.trailingSeparator ? internal_match_kind_1.MatchKind.Directory : internal_match_kind_1.MatchKind.All;
+        }
+        return internal_match_kind_1.MatchKind.None;
+    }
+    /**
+     * Indicates whether the pattern may match descendants of the specified path
+     */
+    partialMatch(itemPath) {
+        // Normalize slashes and trim unnecessary trailing slash
+        itemPath = pathHelper.safeTrimTrailingSeparator(itemPath);
+        // matchOne does not handle root path correctly
+        if (pathHelper.dirname(itemPath) === itemPath) {
+            return this.rootRegExp.test(itemPath);
+        }
+        return this.minimatch.matchOne(itemPath.split(IS_WINDOWS ? /\\+/ : /\/+/), this.minimatch.set[0], true);
+    }
+    /**
+     * Escapes glob patterns within a path
+     */
+    static globEscape(s) {
+        return (IS_WINDOWS ? s : s.replace(/\\/g, '\\\\')) // escape '\' on Linux/macOS
+            .replace(/(\[)(?=[^/]+\])/g, '[[]') // escape '[' when ']' follows within the path segment
+            .replace(/\?/g, '[?]') // escape '?'
+            .replace(/\*/g, '[*]'); // escape '*'
+    }
+    /**
+     * Normalizes slashes and ensures absolute root
+     */
+    static fixupPattern(pattern, homedir) {
+        // Empty
+        assert_1.default(pattern, 'pattern cannot be empty');
+        // Must not contain `.` segment, unless first segment
+        // Must not contain `..` segment
+        const literalSegments = new internal_path_1.Path(pattern).segments.map(x => Pattern.getLiteral(x));
+        assert_1.default(literalSegments.every((x, i) => (x !== '.' || i === 0) && x !== '..'), `Invalid pattern '${pattern}'. Relative pathing '.' and '..' is not allowed.`);
+        // Must not contain globs in root, e.g. Windows UNC path \\foo\b*r
+        assert_1.default(!pathHelper.hasRoot(pattern) || literalSegments[0], `Invalid pattern '${pattern}'. Root segment must not contain globs.`);
+        // Normalize slashes
+        pattern = pathHelper.normalizeSeparators(pattern);
+        // Replace leading `.` segment
+        if (pattern === '.' || pattern.startsWith(`.${path.sep}`)) {
+            pattern = Pattern.globEscape(process.cwd()) + pattern.substr(1);
+        }
+        // Replace leading `~` segment
+        else if (pattern === '~' || pattern.startsWith(`~${path.sep}`)) {
+            homedir = homedir || os.homedir();
+            assert_1.default(homedir, 'Unable to determine HOME directory');
+            assert_1.default(pathHelper.hasAbsoluteRoot(homedir), `Expected HOME directory to be a rooted path. Actual '${homedir}'`);
+            pattern = Pattern.globEscape(homedir) + pattern.substr(1);
+        }
+        // Replace relative drive root, e.g. pattern is C: or C:foo
+        else if (IS_WINDOWS &&
+            (pattern.match(/^[A-Z]:$/i) || pattern.match(/^[A-Z]:[^\\]/i))) {
+            let root = pathHelper.ensureAbsoluteRoot('C:\\dummy-root', pattern.substr(0, 2));
+            if (pattern.length > 2 && !root.endsWith('\\')) {
+                root += '\\';
+            }
+            pattern = Pattern.globEscape(root) + pattern.substr(2);
+        }
+        // Replace relative root, e.g. pattern is \ or \foo
+        else if (IS_WINDOWS && (pattern === '\\' || pattern.match(/^\\[^\\]/))) {
+            let root = pathHelper.ensureAbsoluteRoot('C:\\dummy-root', '\\');
+            if (!root.endsWith('\\')) {
+                root += '\\';
+            }
+            pattern = Pattern.globEscape(root) + pattern.substr(1);
+        }
+        // Otherwise ensure absolute root
+        else {
+            pattern = pathHelper.ensureAbsoluteRoot(Pattern.globEscape(process.cwd()), pattern);
+        }
+        return pathHelper.normalizeSeparators(pattern);
+    }
+    /**
+     * Attempts to unescape a pattern segment to create a literal path segment.
+     * Otherwise returns empty string.
+     */
+    static getLiteral(segment) {
+        let literal = '';
+        for (let i = 0; i < segment.length; i++) {
+            const c = segment[i];
+            // Escape
+            if (c === '\\' && !IS_WINDOWS && i + 1 < segment.length) {
+                literal += segment[++i];
+                continue;
+            }
+            // Wildcard
+            else if (c === '*' || c === '?') {
+                return '';
+            }
+            // Character set
+            else if (c === '[' && i + 1 < segment.length) {
+                let set = '';
+                let closed = -1;
+                for (let i2 = i + 1; i2 < segment.length; i2++) {
+                    const c2 = segment[i2];
+                    // Escape
+                    if (c2 === '\\' && !IS_WINDOWS && i2 + 1 < segment.length) {
+                        set += segment[++i2];
+                        continue;
+                    }
+                    // Closed
+                    else if (c2 === ']') {
+                        closed = i2;
+                        break;
+                    }
+                    // Otherwise
+                    else {
+                        set += c2;
+                    }
+                }
+                // Closed?
+                if (closed >= 0) {
+                    // Cannot convert
+                    if (set.length > 1) {
+                        return '';
+                    }
+                    // Convert to literal
+                    if (set) {
+                        literal += set;
+                        i = closed;
+                        continue;
+                    }
+                }
+                // Otherwise fall thru
+            }
+            // Append
+            literal += c;
+        }
+        return literal;
+    }
+    /**
+     * Escapes regexp special characters
+     * https://javascript.info/regexp-escaping
+     */
+    static regExpEscape(s) {
+        return s.replace(/[[\\^$.|?*+()]/g, '\\$&');
+    }
+}
+exports.Pattern = Pattern;
+//# sourceMappingURL=internal-pattern.js.map
+
+/***/ }),
+
+/***/ 117:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SearchState = void 0;
+class SearchState {
+    constructor(path, level) {
+        this.path = path;
+        this.level = level;
+    }
+}
+exports.SearchState = SearchState;
+//# sourceMappingURL=internal-search-state.js.map
+
+/***/ }),
+
+/***/ 417:
+/***/ ((module) => {
+
+"use strict";
+
+module.exports = balanced;
+function balanced(a, b, str) {
+  if (a instanceof RegExp) a = maybeMatch(a, str);
+  if (b instanceof RegExp) b = maybeMatch(b, str);
+
+  var r = range(a, b, str);
+
+  return r && {
+    start: r[0],
+    end: r[1],
+    pre: str.slice(0, r[0]),
+    body: str.slice(r[0] + a.length, r[1]),
+    post: str.slice(r[1] + b.length)
+  };
+}
+
+function maybeMatch(reg, str) {
+  var m = str.match(reg);
+  return m ? m[0] : null;
+}
+
+balanced.range = range;
+function range(a, b, str) {
+  var begs, beg, left, right, result;
+  var ai = str.indexOf(a);
+  var bi = str.indexOf(b, ai + 1);
+  var i = ai;
+
+  if (ai >= 0 && bi > 0) {
+    if(a===b) {
+      return [ai, bi];
+    }
+    begs = [];
+    left = str.length;
+
+    while (i >= 0 && !result) {
+      if (i == ai) {
+        begs.push(i);
+        ai = str.indexOf(a, i + 1);
+      } else if (begs.length == 1) {
+        result = [ begs.pop(), bi ];
+      } else {
+        beg = begs.pop();
+        if (beg < left) {
+          left = beg;
+          right = bi;
+        }
+
+        bi = str.indexOf(b, i + 1);
+      }
+
+      i = ai < bi && ai >= 0 ? ai : bi;
+    }
+
+    if (begs.length) {
+      result = [ left, right ];
+    }
+  }
+
+  return result;
+}
+
+
+/***/ }),
+
+/***/ 850:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+var concatMap = __nccwpck_require__(891);
+var balanced = __nccwpck_require__(417);
+
+module.exports = expandTop;
+
+var escSlash = '\0SLASH'+Math.random()+'\0';
+var escOpen = '\0OPEN'+Math.random()+'\0';
+var escClose = '\0CLOSE'+Math.random()+'\0';
+var escComma = '\0COMMA'+Math.random()+'\0';
+var escPeriod = '\0PERIOD'+Math.random()+'\0';
+
+function numeric(str) {
+  return parseInt(str, 10) == str
+    ? parseInt(str, 10)
+    : str.charCodeAt(0);
+}
+
+function escapeBraces(str) {
+  return str.split('\\\\').join(escSlash)
+            .split('\\{').join(escOpen)
+            .split('\\}').join(escClose)
+            .split('\\,').join(escComma)
+            .split('\\.').join(escPeriod);
+}
+
+function unescapeBraces(str) {
+  return str.split(escSlash).join('\\')
+            .split(escOpen).join('{')
+            .split(escClose).join('}')
+            .split(escComma).join(',')
+            .split(escPeriod).join('.');
+}
+
+
+// Basically just str.split(","), but handling cases
+// where we have nested braced sections, which should be
+// treated as individual members, like {a,{b,c},d}
+function parseCommaParts(str) {
+  if (!str)
+    return [''];
+
+  var parts = [];
+  var m = balanced('{', '}', str);
+
+  if (!m)
+    return str.split(',');
+
+  var pre = m.pre;
+  var body = m.body;
+  var post = m.post;
+  var p = pre.split(',');
+
+  p[p.length-1] += '{' + body + '}';
+  var postParts = parseCommaParts(post);
+  if (post.length) {
+    p[p.length-1] += postParts.shift();
+    p.push.apply(p, postParts);
+  }
+
+  parts.push.apply(parts, p);
+
+  return parts;
+}
+
+function expandTop(str) {
+  if (!str)
+    return [];
+
+  // I don't know why Bash 4.3 does this, but it does.
+  // Anything starting with {} will have the first two bytes preserved
+  // but *only* at the top level, so {},a}b will not expand to anything,
+  // but a{},b}c will be expanded to [a}c,abc].
+  // One could argue that this is a bug in Bash, but since the goal of
+  // this module is to match Bash's rules, we escape a leading {}
+  if (str.substr(0, 2) === '{}') {
+    str = '\\{\\}' + str.substr(2);
+  }
+
+  return expand(escapeBraces(str), true).map(unescapeBraces);
+}
+
+function identity(e) {
+  return e;
+}
+
+function embrace(str) {
+  return '{' + str + '}';
+}
+function isPadded(el) {
+  return /^-?0\d/.test(el);
+}
+
+function lte(i, y) {
+  return i <= y;
+}
+function gte(i, y) {
+  return i >= y;
+}
+
+function expand(str, isTop) {
+  var expansions = [];
+
+  var m = balanced('{', '}', str);
+  if (!m || /\$$/.test(m.pre)) return [str];
+
+  var isNumericSequence = /^-?\d+\.\.-?\d+(?:\.\.-?\d+)?$/.test(m.body);
+  var isAlphaSequence = /^[a-zA-Z]\.\.[a-zA-Z](?:\.\.-?\d+)?$/.test(m.body);
+  var isSequence = isNumericSequence || isAlphaSequence;
+  var isOptions = m.body.indexOf(',') >= 0;
+  if (!isSequence && !isOptions) {
+    // {a},b}
+    if (m.post.match(/,.*\}/)) {
+      str = m.pre + '{' + m.body + escClose + m.post;
+      return expand(str);
+    }
+    return [str];
+  }
+
+  var n;
+  if (isSequence) {
+    n = m.body.split(/\.\./);
+  } else {
+    n = parseCommaParts(m.body);
+    if (n.length === 1) {
+      // x{{a,b}}y ==> x{a}y x{b}y
+      n = expand(n[0], false).map(embrace);
+      if (n.length === 1) {
+        var post = m.post.length
+          ? expand(m.post, false)
+          : [''];
+        return post.map(function(p) {
+          return m.pre + n[0] + p;
+        });
+      }
+    }
+  }
+
+  // at this point, n is the parts, and we know it's not a comma set
+  // with a single entry.
+
+  // no need to expand pre, since it is guaranteed to be free of brace-sets
+  var pre = m.pre;
+  var post = m.post.length
+    ? expand(m.post, false)
+    : [''];
+
+  var N;
+
+  if (isSequence) {
+    var x = numeric(n[0]);
+    var y = numeric(n[1]);
+    var width = Math.max(n[0].length, n[1].length)
+    var incr = n.length == 3
+      ? Math.abs(numeric(n[2]))
+      : 1;
+    var test = lte;
+    var reverse = y < x;
+    if (reverse) {
+      incr *= -1;
+      test = gte;
+    }
+    var pad = n.some(isPadded);
+
+    N = [];
+
+    for (var i = x; test(i, y); i += incr) {
+      var c;
+      if (isAlphaSequence) {
+        c = String.fromCharCode(i);
+        if (c === '\\')
+          c = '';
+      } else {
+        c = String(i);
+        if (pad) {
+          var need = width - c.length;
+          if (need > 0) {
+            var z = new Array(need + 1).join('0');
+            if (i < 0)
+              c = '-' + z + c.slice(1);
+            else
+              c = z + c;
+          }
+        }
+      }
+      N.push(c);
+    }
+  } else {
+    N = concatMap(n, function(el) { return expand(el, false) });
+  }
+
+  for (var j = 0; j < N.length; j++) {
+    for (var k = 0; k < post.length; k++) {
+      var expansion = pre + N[j] + post[k];
+      if (!isTop || isSequence || expansion)
+        expansions.push(expansion);
+    }
+  }
+
+  return expansions;
+}
+
+
+
+/***/ }),
+
+/***/ 891:
+/***/ ((module) => {
+
+module.exports = function (xs, fn) {
+    var res = [];
+    for (var i = 0; i < xs.length; i++) {
+        var x = fn(xs[i], i);
+        if (isArray(x)) res.push.apply(res, x);
+        else res.push(x);
+    }
+    return res;
+};
+
+var isArray = Array.isArray || function (xs) {
+    return Object.prototype.toString.call(xs) === '[object Array]';
+};
+
+
+/***/ }),
+
+/***/ 973:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = minimatch
+minimatch.Minimatch = Minimatch
+
+var path = { sep: '/' }
+try {
+  path = __nccwpck_require__(622)
+} catch (er) {}
+
+var GLOBSTAR = minimatch.GLOBSTAR = Minimatch.GLOBSTAR = {}
+var expand = __nccwpck_require__(850)
+
+var plTypes = {
+  '!': { open: '(?:(?!(?:', close: '))[^/]*?)'},
+  '?': { open: '(?:', close: ')?' },
+  '+': { open: '(?:', close: ')+' },
+  '*': { open: '(?:', close: ')*' },
+  '@': { open: '(?:', close: ')' }
+}
+
+// any single thing other than /
+// don't need to escape / when using new RegExp()
+var qmark = '[^/]'
+
+// * => any number of characters
+var star = qmark + '*?'
+
+// ** when dots are allowed.  Anything goes, except .. and .
+// not (^ or / followed by one or two dots followed by $ or /),
+// followed by anything, any number of times.
+var twoStarDot = '(?:(?!(?:\\\/|^)(?:\\.{1,2})($|\\\/)).)*?'
+
+// not a ^ or / followed by a dot,
+// followed by anything, any number of times.
+var twoStarNoDot = '(?:(?!(?:\\\/|^)\\.).)*?'
+
+// characters that need to be escaped in RegExp.
+var reSpecials = charSet('().*{}+?[]^$\\!')
+
+// "abc" -> { a:true, b:true, c:true }
+function charSet (s) {
+  return s.split('').reduce(function (set, c) {
+    set[c] = true
+    return set
+  }, {})
+}
+
+// normalizes slashes.
+var slashSplit = /\/+/
+
+minimatch.filter = filter
+function filter (pattern, options) {
+  options = options || {}
+  return function (p, i, list) {
+    return minimatch(p, pattern, options)
+  }
+}
+
+function ext (a, b) {
+  a = a || {}
+  b = b || {}
+  var t = {}
+  Object.keys(b).forEach(function (k) {
+    t[k] = b[k]
+  })
+  Object.keys(a).forEach(function (k) {
+    t[k] = a[k]
+  })
+  return t
+}
+
+minimatch.defaults = function (def) {
+  if (!def || !Object.keys(def).length) return minimatch
+
+  var orig = minimatch
+
+  var m = function minimatch (p, pattern, options) {
+    return orig.minimatch(p, pattern, ext(def, options))
+  }
+
+  m.Minimatch = function Minimatch (pattern, options) {
+    return new orig.Minimatch(pattern, ext(def, options))
+  }
+
+  return m
+}
+
+Minimatch.defaults = function (def) {
+  if (!def || !Object.keys(def).length) return Minimatch
+  return minimatch.defaults(def).Minimatch
+}
+
+function minimatch (p, pattern, options) {
+  if (typeof pattern !== 'string') {
+    throw new TypeError('glob pattern string required')
+  }
+
+  if (!options) options = {}
+
+  // shortcut: comments match nothing.
+  if (!options.nocomment && pattern.charAt(0) === '#') {
+    return false
+  }
+
+  // "" only matches ""
+  if (pattern.trim() === '') return p === ''
+
+  return new Minimatch(pattern, options).match(p)
+}
+
+function Minimatch (pattern, options) {
+  if (!(this instanceof Minimatch)) {
+    return new Minimatch(pattern, options)
+  }
+
+  if (typeof pattern !== 'string') {
+    throw new TypeError('glob pattern string required')
+  }
+
+  if (!options) options = {}
+  pattern = pattern.trim()
+
+  // windows support: need to use /, not \
+  if (path.sep !== '/') {
+    pattern = pattern.split(path.sep).join('/')
+  }
+
+  this.options = options
+  this.set = []
+  this.pattern = pattern
+  this.regexp = null
+  this.negate = false
+  this.comment = false
+  this.empty = false
+
+  // make the set of regexps etc.
+  this.make()
+}
+
+Minimatch.prototype.debug = function () {}
+
+Minimatch.prototype.make = make
+function make () {
+  // don't do it more than once.
+  if (this._made) return
+
+  var pattern = this.pattern
+  var options = this.options
+
+  // empty patterns and comments match nothing.
+  if (!options.nocomment && pattern.charAt(0) === '#') {
+    this.comment = true
+    return
+  }
+  if (!pattern) {
+    this.empty = true
+    return
+  }
+
+  // step 1: figure out negation, etc.
+  this.parseNegate()
+
+  // step 2: expand braces
+  var set = this.globSet = this.braceExpand()
+
+  if (options.debug) this.debug = console.error
+
+  this.debug(this.pattern, set)
+
+  // step 3: now we have a set, so turn each one into a series of path-portion
+  // matching patterns.
+  // These will be regexps, except in the case of "**", which is
+  // set to the GLOBSTAR object for globstar behavior,
+  // and will not contain any / characters
+  set = this.globParts = set.map(function (s) {
+    return s.split(slashSplit)
+  })
+
+  this.debug(this.pattern, set)
+
+  // glob --> regexps
+  set = set.map(function (s, si, set) {
+    return s.map(this.parse, this)
+  }, this)
+
+  this.debug(this.pattern, set)
+
+  // filter out everything that didn't compile properly.
+  set = set.filter(function (s) {
+    return s.indexOf(false) === -1
+  })
+
+  this.debug(this.pattern, set)
+
+  this.set = set
+}
+
+Minimatch.prototype.parseNegate = parseNegate
+function parseNegate () {
+  var pattern = this.pattern
+  var negate = false
+  var options = this.options
+  var negateOffset = 0
+
+  if (options.nonegate) return
+
+  for (var i = 0, l = pattern.length
+    ; i < l && pattern.charAt(i) === '!'
+    ; i++) {
+    negate = !negate
+    negateOffset++
+  }
+
+  if (negateOffset) this.pattern = pattern.substr(negateOffset)
+  this.negate = negate
+}
+
+// Brace expansion:
+// a{b,c}d -> abd acd
+// a{b,}c -> abc ac
+// a{0..3}d -> a0d a1d a2d a3d
+// a{b,c{d,e}f}g -> abg acdfg acefg
+// a{b,c}d{e,f}g -> abdeg acdeg abdeg abdfg
+//
+// Invalid sets are not expanded.
+// a{2..}b -> a{2..}b
+// a{b}c -> a{b}c
+minimatch.braceExpand = function (pattern, options) {
+  return braceExpand(pattern, options)
+}
+
+Minimatch.prototype.braceExpand = braceExpand
+
+function braceExpand (pattern, options) {
+  if (!options) {
+    if (this instanceof Minimatch) {
+      options = this.options
+    } else {
+      options = {}
+    }
+  }
+
+  pattern = typeof pattern === 'undefined'
+    ? this.pattern : pattern
+
+  if (typeof pattern === 'undefined') {
+    throw new TypeError('undefined pattern')
+  }
+
+  if (options.nobrace ||
+    !pattern.match(/\{.*\}/)) {
+    // shortcut. no need to expand.
+    return [pattern]
+  }
+
+  return expand(pattern)
+}
+
+// parse a component of the expanded set.
+// At this point, no pattern may contain "/" in it
+// so we're going to return a 2d array, where each entry is the full
+// pattern, split on '/', and then turned into a regular expression.
+// A regexp is made at the end which joins each array with an
+// escaped /, and another full one which joins each regexp with |.
+//
+// Following the lead of Bash 4.1, note that "**" only has special meaning
+// when it is the *only* thing in a path portion.  Otherwise, any series
+// of * is equivalent to a single *.  Globstar behavior is enabled by
+// default, and can be disabled by setting options.noglobstar.
+Minimatch.prototype.parse = parse
+var SUBPARSE = {}
+function parse (pattern, isSub) {
+  if (pattern.length > 1024 * 64) {
+    throw new TypeError('pattern is too long')
+  }
+
+  var options = this.options
+
+  // shortcuts
+  if (!options.noglobstar && pattern === '**') return GLOBSTAR
+  if (pattern === '') return ''
+
+  var re = ''
+  var hasMagic = !!options.nocase
+  var escaping = false
+  // ? => one single character
+  var patternListStack = []
+  var negativeLists = []
+  var stateChar
+  var inClass = false
+  var reClassStart = -1
+  var classStart = -1
+  // . and .. never match anything that doesn't start with .,
+  // even when options.dot is set.
+  var patternStart = pattern.charAt(0) === '.' ? '' // anything
+  // not (start or / followed by . or .. followed by / or end)
+  : options.dot ? '(?!(?:^|\\\/)\\.{1,2}(?:$|\\\/))'
+  : '(?!\\.)'
+  var self = this
+
+  function clearStateChar () {
+    if (stateChar) {
+      // we had some state-tracking character
+      // that wasn't consumed by this pass.
+      switch (stateChar) {
+        case '*':
+          re += star
+          hasMagic = true
+        break
+        case '?':
+          re += qmark
+          hasMagic = true
+        break
+        default:
+          re += '\\' + stateChar
+        break
+      }
+      self.debug('clearStateChar %j %j', stateChar, re)
+      stateChar = false
+    }
+  }
+
+  for (var i = 0, len = pattern.length, c
+    ; (i < len) && (c = pattern.charAt(i))
+    ; i++) {
+    this.debug('%s\t%s %s %j', pattern, i, re, c)
+
+    // skip over any that are escaped.
+    if (escaping && reSpecials[c]) {
+      re += '\\' + c
+      escaping = false
+      continue
+    }
+
+    switch (c) {
+      case '/':
+        // completely not allowed, even escaped.
+        // Should already be path-split by now.
+        return false
+
+      case '\\':
+        clearStateChar()
+        escaping = true
+      continue
+
+      // the various stateChar values
+      // for the "extglob" stuff.
+      case '?':
+      case '*':
+      case '+':
+      case '@':
+      case '!':
+        this.debug('%s\t%s %s %j <-- stateChar', pattern, i, re, c)
+
+        // all of those are literals inside a class, except that
+        // the glob [!a] means [^a] in regexp
+        if (inClass) {
+          this.debug('  in class')
+          if (c === '!' && i === classStart + 1) c = '^'
+          re += c
+          continue
+        }
+
+        // if we already have a stateChar, then it means
+        // that there was something like ** or +? in there.
+        // Handle the stateChar, then proceed with this one.
+        self.debug('call clearStateChar %j', stateChar)
+        clearStateChar()
+        stateChar = c
+        // if extglob is disabled, then +(asdf|foo) isn't a thing.
+        // just clear the statechar *now*, rather than even diving into
+        // the patternList stuff.
+        if (options.noext) clearStateChar()
+      continue
+
+      case '(':
+        if (inClass) {
+          re += '('
+          continue
+        }
+
+        if (!stateChar) {
+          re += '\\('
+          continue
+        }
+
+        patternListStack.push({
+          type: stateChar,
+          start: i - 1,
+          reStart: re.length,
+          open: plTypes[stateChar].open,
+          close: plTypes[stateChar].close
+        })
+        // negation is (?:(?!js)[^/]*)
+        re += stateChar === '!' ? '(?:(?!(?:' : '(?:'
+        this.debug('plType %j %j', stateChar, re)
+        stateChar = false
+      continue
+
+      case ')':
+        if (inClass || !patternListStack.length) {
+          re += '\\)'
+          continue
+        }
+
+        clearStateChar()
+        hasMagic = true
+        var pl = patternListStack.pop()
+        // negation is (?:(?!js)[^/]*)
+        // The others are (?:<pattern>)<type>
+        re += pl.close
+        if (pl.type === '!') {
+          negativeLists.push(pl)
+        }
+        pl.reEnd = re.length
+      continue
+
+      case '|':
+        if (inClass || !patternListStack.length || escaping) {
+          re += '\\|'
+          escaping = false
+          continue
+        }
+
+        clearStateChar()
+        re += '|'
+      continue
+
+      // these are mostly the same in regexp and glob
+      case '[':
+        // swallow any state-tracking char before the [
+        clearStateChar()
+
+        if (inClass) {
+          re += '\\' + c
+          continue
+        }
+
+        inClass = true
+        classStart = i
+        reClassStart = re.length
+        re += c
+      continue
+
+      case ']':
+        //  a right bracket shall lose its special
+        //  meaning and represent itself in
+        //  a bracket expression if it occurs
+        //  first in the list.  -- POSIX.2 2.8.3.2
+        if (i === classStart + 1 || !inClass) {
+          re += '\\' + c
+          escaping = false
+          continue
+        }
+
+        // handle the case where we left a class open.
+        // "[z-a]" is valid, equivalent to "\[z-a\]"
+        if (inClass) {
+          // split where the last [ was, make sure we don't have
+          // an invalid re. if so, re-walk the contents of the
+          // would-be class to re-translate any characters that
+          // were passed through as-is
+          // TODO: It would probably be faster to determine this
+          // without a try/catch and a new RegExp, but it's tricky
+          // to do safely.  For now, this is safe and works.
+          var cs = pattern.substring(classStart + 1, i)
+          try {
+            RegExp('[' + cs + ']')
+          } catch (er) {
+            // not a valid class!
+            var sp = this.parse(cs, SUBPARSE)
+            re = re.substr(0, reClassStart) + '\\[' + sp[0] + '\\]'
+            hasMagic = hasMagic || sp[1]
+            inClass = false
+            continue
+          }
+        }
+
+        // finish up the class.
+        hasMagic = true
+        inClass = false
+        re += c
+      continue
+
+      default:
+        // swallow any state char that wasn't consumed
+        clearStateChar()
+
+        if (escaping) {
+          // no need
+          escaping = false
+        } else if (reSpecials[c]
+          && !(c === '^' && inClass)) {
+          re += '\\'
+        }
+
+        re += c
+
+    } // switch
+  } // for
+
+  // handle the case where we left a class open.
+  // "[abc" is valid, equivalent to "\[abc"
+  if (inClass) {
+    // split where the last [ was, and escape it
+    // this is a huge pita.  We now have to re-walk
+    // the contents of the would-be class to re-translate
+    // any characters that were passed through as-is
+    cs = pattern.substr(classStart + 1)
+    sp = this.parse(cs, SUBPARSE)
+    re = re.substr(0, reClassStart) + '\\[' + sp[0]
+    hasMagic = hasMagic || sp[1]
+  }
+
+  // handle the case where we had a +( thing at the *end*
+  // of the pattern.
+  // each pattern list stack adds 3 chars, and we need to go through
+  // and escape any | chars that were passed through as-is for the regexp.
+  // Go through and escape them, taking care not to double-escape any
+  // | chars that were already escaped.
+  for (pl = patternListStack.pop(); pl; pl = patternListStack.pop()) {
+    var tail = re.slice(pl.reStart + pl.open.length)
+    this.debug('setting tail', re, pl)
+    // maybe some even number of \, then maybe 1 \, followed by a |
+    tail = tail.replace(/((?:\\{2}){0,64})(\\?)\|/g, function (_, $1, $2) {
+      if (!$2) {
+        // the | isn't already escaped, so escape it.
+        $2 = '\\'
+      }
+
+      // need to escape all those slashes *again*, without escaping the
+      // one that we need for escaping the | character.  As it works out,
+      // escaping an even number of slashes can be done by simply repeating
+      // it exactly after itself.  That's why this trick works.
+      //
+      // I am sorry that you have to see this.
+      return $1 + $1 + $2 + '|'
+    })
+
+    this.debug('tail=%j\n   %s', tail, tail, pl, re)
+    var t = pl.type === '*' ? star
+      : pl.type === '?' ? qmark
+      : '\\' + pl.type
+
+    hasMagic = true
+    re = re.slice(0, pl.reStart) + t + '\\(' + tail
+  }
+
+  // handle trailing things that only matter at the very end.
+  clearStateChar()
+  if (escaping) {
+    // trailing \\
+    re += '\\\\'
+  }
+
+  // only need to apply the nodot start if the re starts with
+  // something that could conceivably capture a dot
+  var addPatternStart = false
+  switch (re.charAt(0)) {
+    case '.':
+    case '[':
+    case '(': addPatternStart = true
+  }
+
+  // Hack to work around lack of negative lookbehind in JS
+  // A pattern like: *.!(x).!(y|z) needs to ensure that a name
+  // like 'a.xyz.yz' doesn't match.  So, the first negative
+  // lookahead, has to look ALL the way ahead, to the end of
+  // the pattern.
+  for (var n = negativeLists.length - 1; n > -1; n--) {
+    var nl = negativeLists[n]
+
+    var nlBefore = re.slice(0, nl.reStart)
+    var nlFirst = re.slice(nl.reStart, nl.reEnd - 8)
+    var nlLast = re.slice(nl.reEnd - 8, nl.reEnd)
+    var nlAfter = re.slice(nl.reEnd)
+
+    nlLast += nlAfter
+
+    // Handle nested stuff like *(*.js|!(*.json)), where open parens
+    // mean that we should *not* include the ) in the bit that is considered
+    // "after" the negated section.
+    var openParensBefore = nlBefore.split('(').length - 1
+    var cleanAfter = nlAfter
+    for (i = 0; i < openParensBefore; i++) {
+      cleanAfter = cleanAfter.replace(/\)[+*?]?/, '')
+    }
+    nlAfter = cleanAfter
+
+    var dollar = ''
+    if (nlAfter === '' && isSub !== SUBPARSE) {
+      dollar = '$'
+    }
+    var newRe = nlBefore + nlFirst + nlAfter + dollar + nlLast
+    re = newRe
+  }
+
+  // if the re is not "" at this point, then we need to make sure
+  // it doesn't match against an empty path part.
+  // Otherwise a/* will match a/, which it should not.
+  if (re !== '' && hasMagic) {
+    re = '(?=.)' + re
+  }
+
+  if (addPatternStart) {
+    re = patternStart + re
+  }
+
+  // parsing just a piece of a larger pattern.
+  if (isSub === SUBPARSE) {
+    return [re, hasMagic]
+  }
+
+  // skip the regexp for non-magical patterns
+  // unescape anything in it, though, so that it'll be
+  // an exact match against a file etc.
+  if (!hasMagic) {
+    return globUnescape(pattern)
+  }
+
+  var flags = options.nocase ? 'i' : ''
+  try {
+    var regExp = new RegExp('^' + re + '$', flags)
+  } catch (er) {
+    // If it was an invalid regular expression, then it can't match
+    // anything.  This trick looks for a character after the end of
+    // the string, which is of course impossible, except in multi-line
+    // mode, but it's not a /m regex.
+    return new RegExp('$.')
+  }
+
+  regExp._glob = pattern
+  regExp._src = re
+
+  return regExp
+}
+
+minimatch.makeRe = function (pattern, options) {
+  return new Minimatch(pattern, options || {}).makeRe()
+}
+
+Minimatch.prototype.makeRe = makeRe
+function makeRe () {
+  if (this.regexp || this.regexp === false) return this.regexp
+
+  // at this point, this.set is a 2d array of partial
+  // pattern strings, or "**".
+  //
+  // It's better to use .match().  This function shouldn't
+  // be used, really, but it's pretty convenient sometimes,
+  // when you just want to work with a regex.
+  var set = this.set
+
+  if (!set.length) {
+    this.regexp = false
+    return this.regexp
+  }
+  var options = this.options
+
+  var twoStar = options.noglobstar ? star
+    : options.dot ? twoStarDot
+    : twoStarNoDot
+  var flags = options.nocase ? 'i' : ''
+
+  var re = set.map(function (pattern) {
+    return pattern.map(function (p) {
+      return (p === GLOBSTAR) ? twoStar
+      : (typeof p === 'string') ? regExpEscape(p)
+      : p._src
+    }).join('\\\/')
+  }).join('|')
+
+  // must match entire pattern
+  // ending in a * or ** will make it less strict.
+  re = '^(?:' + re + ')$'
+
+  // can match anything, as long as it's not this.
+  if (this.negate) re = '^(?!' + re + ').*$'
+
+  try {
+    this.regexp = new RegExp(re, flags)
+  } catch (ex) {
+    this.regexp = false
+  }
+  return this.regexp
+}
+
+minimatch.match = function (list, pattern, options) {
+  options = options || {}
+  var mm = new Minimatch(pattern, options)
+  list = list.filter(function (f) {
+    return mm.match(f)
+  })
+  if (mm.options.nonull && !list.length) {
+    list.push(pattern)
+  }
+  return list
+}
+
+Minimatch.prototype.match = match
+function match (f, partial) {
+  this.debug('match', f, this.pattern)
+  // short-circuit in the case of busted things.
+  // comments, etc.
+  if (this.comment) return false
+  if (this.empty) return f === ''
+
+  if (f === '/' && partial) return true
+
+  var options = this.options
+
+  // windows: need to use /, not \
+  if (path.sep !== '/') {
+    f = f.split(path.sep).join('/')
+  }
+
+  // treat the test path as a set of pathparts.
+  f = f.split(slashSplit)
+  this.debug(this.pattern, 'split', f)
+
+  // just ONE of the pattern sets in this.set needs to match
+  // in order for it to be valid.  If negating, then just one
+  // match means that we have failed.
+  // Either way, return on the first hit.
+
+  var set = this.set
+  this.debug(this.pattern, 'set', set)
+
+  // Find the basename of the path by looking for the last non-empty segment
+  var filename
+  var i
+  for (i = f.length - 1; i >= 0; i--) {
+    filename = f[i]
+    if (filename) break
+  }
+
+  for (i = 0; i < set.length; i++) {
+    var pattern = set[i]
+    var file = f
+    if (options.matchBase && pattern.length === 1) {
+      file = [filename]
+    }
+    var hit = this.matchOne(file, pattern, partial)
+    if (hit) {
+      if (options.flipNegate) return true
+      return !this.negate
+    }
+  }
+
+  // didn't get any hits.  this is success if it's a negative
+  // pattern, failure otherwise.
+  if (options.flipNegate) return false
+  return this.negate
+}
+
+// set partial to true to test if, for example,
+// "/a/b" matches the start of "/*/b/*/d"
+// Partial means, if you run out of file before you run
+// out of pattern, then that's fine, as long as all
+// the parts match.
+Minimatch.prototype.matchOne = function (file, pattern, partial) {
+  var options = this.options
+
+  this.debug('matchOne',
+    { 'this': this, file: file, pattern: pattern })
+
+  this.debug('matchOne', file.length, pattern.length)
+
+  for (var fi = 0,
+      pi = 0,
+      fl = file.length,
+      pl = pattern.length
+      ; (fi < fl) && (pi < pl)
+      ; fi++, pi++) {
+    this.debug('matchOne loop')
+    var p = pattern[pi]
+    var f = file[fi]
+
+    this.debug(pattern, p, f)
+
+    // should be impossible.
+    // some invalid regexp stuff in the set.
+    if (p === false) return false
+
+    if (p === GLOBSTAR) {
+      this.debug('GLOBSTAR', [pattern, p, f])
+
+      // "**"
+      // a/**/b/**/c would match the following:
+      // a/b/x/y/z/c
+      // a/x/y/z/b/c
+      // a/b/x/b/x/c
+      // a/b/c
+      // To do this, take the rest of the pattern after
+      // the **, and see if it would match the file remainder.
+      // If so, return success.
+      // If not, the ** "swallows" a segment, and try again.
+      // This is recursively awful.
+      //
+      // a/**/b/**/c matching a/b/x/y/z/c
+      // - a matches a
+      // - doublestar
+      //   - matchOne(b/x/y/z/c, b/**/c)
+      //     - b matches b
+      //     - doublestar
+      //       - matchOne(x/y/z/c, c) -> no
+      //       - matchOne(y/z/c, c) -> no
+      //       - matchOne(z/c, c) -> no
+      //       - matchOne(c, c) yes, hit
+      var fr = fi
+      var pr = pi + 1
+      if (pr === pl) {
+        this.debug('** at the end')
+        // a ** at the end will just swallow the rest.
+        // We have found a match.
+        // however, it will not swallow /.x, unless
+        // options.dot is set.
+        // . and .. are *never* matched by **, for explosively
+        // exponential reasons.
+        for (; fi < fl; fi++) {
+          if (file[fi] === '.' || file[fi] === '..' ||
+            (!options.dot && file[fi].charAt(0) === '.')) return false
+        }
+        return true
+      }
+
+      // ok, let's see if we can swallow whatever we can.
+      while (fr < fl) {
+        var swallowee = file[fr]
+
+        this.debug('\nglobstar while', file, fr, pattern, pr, swallowee)
+
+        // XXX remove this slice.  Just pass the start index.
+        if (this.matchOne(file.slice(fr), pattern.slice(pr), partial)) {
+          this.debug('globstar found match!', fr, fl, swallowee)
+          // found a match.
+          return true
+        } else {
+          // can't swallow "." or ".." ever.
+          // can only swallow ".foo" when explicitly asked.
+          if (swallowee === '.' || swallowee === '..' ||
+            (!options.dot && swallowee.charAt(0) === '.')) {
+            this.debug('dot detected!', file, fr, pattern, pr)
+            break
+          }
+
+          // ** swallows a segment, and continue.
+          this.debug('globstar swallow a segment, and continue')
+          fr++
+        }
+      }
+
+      // no match was found.
+      // However, in partial mode, we can't say this is necessarily over.
+      // If there's more *pattern* left, then
+      if (partial) {
+        // ran out of file
+        this.debug('\n>>> no match, partial?', file, fr, pattern, pr)
+        if (fr === fl) return true
+      }
+      return false
+    }
+
+    // something other than **
+    // non-magic patterns just have to match exactly
+    // patterns with magic have been turned into regexps.
+    var hit
+    if (typeof p === 'string') {
+      if (options.nocase) {
+        hit = f.toLowerCase() === p.toLowerCase()
+      } else {
+        hit = f === p
+      }
+      this.debug('string match', p, f, hit)
+    } else {
+      hit = f.match(p)
+      this.debug('pattern match', p, f, hit)
+    }
+
+    if (!hit) return false
+  }
+
+  // Note: ending in / means that we'll get a final ""
+  // at the end of the pattern.  This can only match a
+  // corresponding "" at the end of the file.
+  // If the file ends in /, then it can only match a
+  // a pattern that ends in /, unless the pattern just
+  // doesn't have any more for it. But, a/b/ should *not*
+  // match "a/b/*", even though "" matches against the
+  // [^/]*? pattern, except in partial mode, where it might
+  // simply not be reached yet.
+  // However, a/b/ should still satisfy a/*
+
+  // now either we fell off the end of the pattern, or we're done.
+  if (fi === fl && pi === pl) {
+    // ran out of pattern and filename at the same time.
+    // an exact hit!
+    return true
+  } else if (fi === fl) {
+    // ran out of file, but still had pattern left.
+    // this is ok if we're doing the match as part of
+    // a glob fs traversal.
+    return partial
+  } else if (pi === pl) {
+    // ran out of pattern, still have file left.
+    // this is only acceptable if we're on the very last
+    // empty segment of a file with a trailing slash.
+    // a/* should match a/b/
+    var emptyFileEnd = (fi === fl - 1) && (file[fi] === '')
+    return emptyFileEnd
+  }
+
+  // should be unreachable.
+  throw new Error('wtf?')
+}
+
+// replace stuff like \* with *
+function globUnescape (s) {
+  return s.replace(/\\(.)/g, '$1')
+}
+
+function regExpEscape (s) {
+  return s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
+}
+
+
+/***/ }),
+
+/***/ 357:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("assert");;
+
+/***/ }),
+
+/***/ 747:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("fs");;
+
+/***/ }),
+
+/***/ 87:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("os");;
+
+/***/ }),
+
+/***/ 622:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("path");;
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __nccwpck_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		var threw = true;
+/******/ 		try {
+/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
+/******/ 			threw = false;
+/******/ 		} finally {
+/******/ 			if(threw) delete __webpack_module_cache__[moduleId];
+/******/ 		}
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__nccwpck_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__nccwpck_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__nccwpck_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__nccwpck_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/compat */
+/******/ 	
+/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+__nccwpck_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(186);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _actions_glob__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(90);
+/* harmony import */ var _actions_glob__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_glob__WEBPACK_IMPORTED_MODULE_1__);
+
+
+(async () => {
+    const _directories = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('directories', { trimWhitespace: true }) ?? '';
+    const accessKey = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('access-key', { trimWhitespace: true }) ?? '';
+    const secretKey = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('secret-key', { trimWhitespace: true }) ?? '';
+    const useWasabi = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('use-wasabi', { trimWhitespace: true });
+    const region = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('region', { trimWhitespace: true }) ?? 'us-east-1';
+    const bucketName = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('bucket', { trimWhitespace: true }) ?? '';
+    if (_directories === '' ||
+        accessKey === '' ||
+        secretKey === '' ||
+        bucketName === '') {
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed('Missing one or more configuration inputs: `directories`, `accessKey`, `secretKey`, `bucket`.');
+        return;
+    }
+    const directories = _directories.split(';');
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(`Using Wasabi: ${useWasabi ? 'Yes' : 'No'}`);
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(`Directories : ${directories.join(', ')}`);
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(`Region:     : ${region}`);
+    for (let i = 0; i < directories.length; i++) {
+        const globber = await _actions_glob__WEBPACK_IMPORTED_MODULE_1__.create(directories[i]);
+        console.log(globber);
+    }
+})();
+
+})();
+
+module.exports = __webpack_exports__;
+/******/ })()
+;

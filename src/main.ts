@@ -25,7 +25,7 @@ import * as glob from '@actions/glob';
   const _directories = core.getInput('directories', { trimWhitespace: true }) ?? '';
   const accessKey   = core.getInput('access-key',  { trimWhitespace: true }) ?? '';
   const secretKey   = core.getInput('secret-key',  { trimWhitespace: true }) ?? '';
-  const useWasabi   = core.getBooleanInput('use-wasabi', { trimWhitespace: true });
+  const useWasabi   = core.getInput('use-wasabi', { trimWhitespace: true });
   const region      = core.getInput('region', { trimWhitespace: true }) ?? 'us-east-1';
   const bucketName  = core.getInput('bucket', { trimWhitespace: true }) ?? '';
 
@@ -36,6 +36,7 @@ import * as glob from '@actions/glob';
     bucketName === ''
   ) {
     core.setFailed('Missing one or more configuration inputs: `directories`, `accessKey`, `secretKey`, `bucket`.');
+    return;
   }
 
   const directories = _directories.split(';');
