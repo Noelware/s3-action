@@ -22,6 +22,29 @@ import * as core from '@actions/core';
 import * as glob from '@actions/glob';
 
 (async() => {
-  console.log(core);
-  console.log(glob);
+  const _directories = core.getInput('directories', { trimWhitespace: true }) ?? '';
+  const accessKey   = core.getInput('access-key',  { trimWhitespace: true }) ?? '';
+  const secretKey   = core.getInput('secret-key',  { trimWhitespace: true }) ?? '';
+  const useWasabi   = core.getBooleanInput('use-wasabi', { trimWhitespace: true });
+  const region      = core.getInput('region', { trimWhitespace: true }) ?? 'us-east-1';
+  const bucketName  = core.getInput('bucket', { trimWhitespace: true }) ?? '';
+
+  if (
+    _directories === '' ||
+    accessKey === '' ||
+    secretKey === '' ||
+    bucketName === ''
+  ) {
+    core.setFailed('Missing one or more configuration inputs: `directories`, `accessKey`, `secretKey`, `bucket`.');
+  }
+
+  const directories = _directories.split(';');
+  core.debug(`Using Wasabi: ${useWasabi ? 'Yes' : 'No'}`);
+  core.debug(`Directories : ${directories.join(', ')}`);
+  core.debug(`Region:     : ${region}`);
+
+  for (let i = 0; i < directories.length; i++) {
+    const globber = await glob.create(directories[i]);
+    console.log(globber);
+  }
 })();

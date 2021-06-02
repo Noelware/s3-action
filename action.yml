@@ -1,5 +1,11 @@
 name: 'S3 Uploader for GitHub Actions'
 description: 'Simple GitHub action to upload contents from a GitHub repository to a S3 bucket'
+author: 'Noelware'
+
+branding:
+  icon: 'zap'
+  color: 'purple'
+
 runs:
   using: 'node12'
   main: './build/index.js'
