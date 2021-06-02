@@ -18,8 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import * as core from '@octokit/core';
+import * as core from '@actions/core';
+import * as glob from '@actions/glob';
 
 (async() => {
   console.log(core);
+  console.log(glob);
 })();

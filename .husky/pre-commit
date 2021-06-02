@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo '[s3-gh-action] Running ESLint...'
+eslint src --ext .ts
+
+echo '[s3-gh-action] Can the project be compiled?'
+tsc --noEmit
