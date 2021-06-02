@@ -2873,12 +2873,12 @@ __nccwpck_require__.r(__webpack_exports__);
 
 
 (async () => {
-    const _directories = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('directories', { trimWhitespace: true }) ?? '';
-    const accessKey = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('access-key', { trimWhitespace: true }) ?? '';
-    const secretKey = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('secret-key', { trimWhitespace: true }) ?? '';
+    const _directories = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('directories', { trimWhitespace: true }) || '';
+    const accessKey = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('access-key', { trimWhitespace: true }) || '';
+    const secretKey = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('secret-key', { trimWhitespace: true }) || '';
     const useWasabi = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('use-wasabi', { trimWhitespace: true });
-    const region = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('region', { trimWhitespace: true }) ?? 'us-east-1';
-    const bucketName = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('bucket', { trimWhitespace: true }) ?? '';
+    const region = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('region', { trimWhitespace: true }) || 'us-east-1';
+    const bucketName = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('bucket', { trimWhitespace: true }) || '';
     if (_directories === '' ||
         accessKey === '' ||
         secretKey === '' ||

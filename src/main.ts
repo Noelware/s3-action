@@ -22,12 +22,12 @@ import * as core from '@actions/core';
 import * as glob from '@actions/glob';
 
 (async() => {
-  const _directories = core.getInput('directories', { trimWhitespace: true }) ?? '';
-  const accessKey   = core.getInput('access-key',  { trimWhitespace: true }) ?? '';
-  const secretKey   = core.getInput('secret-key',  { trimWhitespace: true }) ?? '';
+  const _directories = core.getInput('directories', { trimWhitespace: true }) || '';
+  const accessKey   = core.getInput('access-key',  { trimWhitespace: true }) || '';
+  const secretKey   = core.getInput('secret-key',  { trimWhitespace: true }) || '';
   const useWasabi   = core.getInput('use-wasabi', { trimWhitespace: true });
-  const region      = core.getInput('region', { trimWhitespace: true }) ?? 'us-east-1';
-  const bucketName  = core.getInput('bucket', { trimWhitespace: true }) ?? '';
+  const region      = core.getInput('region', { trimWhitespace: true }) || 'us-east-1';
+  const bucketName  = core.getInput('bucket', { trimWhitespace: true }) || '';
 
   if (
     _directories === '' ||
