@@ -55,15 +55,20 @@ import S3 from './s3-client';
 
   try {
     await s3.verifyBucket();
+    core.info('Setup S3 client, now globbing over directories...');
   } catch(ex) {
     core.setFailed(`Unable to verify S3: ${ex.message}`);
     return;
   }
 
-  // for (let i = 0; i < directories.length; i++) {
-  //   const globber = await glob.create(directories[i]);
-  //   const files = await globber.glob();
+  for (let i = 0; i < directories.length; i++) {
+    const globber = await glob.create(directories[i]);
+    const files = await globber.glob();
 
-  //   core.info(`Found ${files.length} files to upload...`);
-  // }
+    core.info(`Found ${files.length} files to upload...`);
+    for (let f = 0; f < files.length; f++) {
+      const file = files[f];
+      core.info(`[${f + 1}/${files.length}] ${file}`);
+    }
+  }
 })();

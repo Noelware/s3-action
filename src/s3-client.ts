@@ -20,6 +20,7 @@
 
 import { S3Client, ListBucketsCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import type { Provider, Credentials } from '@aws-sdk/types';
+import type { Readable } from 'stream';
 import * as core from '@actions/core';
 
 /**
@@ -71,5 +72,20 @@ export default class S3 {
     const hasBucket = result.Buckets.find(bucket => bucket.Name !== undefined && bucket.Name === this.bucket);
     if (!hasBucket)
       throw new TypeError(`Bucket "${this.bucket}" was not found. Did you provide the right region?`);
+  }
+
+  async upload(
+    objectName: string,
+    stream: Readable
+  ) {
+    core.info(`Uploading object "${objectName}"...`);
+
+    await this.client.send(new PutObjectCommand({
+      Bucket: this.bucket,
+      Body: stream,
+      Key: objectName
+    }));
+
+    core.info(`Uploaded object "${objectName}"`);
   }
 }

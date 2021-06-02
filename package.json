@@ -8,7 +8,7 @@
   "bugs": "https://github.com/Noelware/s3-gh-action/issues",
   "scripts": {
     "install:husky": "husky install",
-    "build": "npm run lint && rm -rf build && ncc build src/main.ts -o build -C --license LICENSE",
+    "build": "npm run lint && rm -rf build && ncc build src/main.ts -o build -m -C --license LICENSE",
     "lint": "eslint src --ext .ts --fix"
   },
   "dependencies": {
