@@ -17,3 +17,59 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+import { S3Client, ListBucketsCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import type { Provider, Credentials } from '@aws-sdk/types';
+import * as core from '@actions/core';
+
+/**
+ * Represents an abstraction class for `S3Client` which handles uploading
+ * parts to S3.
+ */
+export default class S3 {
+  private client: S3Client;
+
+  constructor(
+    private accessKey: string,
+    private secretKey: string,
+    private bucket:    string,
+    private useWasabi: boolean = true,
+    private region:    string = 'us-east-1'
+  ) {
+    this.client = this.createS3Client();
+  }
+
+  /**
+   * Creates the S3 client
+   */
+  private createS3Client() {
+    core.debug('Creating S3 client...');
+
+    // I wish I didn't have to do this, but it's what I got to do
+    const defaultCredentialsProvider = (): Provider<Credentials> => () => Promise.resolve({
+      secretAccessKey: this.secretKey,
+      accessKeyId: this.accessKey
+    });
+
+    const endpointOverride = this.useWasabi ? 'https://s3.wasabisys.com' : '';
+
+    core.debug(`Created S3 client${endpointOverride !== '' ? ', with Wasabi!' : '.'}`);
+    return new S3Client({
+      credentialDefaultProvider: defaultCredentialsProvider,
+      endpoint: endpointOverride,
+      region: this.region
+    });
+  }
+
+  async verifyBucket() {
+    core.debug(`Verifying bucket ${this.bucket}...`);
+
+    const result = await this.client.send(new ListBucketsCommand({}));
+    if (result.Buckets === undefined)
+      throw new TypeError('Malformed data from S3 didn\'t provide buckets (or you didn\'t create any)');
+
+    const hasBucket = result.Buckets.find(bucket => bucket.Name !== undefined && bucket.Name === this.bucket);
+    if (!hasBucket)
+      throw new TypeError(`Bucket "${this.bucket}" was not found. Did you provide the right region?`);
+  }
+}

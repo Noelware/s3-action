@@ -20,12 +20,13 @@
 
 import * as core from '@actions/core';
 import * as glob from '@actions/glob';
+import S3 from './s3-client';
 
 (async() => {
   const _directories = core.getInput('directories', { trimWhitespace: true }) || '';
   const accessKey   = core.getInput('access-key',  { trimWhitespace: true }) || '';
   const secretKey   = core.getInput('secret-key',  { trimWhitespace: true }) || '';
-  const useWasabi   = core.getInput('use-wasabi', { trimWhitespace: true });
+  const useWasabi   = Boolean(core.getInput('use-wasabi', { trimWhitespace: true }) || 'true');
   const region      = core.getInput('region', { trimWhitespace: true }) || 'us-east-1';
   const bucketName  = core.getInput('bucket', { trimWhitespace: true }) || '';
 
@@ -44,8 +45,25 @@ import * as glob from '@actions/glob';
   core.debug(`Directories : ${directories.join(', ')}`);
   core.debug(`Region:     : ${region}`);
 
-  for (let i = 0; i < directories.length; i++) {
-    const globber = await glob.create(directories[i]);
-    console.log(globber);
+  const s3 = new S3(
+    accessKey,
+    secretKey,
+    bucketName,
+    useWasabi,
+    region
+  );
+
+  try {
+    await s3.verifyBucket();
+  } catch(ex) {
+    core.setFailed(`Unable to verify S3: ${ex.message}`);
+    return;
   }
+
+  // for (let i = 0; i < directories.length; i++) {
+  //   const globber = await glob.create(directories[i]);
+  //   const files = await globber.glob();
+
+  //   core.info(`Found ${files.length} files to upload...`);
+  // }
 })();
