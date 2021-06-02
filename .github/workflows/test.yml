@@ -19,4 +19,4 @@ jobs:
           access-key: ${{ secrets.S3_ACCESS_KEY }}
           secret-key: ${{ secrets.S3_SECRET_KEY }}
           use-wasabi: 'true'
-          bucket: s3-test
+          bucket: s3-test-pls
