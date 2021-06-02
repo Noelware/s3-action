@@ -2,7 +2,7 @@ name: 'S3 Uploader for GitHub Actions'
 description: 'Simple GitHub action to upload contents from a GitHub repository to a S3 bucket'
 runs:
   using: 'node12'
-  main: './build/main.js'
+  main: './build/index.js'
 
 inputs:
   directories:
@@ -16,6 +16,16 @@ inputs:
   secret-key:
     description: 'Your S3 secret key to use to authenicate'
     required: true
+
+  use-wasabi:
+    description: 'Uses Wasabi internal servers instead of Amazon internal servers.'
+    required: false
+    default: 'false'
+
+  region:
+    description: 'Sets the region of the S3 bucket that it is located in'
+    required: false
+    default: 'us-east-1'
 
   bucket:
     description: 'The bucket to use when uploading objects'
