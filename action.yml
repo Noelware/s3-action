@@ -12,7 +12,7 @@ runs:
 
 inputs:
   directories:
-    description: 'List of directories to use, glob patterns are supported.'
+    description: 'List of directories to use, glob patterns are supported, use `;` to seperate'
     required: true
 
   access-key:
@@ -27,6 +27,11 @@ inputs:
     description: 'Uses Wasabi internal servers instead of Amazon internal servers.'
     required: false
     default: 'false'
+
+  exclude:
+    description: 'Excludes any directories to not be uploaded, glob patterns are supported, use `;` to seperate'
+    required: false
+    default: ''
 
   region:
     description: 'Sets the region of the S3 bucket that it is located in'

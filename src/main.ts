@@ -20,15 +20,34 @@
 
 import * as core from '@actions/core';
 import * as glob from '@actions/glob';
+import { lstat } from 'fs/promises';
 import S3 from './s3-client';
 
+const overwriteLogger = () => {
+  const originalCoreLog = core.info;
+  const originalCoreDebug = core.debug;
+
+  // @ts-expect-error I know I'm not supposed to do this but whatever
+  core.info = (message: string) => {
+    return originalCoreLog(`[${new Date().toTimeString()}] ${message}`);
+  };
+
+  // @ts-expect-error I know I'm not supposed to do this but whatever
+  core.debug = (message: string) => {
+    return originalCoreDebug(`[${new Date().toTimeString()}] ${message}`);
+  };
+};
+
 (async() => {
+  overwriteLogger();
+
   const _directories = core.getInput('directories', { trimWhitespace: true }) || '';
   const accessKey   = core.getInput('access-key',  { trimWhitespace: true }) || '';
   const secretKey   = core.getInput('secret-key',  { trimWhitespace: true }) || '';
   const useWasabi   = Boolean(core.getInput('use-wasabi', { trimWhitespace: true }) || 'true');
   const region      = core.getInput('region', { trimWhitespace: true }) || 'us-east-1';
   const bucketName  = core.getInput('bucket', { trimWhitespace: true }) || '';
+  const _excludeDirs = core.getInput('exclude', { trimWhitespace: true }) || '';
 
   if (
     _directories === '' ||
@@ -41,9 +60,12 @@ import S3 from './s3-client';
   }
 
   const directories = _directories.split(';');
-  core.debug(`Using Wasabi: ${useWasabi ? 'Yes' : 'No'}`);
-  core.debug(`Directories : ${directories.join(', ')}`);
-  core.debug(`Region:     : ${region}`);
+  const exclude = _directories.split(';');
+
+  core.info(`Exclude Dirs: ${exclude.join(', ')}`);
+  core.info(`Using Wasabi: ${useWasabi ? 'Yes' : 'No'}`);
+  core.info(`Directories : ${directories.join(', ')}`);
+  core.info(`Region:     : ${region}`);
 
   const s3 = new S3(
     accessKey,
@@ -61,6 +83,15 @@ import S3 from './s3-client';
     return;
   }
 
+  let shouldExclude: string[] = [];
+
+  for (let i = 0; i < exclude.length; i++) {
+    const globber = await glob.create(exclude[i]);
+    const files = await globber.glob();
+
+    shouldExclude = shouldExclude.concat(files);
+  }
+
   for (let i = 0; i < directories.length; i++) {
     const globber = await glob.create(directories[i]);
     const files = await globber.glob();
@@ -68,7 +99,17 @@ import S3 from './s3-client';
     core.info(`Found ${files.length} files to upload...`);
     for (let f = 0; f < files.length; f++) {
       const file = files[f];
-      core.info(`[${f + 1}/${files.length}] ${file}`);
+      const stats = await lstat(file);
+
+      // Skip on excluded dirs / files
+      if (shouldExclude.includes(file))
+        continue;
+
+      // Skip on directories
+      if (stats.isDirectory())
+        continue;
+
+      console.log(file);
     }
   }
 })();
