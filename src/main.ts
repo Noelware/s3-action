@@ -33,7 +33,7 @@ const overwriteLogger = () => {
     const date = new Date();
     const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
 
-    return originalCoreLog(`[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(-2)} ${ampm}] ${message} ${message}`);
+    return originalCoreLog(`[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(-2)} ${ampm}] ${message}`);
   };
 
   // @ts-expect-error I know I'm not supposed to do this but whatever
