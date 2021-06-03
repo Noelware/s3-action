@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { lstat as _lstat } from 'fs';
+import { createReadStream, lstat as _lstat } from 'fs';
 import { promisify } from 'util';
 import * as core from '@actions/core';
 import * as glob from '@actions/glob';
@@ -31,13 +31,17 @@ const overwriteLogger = () => {
   // @ts-expect-error I know I'm not supposed to do this but whatever
   core.info = (message: string) => {
     const date = new Date();
-    return originalCoreLog(`[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(-2)}] ${message} ${message}`);
+    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
+
+    return originalCoreLog(`[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(-2)} ${ampm}] ${message} ${message}`);
   };
 
   // @ts-expect-error I know I'm not supposed to do this but whatever
   core.debug = (message: string) => {
     const date = new Date();
-    return originalCoreDebug(`[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(-2)}] ${message}`);
+    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
+
+    return originalCoreDebug(`[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(-2)} ${ampm}] ${message}`);
   };
 };
 
@@ -109,5 +113,8 @@ const lstat = promisify(_lstat);
     // Skip on directories
     if (stats.isDirectory())
       continue;
+
+    const stream = createReadStream(file);
+    console.log(file.replace(process.cwd(), ''));
   }
 })();
