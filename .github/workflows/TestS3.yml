@@ -1,0 +1,57 @@
+name: Tests the S3 config
+on:
+  pull_request:
+    branches:
+      - 'feature/**'
+      - 'issue/gh-**'
+      - master
+
+    paths-ignore:
+      - '.github/**'
+      - '.husky/**'
+      - 'docs/**'
+      - '.eslintignore'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'README.md'
+      - 'renovate.json'
+
+  push:
+    branches:
+      - master
+
+    paths-ignore:
+      - '.github/**'
+      - '.husky/**'
+      - 'docs/**'
+      - '.eslintignore'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'README.md'
+      - 'renovate.json'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 15.x, 16.x]
+
+    steps:
+      - name: Checkouts the repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js v${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Tests the S3 uploader
+        if: ${{ github.actor }} == 'auguwu'
+        uses: ./
+        with:
+          directories: './test/**'
+          access-key: ${{ secrets.S3_ACCESS_KEY }}
+          secret-key: ${{ secrets.S3_SECRET_KEY }}
+          use-wasabi: 'true'
+          bucket: s3-test-pls

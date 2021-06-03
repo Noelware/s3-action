@@ -1,0 +1,40 @@
+name: ESLint
+on:
+  push:
+    branches:
+      - master
+
+    paths-ignore:
+      - '.github/**'
+      - '.husky/**'
+      - 'docs/**'
+      - '.eslintignore'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'README.md'
+      - 'renovate.json'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 15.x, 16.x]
+
+    steps:
+      - name: Checkouts the repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js v${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Installs local packages
+        run: npm ci
+
+      - name: Lints the project for any errors related to linting
+        run: eslint src --ext .ts
+
+      - name: Compiles the project for any TypeScript errors
+        run: tsc --noEmit
