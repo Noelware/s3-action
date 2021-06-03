@@ -115,6 +115,7 @@ const lstat = promisify(_lstat);
       continue;
 
     const stream = createReadStream(file);
-    console.log(file.replace(process.cwd(), '').replace('/', ''));
+    const objName = file.replace(process.cwd(), '').slice(1);
+    await s3.upload(objName, stream);
   }
 })();
