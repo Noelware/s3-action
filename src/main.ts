@@ -18,9 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { lstat as _lstat } from 'fs';
+import { promisify } from 'util';
 import * as core from '@actions/core';
 import * as glob from '@actions/glob';
-import { lstat } from 'fs/promises';
 import S3 from './s3-client';
 
 const overwriteLogger = () => {
@@ -37,6 +38,8 @@ const overwriteLogger = () => {
     return originalCoreDebug(`[${new Date().toTimeString()}] ${message}`);
   };
 };
+
+const lstat = promisify(_lstat);
 
 (async() => {
   overwriteLogger();
@@ -60,7 +63,7 @@ const overwriteLogger = () => {
   }
 
   const directories = _directories.split(';');
-  const exclude = _directories.split(';');
+  const exclude = _excludeDirs.split(';');
 
   core.info(`Exclude Dirs: ${exclude.join(', ')}`);
   core.info(`Using Wasabi: ${useWasabi ? 'Yes' : 'No'}`);
