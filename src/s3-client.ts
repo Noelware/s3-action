@@ -44,7 +44,7 @@ export default class S3 {
    * Creates the S3 client
    */
   private createS3Client() {
-    core.debug('Creating S3 client...');
+    core.info('Creating S3 client...');
 
     // I wish I didn't have to do this, but it's what I got to do
     const defaultCredentialsProvider = (): Provider<Credentials> => () => Promise.resolve({
@@ -63,7 +63,7 @@ export default class S3 {
   }
 
   async verifyBucket() {
-    core.debug(`Verifying bucket ${this.bucket}...`);
+    core.info(`Verifying bucket ${this.bucket}...`);
 
     const result = await this.client.send(new ListBucketsCommand({}));
     if (result.Buckets === undefined)

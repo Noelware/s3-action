@@ -30,12 +30,14 @@ const overwriteLogger = () => {
 
   // @ts-expect-error I know I'm not supposed to do this but whatever
   core.info = (message: string) => {
-    return originalCoreLog(`[${new Date().toTimeString()}] ${message}`);
+    const date = new Date();
+    return originalCoreLog(`[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(-2)}] ${message} ${message}`);
   };
 
   // @ts-expect-error I know I'm not supposed to do this but whatever
   core.debug = (message: string) => {
-    return originalCoreDebug(`[${new Date().toTimeString()}] ${message}`);
+    const date = new Date();
+    return originalCoreDebug(`[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(-2)}] ${message}`);
   };
 };
 
@@ -65,7 +67,7 @@ const lstat = promisify(_lstat);
   const directories = _directories.split(';');
   const exclude = _excludeDirs.split(';');
 
-  core.info(`Exclude Dirs: ${exclude.join(', ')}`);
+  core.info(`Exclude Dirs: ${exclude.join(', ') || 'No directories set.'}`);
   core.info(`Using Wasabi: ${useWasabi ? 'Yes' : 'No'}`);
   core.info(`Directories : ${directories.join(', ')}`);
   core.info(`Region:     : ${region}`);
@@ -86,33 +88,26 @@ const lstat = promisify(_lstat);
     return;
   }
 
-  let shouldExclude: string[] = [];
+  const shouldExclude: string[] = [];
+  const excludePatterns = await glob.create(exclude.join('\n'), {
+    followSymbolicLinks: true // TODO: make this into a config variable
+  });
 
-  for (let i = 0; i < exclude.length; i++) {
-    const globber = await glob.create(exclude[i]);
-    const files = await globber.glob();
+  core.info('Linking excluding directories...');
+  for await (const file of excludePatterns.globGenerator())
+    shouldExclude.push(file);
 
-    shouldExclude = shouldExclude.concat(files);
-  }
+  core.info('Checking directories...');
+  const dirGlob = await glob.create(directories.filter(d => !shouldExclude.includes(d)).join('\n'), {
+    followSymbolicLinks: true // TODO: make this into a config variable
+  });
 
-  for (let i = 0; i < directories.length; i++) {
-    const globber = await glob.create(directories[i]);
-    const files = await globber.glob();
+  for await (const file of dirGlob.globGenerator()) {
+    core.info(`File "${file}" found.`);
+    const stats = await lstat(file);
 
-    core.info(`Found ${files.length} files to upload...`);
-    for (let f = 0; f < files.length; f++) {
-      const file = files[f];
-      const stats = await lstat(file);
-
-      // Skip on excluded dirs / files
-      if (shouldExclude.includes(file))
-        continue;
-
-      // Skip on directories
-      if (stats.isDirectory())
-        continue;
-
-      console.log(file);
-    }
+    // Skip on directories
+    if (stats.isDirectory())
+      continue;
   }
 })();
