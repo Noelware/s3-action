@@ -115,6 +115,6 @@ const lstat = promisify(_lstat);
       continue;
 
     const stream = createReadStream(file);
-    console.log(file.replace(process.cwd(), ''));
+    console.log(file.replace(process.cwd(), '').replace('/', ''));
   }
 })();
