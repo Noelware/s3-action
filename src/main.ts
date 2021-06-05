@@ -165,10 +165,10 @@ const config = new Config<S3ActionConfig>({
 
     const format = config.getInput('object-format', '')!
       .replace(/[$]\(([\w\.]+)\)g/, (_, key) => {
+        console.log(`key: ${key}; format: ${format}`);
         switch (key) {
           case 'file':
-            const contents = file.split('/');
-            return contents.pop()!;
+            return file.replace(process.cwd(), '').slice(1);
 
           case 'branch':
             return branch;
