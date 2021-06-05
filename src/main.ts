@@ -164,8 +164,7 @@ const config = new Config<S3ActionConfig>({
       continue;
 
     const format = config.getInput('object-format', '')!
-      .replace(/[$]\(([\w\.]+)\)g/, (_, key) => {
-        console.log(`key: ${key}; format: ${format}`);
+      .replace(/[$]\(([\w\.]+)\)/g, (_, key) => {
         switch (key) {
           case 'file':
             return file.replace(process.cwd(), '').slice(1);
