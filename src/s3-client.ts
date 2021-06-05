@@ -22,6 +22,7 @@ import { S3Client, ListBucketsCommand, PutObjectCommand } from '@aws-sdk/client-
 import type { Provider, Credentials } from '@aws-sdk/types';
 import type { Readable } from 'stream';
 import * as core from '@actions/core';
+import * as mime from 'mime-types';
 
 /**
  * Represents an abstraction class for `S3Client` which handles uploading
@@ -81,11 +82,12 @@ export default class S3 {
     core.info(`Uploading object "${objectName}"...`);
 
     await this.client.send(new PutObjectCommand({
+      ContentType: mime.lookup(objectName) || 'application/octet-stream',
       Bucket: this.bucket,
       Body: stream,
       Key: objectName
     }));
 
-    core.info(`Uploaded object "${objectName}"`);
+    core.info(`Uploaded object "${objectName}" (Content-Type: ${mime.lookup(objectName) || 'application/octet-stream (will download instead of preview)'})`);
   }
 }
