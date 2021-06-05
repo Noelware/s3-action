@@ -27,6 +27,8 @@ jobs:
 ## Inputs
 |Name|Type|Description|Required|Default?|
 |----|----|-----------|--------|--------|
+|`upload-this-branch`|`Boolean`|If the current branch should have its own directory when uploading|false|`false`|
+|`object-format`|`String`|The [format](#file-format) of the object name when uploading|false|None.|
 |`directories`|`String[]`|List of directories to use, glob patterns are supported, use `;` to seperate|true|None.|
 |`access-key`|`String`|Your S3 access key to use to authenicate|true|None.|
 |`secret-key`|`String`|Your S3 secret key to use to authenicate`|true|None.|
@@ -34,6 +36,14 @@ jobs:
 |`exclude`|`String`|Excludes any directories to not be uploaded, glob patterns are supported, use `;` to seperate|false|None.|
 |`region`|`String`|Sets the region of the S3 bucket that it is located in|false|`us-east-1`|
 |`bucket`|`String`|The bucket to use when uploading objects|true|None.|
+
+### File Format
+<hr />
+
+The file format can have the following properties:
+
+- `$(file)`: The file name
+- `$(branch)`: The branch (this is overrided in `upload-this-branch`)
 
 ## License
 **s3-action** is released under the **GPL-3.0** License.
