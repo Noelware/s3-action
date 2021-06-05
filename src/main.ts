@@ -110,7 +110,7 @@ const config = new Config<S3ActionConfig>({
 
   core.info([
     '',
-    `> Exclude Directories: ${(excludeDirs ?? []).join(', ') || 'None set.'}`,
+    `> Exclude Directories: ${(excludeDirs || []).join(', ') || 'None set.'}`,
     `> Use Wasabi Servers : ${useWasabi ? 'Yes' : 'No'}`,
     `> Directories        : ${directories.join(', ')}`,
     `> Bucket Region      : ${region}`
@@ -133,7 +133,7 @@ const config = new Config<S3ActionConfig>({
   }
 
   const shouldExclude: string[] = [];
-  const excludePatterns = await glob.create((excludeDirs ?? []).join('\n'), {
+  const excludePatterns = await glob.create((excludeDirs || []).join('\n'), {
     followSymbolicLinks: true // TODO: make this into a config variable
   });
 
