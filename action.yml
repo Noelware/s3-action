@@ -11,6 +11,16 @@ runs:
   main: './build/index.js'
 
 inputs:
+  object-format:
+    description: 'The format of the object name when uploading'
+    required: false
+    default: ''
+
+  upload-this-branch:
+    description: 'If the current branch should have its own directory when uploading'
+    required: false
+    default: 'false'
+
   directories:
     description: 'List of directories to use, glob patterns are supported, use `;` to seperate'
     required: true

@@ -20,61 +20,101 @@
 
 import { createReadStream, lstat as _lstat } from 'fs';
 import { promisify } from 'util';
+import { execSync } from 'child_process';
+import { Config } from './config';
+import * as util from './utils';
 import * as core from '@actions/core';
 import * as glob from '@actions/glob';
 import S3 from './s3-client';
 
-const overwriteLogger = () => {
-  const originalCoreLog = core.info;
-  const originalCoreDebug = core.debug;
-
-  // @ts-expect-error I know I'm not supposed to do this but whatever
-  core.info = (message: string) => {
-    const date = new Date();
-    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
-
-    return originalCoreLog(`[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(-2)} ${ampm}] ${message}`);
-  };
-
-  // @ts-expect-error I know I'm not supposed to do this but whatever
-  core.debug = (message: string) => {
-    const date = new Date();
-    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
-
-    return originalCoreDebug(`[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(-2)} ${ampm}] ${message}`);
-  };
-};
+interface S3ActionConfig {
+  'upload-this-branch'?: boolean;
+  'object-format'?: string;
+  'use-wasabi'?: boolean;
+  'secret-key': string;
+  'access-key': string;
+  directories: string[];
+  exclude?: string[];
+  region?: string;
+  bucket: string;
+}
 
 const lstat = promisify(_lstat);
+const config = new Config<S3ActionConfig>({
+  'upload-this-branch': <any> core.getInput('upload-this-branch', { trimWhitespace: true }),
+  'object-format': core.getInput('object-format', { trimWhitespace: true }),
+  'use-wasabi': <any> core.getInput('use-wasabi', { trimWhitespace: true }),
+  'access-key': <any> core.getInput('access-key', { trimWhitespace: true }),
+  'secret-key': <any> core.getInput('secret-key', { trimWhitespace: true }),
+  directories: <any> core.getInput('directories', { trimWhitespace: true }),
+  exclude: <any> core.getInput('exclude', { trimWhitespace: true }),
+  region: <any> core.getInput('region', { trimWhitespace: true }),
+  bucket: core.getInput('bucket', { trimWhitespace: true })
+}, {
+  'upload-this-branch': {
+    required: false,
+    type: 'boolean'
+  },
+
+  'object-format': {
+    required: false,
+    type: 'string'
+  },
+
+  'use-wasabi': {
+    required: false,
+    type: 'boolean'
+  },
+
+  'access-key': {
+    required: true,
+    type: 'string'
+  },
+
+  'secret-key': {
+    required: true,
+    type: 'boolean'
+  },
+
+  directories: {
+    required: true,
+    type: 'array'
+  },
+
+  exclude: {
+    required: false,
+    type: 'array'
+  },
+
+  region: {
+    required: false,
+    type: 'string'
+  },
+
+  bucket: {
+    required: false,
+    type: 'string'
+  }
+});
 
 (async() => {
-  overwriteLogger();
+  util.overwriteLogger();
 
-  const _directories = core.getInput('directories', { trimWhitespace: true }) || '';
-  const accessKey   = core.getInput('access-key',  { trimWhitespace: true }) || '';
-  const secretKey   = core.getInput('secret-key',  { trimWhitespace: true }) || '';
-  const useWasabi   = Boolean(core.getInput('use-wasabi', { trimWhitespace: true }) || 'true');
-  const region      = core.getInput('region', { trimWhitespace: true }) || 'us-east-1';
-  const bucketName  = core.getInput('bucket', { trimWhitespace: true }) || '';
-  const _excludeDirs = core.getInput('exclude', { trimWhitespace: true }) || '';
+  const secretKey = config.getInput('secret-key', '')!;
+  const accessKey = config.getInput('access-key', '');
+  const excludeDirs = config.getInput('exclude', []);
+  const useWasabi = config.getInput('use-wasabi', false);
+  const directories = config.getInput('directories', []);
+  const region = config.getInput('region', 'us-east-1');
+  const bucketName = config.getInput('bucket', '');
 
-  if (
-    _directories === '' ||
-    accessKey === '' ||
-    secretKey === '' ||
-    bucketName === ''
-  ) {
-    core.setFailed('Missing one or more configuration inputs: `directories`, `accessKey`, `secretKey`, `bucket`.');
-    return;
-  }
-
-  const directories = _directories.split(';');
-  const exclude = _excludeDirs.split(';');
-
-  core.info(`Exclude Dirs: ${exclude.join(', ') || 'No directories set.'}`);
-  core.info(`Using Wasabi: ${useWasabi ? 'Yes' : 'No'}`);
-  core.info(`Directories : ${directories.join(', ')}`);
-  core.info(`Region:     : ${region}`);
+  core.info([
+    '',
+    `> Exclude Directories: ${(excludeDirs ?? []).join(', ') || 'None set.'}`,
+    `> Use Wasabi Servers : ${useWasabi ? 'Yes' : 'No'}`,
+    `> Directories        : ${directories.join(', ')}`,
+    `> Bucket Region      : ${region}`
+  ].join('\n'));
 
   const s3 = new S3(
     accessKey,
@@ -93,7 +133,7 @@ const lstat = promisify(_lstat);
   }
 
   const shouldExclude: string[] = [];
-  const excludePatterns = await glob.create(exclude.join('\n'), {
+  const excludePatterns = await glob.create((excludeDirs ?? []).join('\n'), {
     followSymbolicLinks: true // TODO: make this into a config variable
   });
 
@@ -106,6 +146,8 @@ const lstat = promisify(_lstat);
     followSymbolicLinks: true // TODO: make this into a config variable
   });
 
+  const branch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8' }).trim();
+
   for await (const file of dirGlob.globGenerator()) {
     core.info(`File "${file}" found.`);
     const stats = await lstat(file);
@@ -114,8 +156,26 @@ const lstat = promisify(_lstat);
     if (stats.isDirectory())
       continue;
 
+    const format = config.getInput('object-format', '')!
+      .replace(/[$]\(([\w\.]+)\)g/, (_, key) => {
+        switch (key) {
+          case 'file':
+            const contents = file.split('/');
+            return contents.pop()!;
+
+          case 'branch':
+            return branch;
+
+          default:
+            return key;
+        }
+      });
+
     const stream = createReadStream(file);
-    const objName = file.replace(process.cwd(), '').slice(1);
+    const objName = config.getInput('upload-this-branch', false)
+      ? `${branch}/${format}`
+      : format || file.replace(process.cwd(), '').slice(1);
+
     await s3.upload(objName, stream);
   }
 })();

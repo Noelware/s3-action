@@ -46,10 +46,22 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Tests the S3 uploader
+      - name: Tests the S3 uploader (normally)
         if: ${{ github.actor }} == 'auguwu'
         uses: ./
         with:
+          directories: './test/**'
+          access-key: ${{ secrets.S3_ACCESS_KEY }}
+          secret-key: ${{ secrets.S3_SECRET_KEY }}
+          use-wasabi: 'true'
+          bucket: s3-test-pls
+
+      - name: Tests the S3 uploader (with `upload-this-branch` & `object-format`)
+        if: ${{ github.actor }} == 'auguwu'
+        uses: ./
+        with:
+          upload-this-branch: 'true'
+          object-format: 'a/$(file)'
           directories: './test/**'
           access-key: ${{ secrets.S3_ACCESS_KEY }}
           secret-key: ${{ secrets.S3_SECRET_KEY }}

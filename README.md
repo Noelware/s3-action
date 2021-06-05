@@ -36,4 +36,4 @@ jobs:
 |`bucket`|`String`|The bucket to use when uploading objects|true|None.|
 
 ## License
-**gh-s3-action** is released under the **GPL-3.0** License.
+**s3-action** is released under the **GPL-3.0** License.
