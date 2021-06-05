@@ -73,7 +73,7 @@ const config = new Config<S3ActionConfig>({
 
   'secret-key': {
     required: true,
-    type: 'boolean'
+    type: 'string'
   },
 
   directories: {
@@ -99,6 +99,13 @@ const config = new Config<S3ActionConfig>({
 
 (async() => {
   util.overwriteLogger();
+  config.validate();
+
+  // Since core.setFailed only sets the process exit code
+  // we have to handle it ourselves.
+  console.log(process.exitCode);
+  if (process.exitCode !== undefined)
+    process.exit(process.exitCode);
 
   const secretKey = config.getInput('secret-key', '')!;
   const accessKey = config.getInput('access-key', '');

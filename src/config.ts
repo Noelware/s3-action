@@ -47,11 +47,9 @@ export class Config<T> {
   constructor(opts: T, schema: ConfigSchema<T>) {
     this._config = opts;
     this._schema = schema;
-
-    this.validate();
   }
 
-  protected validate() {
+  validate() {
     for (const key in this._config) {
       const value = this._config[key] as any;
       const schema = this._schema[key];
