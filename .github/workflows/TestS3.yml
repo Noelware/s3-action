@@ -1,5 +1,7 @@
 name: Tests the S3 config
 on:
+  workflow_dispatch:
+
   pull_request:
     branches:
       - 'feature/**'
