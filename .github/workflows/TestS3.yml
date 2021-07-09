@@ -67,3 +67,4 @@ jobs:
           secret-key: ${{ secrets.S3_SECRET_KEY }}
           use-wasabi: 'true'
           bucket: s3-test-pls
+          acl: private

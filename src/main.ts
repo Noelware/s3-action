@@ -37,6 +37,7 @@ interface S3ActionConfig {
   exclude?: string[];
   region?: string;
   bucket: string;
+  acl?: string;
 }
 
 const lstat = promisify(_lstat);
@@ -49,7 +50,8 @@ const config = new Config<S3ActionConfig>({
   directories: <any> core.getInput('directories', { trimWhitespace: true }),
   exclude: <any> core.getInput('exclude', { trimWhitespace: true }),
   region: <any> core.getInput('region', { trimWhitespace: true }),
-  bucket: core.getInput('bucket', { trimWhitespace: true })
+  bucket: core.getInput('bucket', { trimWhitespace: true }),
+  acl: core.getInput('acl', { trimWhitespace: true })
 }, {
   'upload-this-branch': {
     required: false,
@@ -94,6 +96,11 @@ const config = new Config<S3ActionConfig>({
   bucket: {
     required: false,
     type: 'string'
+  },
+
+  acl: {
+    required: false,
+    type: 'string'
   }
 });
 
@@ -103,7 +110,6 @@ const config = new Config<S3ActionConfig>({
 
   // Since core.setFailed only sets the process exit code
   // we have to handle it ourselves.
-  console.log(process.exitCode);
   if (process.exitCode !== undefined)
     process.exit(process.exitCode);
 
@@ -114,6 +120,7 @@ const config = new Config<S3ActionConfig>({
   const directories = config.getInput('directories', []);
   const region = config.getInput('region', 'us-east-1');
   const bucketName = config.getInput('bucket', '');
+  const acl = config.getInput('acl', 'public-read');
 
   core.info([
     '',
@@ -182,6 +189,6 @@ const config = new Config<S3ActionConfig>({
       ? `${branch}/${format}`
       : format || file.replace(process.cwd(), '').slice(1);
 
-    await s3.upload(objName, stream);
+    await s3.upload(objName, stream, acl);
   }
 })();

@@ -51,3 +51,8 @@ inputs:
   bucket:
     description: 'The bucket to use when uploading objects'
     required: true
+
+  acl:
+    description: 'The ACL binding to use for every file'
+    required: false
+    default: 'public-read'

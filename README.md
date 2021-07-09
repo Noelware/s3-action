@@ -16,7 +16,7 @@ jobs:
           node-version: 16.x
 
       - name: upload to s3 bucket
-        uses: noelware/s3-action@v1
+        uses: noelware/s3-action@v1.2.0
         with:
           directories: './directories;./to;./use'
           access-key: <aws s3 access key>
@@ -36,6 +36,7 @@ jobs:
 |`exclude`|`String`|Excludes any directories to not be uploaded, glob patterns are supported, use `;` to seperate|false|None.|
 |`region`|`String`|Sets the region of the S3 bucket that it is located in|false|`us-east-1`|
 |`bucket`|`String`|The bucket to use when uploading objects|true|None.|
+|`acl`|`String`|The ACL binding to use for every file|false|`public-read`|
 
 ### File Format
 <hr />
