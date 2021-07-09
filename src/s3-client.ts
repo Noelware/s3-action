@@ -78,7 +78,7 @@ export default class S3 {
   async upload(
     objectName: string,
     stream: Readable,
-    acl?: string
+    acl: string = 'public-read'
   ) {
     core.info(`Uploading object "${objectName}"...`);
 
@@ -87,7 +87,7 @@ export default class S3 {
       Bucket: this.bucket,
       Body: stream,
       Key: objectName,
-      ACL: acl ?? 'public-read'
+      ACL: acl
     }));
 
     core.info(`Uploaded object "${objectName}" (Content-Type: ${mime.lookup(objectName) || 'application/octet-stream (will download instead of preview)'})`);
