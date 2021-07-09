@@ -55,6 +55,7 @@ jobs:
           secret-key: ${{ secrets.S3_SECRET_KEY }}
           use-wasabi: 'true'
           bucket: s3-test-pls
+          acl: private
 
       - name: Tests the S3 uploader (with `upload-this-branch` & `object-format`)
         if: ${{ github.actor }} == 'auguwu'
