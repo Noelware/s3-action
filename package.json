@@ -18,7 +18,7 @@
     "mime-types": "2.1.32"
   },
   "devDependencies": {
-    "@augu/eslint-config": "2.1.2",
+    "@augu/eslint-config": "2.2.0",
     "@augu/tsconfig": "1.1.1",
     "@types/mime-types": "2.1.0",
     "@types/node": "15.9.0",
