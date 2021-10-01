@@ -15,7 +15,7 @@
     "@actions/core": "1.6.0",
     "@actions/glob": "0.2.0",
     "@aws-sdk/client-s3": "3.34.0",
-    "mime-types": "2.1.32"
+    "mime-types": "2.1.33"
   },
   "devDependencies": {
     "@augu/eslint-config": "2.2.0",
