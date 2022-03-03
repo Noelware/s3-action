@@ -31,10 +31,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install global dependencies
-        run: npm i -g eslint typescript
+        run: yarn global eslint typescript
 
       - name: Installs local packages
-        run: npm ci
+        run: yarn
 
       - name: Lints the project for any errors related to linting
         run: eslint src --ext .ts
