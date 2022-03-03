@@ -2,7 +2,7 @@
 . "$(dirname "$0")/_/husky.sh"
 
 echo '[s3-action] Running ESLint...'
-eslint src --ext .ts
+yarn eslint src --ext .ts
 
 echo '[s3-action] Can the project be compiled?'
-tsc --noEmit
+yarn tsc --noEmit

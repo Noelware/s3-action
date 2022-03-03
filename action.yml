@@ -21,6 +21,10 @@ inputs:
     required: false
     default: 'false'
 
+  endpoint:
+    description: 'The S3 endpoint to use when uploading objects.'
+    required: false
+
   directories:
     description: 'List of directories to use, glob patterns are supported, use `;` to seperate'
     required: true
