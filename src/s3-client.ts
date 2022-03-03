@@ -1,8 +1,6 @@
-/**
- * `@noelware/gh-s3-action` is a GitHub Action to publish contents of a
- * GitHub repository to a S3 bucket.
- *
- * Copyright (c) 2021-present Noelware
+/*
+ * ☕ @noelware/s3-action: GitHub Action to publish contents of a GitHub repository to a S3 bucket.
+ * Copyright (c) 2021-2022 Noelware
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,9 +32,10 @@ export default class S3 {
   constructor(
     private accessKey: string,
     private secretKey: string,
-    private bucket:    string,
+    private bucket: string,
     private useWasabi: boolean = true,
-    private region:    string = 'us-east-1'
+    private region: string = 'us-east-1',
+    private endpoint: string = ''
   ) {
     this.client = this.createS3Client();
   }
@@ -48,12 +47,13 @@ export default class S3 {
     core.info('Creating S3 client...');
 
     // I wish I didn't have to do this, but it's what I got to do
-    const defaultCredentialsProvider = (): Provider<Credentials> => () => Promise.resolve({
-      secretAccessKey: this.secretKey,
-      accessKeyId: this.accessKey
-    });
+    const defaultCredentialsProvider = (): Provider<Credentials> => () =>
+      Promise.resolve({
+        secretAccessKey: this.secretKey,
+        accessKeyId: this.accessKey
+      });
 
-    const endpointOverride = this.useWasabi ? 'https://s3.wasabisys.com' : '';
+    const endpointOverride = this.useWasabi ? 'https://s3.wasabisys.com' : this.endpoint;
 
     core.debug(`Created S3 client${endpointOverride !== '' ? ', with Wasabi!' : '.'}`);
     return new S3Client({
@@ -68,28 +68,29 @@ export default class S3 {
 
     const result = await this.client.send(new ListBucketsCommand({}));
     if (result.Buckets === undefined)
-      throw new TypeError('Malformed data from S3 didn\'t provide buckets (or you didn\'t create any)');
+      throw new TypeError("Malformed data from S3 didn't provide buckets (or you didn't create any)");
 
-    const hasBucket = result.Buckets.find(bucket => bucket.Name !== undefined && bucket.Name === this.bucket);
-    if (!hasBucket)
-      throw new TypeError(`Bucket "${this.bucket}" was not found. Did you provide the right region?`);
+    const hasBucket = result.Buckets.find((bucket) => bucket.Name !== undefined && bucket.Name === this.bucket);
+    if (!hasBucket) throw new TypeError(`Bucket "${this.bucket}" was not found. Did you provide the right region?`);
   }
 
-  async upload(
-    objectName: string,
-    stream: Readable,
-    acl: string = 'public-read'
-  ) {
+  async upload(objectName: string, stream: Readable, acl: string = 'public-read') {
     core.info(`Uploading object "${objectName}"...`);
 
-    await this.client.send(new PutObjectCommand({
-      ContentType: mime.lookup(objectName) || 'application/octet-stream',
-      Bucket: this.bucket,
-      Body: stream,
-      Key: objectName,
-      ACL: acl
-    }));
+    await this.client.send(
+      new PutObjectCommand({
+        ContentType: mime.lookup(objectName) || 'application/octet-stream',
+        Bucket: this.bucket,
+        Body: stream,
+        Key: objectName,
+        ACL: acl
+      })
+    );
 
-    core.info(`Uploaded object "${objectName}" (Content-Type: ${mime.lookup(objectName) || 'application/octet-stream (will download instead of preview)'})`);
+    core.info(
+      `Uploaded object "${objectName}" (Content-Type: ${
+        mime.lookup(objectName) || 'application/octet-stream (will download instead of preview)'
+      })`
+    );
   }
 }

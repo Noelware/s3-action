@@ -1,8 +1,6 @@
-/**
- * `@noelware/gh-s3-action` is a GitHub Action to publish contents of a
- * GitHub repository to a S3 bucket.
- *
- * Copyright (c) 2021-present Noelware
+/*
+ * ☕ @noelware/s3-action: GitHub Action to publish contents of a GitHub repository to a S3 bucket.
+ * Copyright (c) 2021-2022 Noelware
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +30,11 @@ export const overwriteLogger = () => {
     const date = new Date();
     const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
 
-    return originalCoreLog(`[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(-2)} ${ampm}] ${message}`);
+    return originalCoreLog(
+      `[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(
+        -2
+      )} ${ampm}] ${message}`
+    );
   };
 
   // @ts-expect-error I know I'm not supposed to do this but whatever
@@ -40,6 +42,10 @@ export const overwriteLogger = () => {
     const date = new Date();
     const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
 
-    return originalCoreDebug(`[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(-2)} ${ampm}] ${message}`);
+    return originalCoreDebug(
+      `[${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(
+        -2
+      )} ${ampm}] ${message}`
+    );
   };
 };

@@ -1,8 +1,6 @@
-/**
- * `@noelware/gh-s3-action` is a GitHub Action to publish contents of a
- * GitHub repository to a S3 bucket.
- *
- * Copyright (c) 2021-present Noelware
+/*
+ * ☕ @noelware/s3-action: GitHub Action to publish contents of a GitHub repository to a S3 bucket.
+ * Copyright (c) 2021-2022 Noelware
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,21 +22,14 @@ type PrimitiveTypes = 'string' | 'boolean' | 'array';
 
 type ConfigSchema<T> = {
   [P in keyof T]: IConfigInterface;
-}
+};
 
 interface IConfigInterface {
   required?: boolean;
   type: PrimitiveTypes;
 }
 
-const BOOLEAN_TYPES = [
-  'true',
-  'false',
-  'on',
-  'off',
-  'enable',
-  'disable'
-];
+const BOOLEAN_TYPES = ['true', 'false', 'on', 'off', 'enable', 'disable'];
 
 export class Config<T> {
   private _schema: ConfigSchema<T>;
@@ -56,21 +47,29 @@ export class Config<T> {
 
       core.debug(`Validating option '${key}'...`);
       switch (schema.type) {
-        case 'string': {
-          if (schema.required === true && value === '')
-            return core.setFailed(`[schema:validate:${key}] Key is required but nothing was provided`);
+        case 'string':
+          {
+            if (schema.required === true && value === '')
+              return core.setFailed(`[schema:validate:${key}] Key is required but nothing was provided`);
 
-          if (typeof value !== 'string')
-            return core.setFailed(`[schema:validate:${key}] Expected 'string', received ${typeof value}`);
-        } break;
+            if (typeof value !== 'string')
+              return core.setFailed(`[schema:validate:${key}] Expected 'string', received ${typeof value}`);
+          }
+          break;
 
-        case 'boolean': {
-          if (schema.required === true && value === '')
-            return core.setFailed(`[schema:validate:${key}] Key is required but nothing was provided`);
+        case 'boolean':
+          {
+            if (schema.required === true && value === '')
+              return core.setFailed(`[schema:validate:${key}] Key is required but nothing was provided`);
 
-          if (!BOOLEAN_TYPES.includes(value))
-            return core.setFailed(`[schema:validate:${key}] Expected ${BOOLEAN_TYPES.map(v => `"${v}"`).join(', ')} but received "${value}"`);
-        } break;
+            if (!BOOLEAN_TYPES.includes(value))
+              return core.setFailed(
+                `[schema:validate:${key}] Expected ${BOOLEAN_TYPES.map((v) => `"${v}"`).join(
+                  ', '
+                )} but received "${value}"`
+              );
+          }
+          break;
 
         case 'array': {
           if (schema.required === true && value === '')
@@ -85,11 +84,9 @@ export class Config<T> {
   getInput<K extends keyof T>(key: K, defaultValue: T[K]): T[K] {
     const input = core.getInput(key as string);
     const schema = this._schema[key];
-    if (!schema)
-      throw new TypeError('Missing schema for key: ' + key);
+    if (!schema) throw new TypeError('Missing schema for key: ' + key);
 
-    if (!input)
-      return defaultValue;
+    if (!input) return defaultValue;
 
     switch (schema.type) {
       case 'string':
