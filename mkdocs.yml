@@ -1,0 +1,4 @@
+site_name: S3 GitHub Action
+site_url: https://s3.noelware.org
+theme:
+  name: material
