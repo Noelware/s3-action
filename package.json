@@ -22,7 +22,7 @@
     "@augu/eslint-config": "2.2.0",
     "@augu/tsconfig": "1.1.1",
     "@types/mime-types": "2.1.1",
-    "@types/node": "16.11.31",
+    "@types/node": "16.11.32",
     "@typescript-eslint/eslint-plugin": "5.21.0",
     "@typescript-eslint/parser": "5.21.0",
     "@vercel/ncc": "0.33.4",
