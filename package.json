@@ -13,7 +13,7 @@
     "fmt": "prettier --write . --config ./.prettierrc.json"
   },
   "dependencies": {
-    "@actions/core": "1.7.0",
+    "@actions/core": "1.9.0",
     "@actions/glob": "0.3.0",
     "@aws-sdk/client-s3": "3.83.0",
     "mime-types": "2.1.35"
