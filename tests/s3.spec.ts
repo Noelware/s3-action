@@ -21,6 +21,7 @@
  * SOFTWARE.
  */
 
+import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { createReadStream } from 'fs';
 import { resolve } from 'path';
 import { test, expect } from 'vitest';
@@ -55,6 +56,16 @@ if (accessKeyId !== undefined && secretAccessKey !== undefined) {
         acl: 'public-read'
       })
     ).resolves.toBeUndefined();
+
+    // we need to delete it so we don't override the same thing lol
+    await expect(
+      s3.s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: 'august',
+          Key: '/wuff.json'
+        })
+      )
+    ).resolves.toBeTruthy();
   });
 } else {
   test('simple test because no env variables were defined', () => {

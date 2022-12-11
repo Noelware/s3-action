@@ -28,7 +28,8 @@ import * as core from '@actions/core';
 import { Readable } from 'stream';
 import { lookup } from 'mime-types';
 
-let s3Client: S3Client;
+// only exported for tests
+export let s3Client: S3Client;
 
 export const initS3Client = async ({
   accessKeyId,
