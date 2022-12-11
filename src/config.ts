@@ -21,11 +21,12 @@
  * SOFTWARE.
  */
 
-import { getInput, getBooleanInput } from '@actions/core';
+import { getInput, InputOptions } from '@actions/core';
 import z from 'zod';
 
 const configSchema = z
   .object({
+    enforcePathAccessStyle: z.boolean().default(false),
     followSymlinks: z.boolean().default(false),
     accessKeyId: z.string(),
     directories: z.array(z.string()).default([]),
@@ -42,6 +43,18 @@ const configSchema = z
   })
   .strict();
 
+const truthy = new Set(['true', 'True', 'TRUE']);
+const falsy = new Set(['false', 'False', 'FALSE']);
+
+const getBooleanInput = (name: string, options: InputOptions) => {
+  const value = getInput(name, options);
+  if (!value) return false;
+  if (truthy.has(value)) return true;
+  if (falsy.has(value)) return false;
+
+  throw new Error(`Value of key [${name}] didn't meet the Yaml 1.2 "Core Schema" specification (received: [${value}])`);
+};
+
 /**
  * Represents the configuration schema's type.
  */
@@ -55,6 +68,7 @@ export const inferOptions = (): Promise<InputConfig> => {
     .split(',')
     .map((i) => i.trim());
 
+  const enforcePathAccessStyle = getBooleanInput('enforce-path-access-style', { trimWhitespace: true });
   const followSymlinks = getBooleanInput('follow-symlinks', { trimWhitespace: true });
   const accessKeyId = getInput('access-key-id', { trimWhitespace: true, required: true });
   const pathFormat = getInput('path-format', { trimWhitespace: true });
@@ -74,6 +88,7 @@ export const inferOptions = (): Promise<InputConfig> => {
     .map((i) => i.trim());
 
   return configSchema.parseAsync({
+    enforcePathAccessStyle,
     followSymlinks,
     directories,
     accessKeyId,

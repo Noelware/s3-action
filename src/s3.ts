@@ -36,8 +36,12 @@ export const initS3Client = async ({
   bucket,
   endpoint,
   region,
-  bucketAcl
-}: Pick<InputConfig, 'accessKeyId' | 'secretKey' | 'endpoint' | 'bucket' | 'region' | 'bucketAcl'>) => {
+  bucketAcl,
+  enforcePathAccessStyle
+}: Pick<
+  InputConfig,
+  'accessKeyId' | 'secretKey' | 'endpoint' | 'bucket' | 'region' | 'bucketAcl' | 'enforcePathAccessStyle'
+>) => {
   if (s3Client !== undefined) return s3Client;
 
   core.info(`Initializing S3 client with bucket ${bucket} on endpoint ${endpoint}...`);
@@ -48,6 +52,7 @@ export const initS3Client = async ({
         accessKeyId
       }),
 
+    forcePathStyle: enforcePathAccessStyle,
     endpoint: endpoint || 's3.amazonaws.com',
     region
   });

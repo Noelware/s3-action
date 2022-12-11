@@ -74,3 +74,7 @@ inputs:
     description: If the action should follow symbolic link files or not
     required: false
     default: 'false'
+  enforce-path-access-style:
+    description: If the S3 client should enforce path access style or not, recommended for instances using MinIO
+    required: false
+    default: 'false'

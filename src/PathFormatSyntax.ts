@@ -77,8 +77,8 @@ export const MATCHERS: Matchers = {
  * // => "/src/main.ts"
  * ```
  */
-export const parsePathFormatSyntax = (syntax: string, { prefix, file }: Record<'prefix' | 'file', string>) =>
-  syntax.replace(/[$]\(([\w\.]+)\)/g, (_, key) => {
+export const parsePathFormatSyntax = (syntax: string, { prefix, file }: Record<'prefix' | 'file', string>) => {
+  const result = syntax.replace(/[$]\(([\w\.]+)\)/g, (_, key) => {
     const matcher = MATCHERS[key] as boolean | (() => string);
     if (!matcher) return key;
 
@@ -95,3 +95,10 @@ export const parsePathFormatSyntax = (syntax: string, { prefix, file }: Record<'
       return matcher();
     }
   });
+
+  if (result[0] === prefix && result[1] === prefix) {
+    return result.substring(1);
+  }
+
+  return result;
+};

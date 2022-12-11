@@ -71,3 +71,10 @@ jobs:
 
       - name: Run ESLint
         run: yarn lint:ci
+
+      - name: Run unit tests
+        run: yarn test
+        env:
+          S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+          S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+          S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
