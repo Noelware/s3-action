@@ -1,106 +1,91 @@
 /*
- * ☕ @noelware/s3-action: GitHub Action to publish contents of a GitHub repository to a S3 bucket.
- * Copyright (c) 2021-2022 Noelware
+ * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
+ * Copyright (c) 2021-2023 Noelware Team <team@noelware.org>
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
-import * as core from '@actions/core';
+import { getInput, getBooleanInput } from '@actions/core';
+import z from 'zod';
 
-type PrimitiveTypes = 'string' | 'boolean' | 'array';
+const configSchema = z
+  .object({
+    followSymlinks: z.boolean().default(false),
+    accessKeyId: z.string(),
+    directories: z.array(z.string()).default([]),
+    pathFormat: z.string().default('$(prefix)/$(file)'),
+    secretKey: z.string(),
+    bucketAcl: z.string().default('public-read'),
+    objectAcl: z.string().default('public-read'),
+    endpoint: z.string().default('s3.amazonaws.com'),
+    exclude: z.array(z.string()).default([]),
+    region: z.string().default('us-east-1'),
+    prefix: z.string().startsWith('/', '`prefix` must start with /'),
+    bucket: z.string(),
+    files: z.array(z.string()).default([])
+  })
+  .strict();
 
-type ConfigSchema<T> = {
-  [P in keyof T]: IConfigInterface;
+/**
+ * Represents the configuration schema's type.
+ */
+export type InputConfig = z.infer<typeof configSchema>;
+
+/**
+ * Infers all the options and validates them from the {@link configSchema configuration schema}.
+ */
+export const inferOptions = (): Promise<InputConfig> => {
+  const directories = getInput('directories', { trimWhitespace: true })
+    .split(',')
+    .map((i) => i.trim());
+
+  const followSymlinks = getBooleanInput('follow-symlinks', { trimWhitespace: true });
+  const accessKeyId = getInput('access-key-id', { trimWhitespace: true, required: true });
+  const pathFormat = getInput('path-format', { trimWhitespace: true });
+  const bucketAcl = getInput('bucket-acl', { trimWhitespace: true });
+  const objectAcl = getInput('object-acl', { trimWhitespace: true });
+  const secretKey = getInput('secret-key', { trimWhitespace: true, required: true });
+  const endpoint = getInput('endpoint', { trimWhitespace: true });
+  const prefix = getInput('prefix', { trimWhitespace: true });
+  const bucket = getInput('bucket', { trimWhitespace: true, required: true });
+  const region = getInput('region', { trimWhitespace: true });
+  const exclude = getInput('exclude', { trimWhitespace: true })
+    .split(',')
+    .map((i) => i.trim());
+
+  const files = getInput('files', { trimWhitespace: true })
+    .split(',')
+    .map((i) => i.trim());
+
+  return configSchema.parseAsync({
+    followSymlinks,
+    directories,
+    accessKeyId,
+    pathFormat,
+    bucketAcl,
+    objectAcl,
+    secretKey,
+    endpoint,
+    exclude,
+    prefix,
+    bucket,
+    region,
+    files
+  });
 };
-
-interface IConfigInterface {
-  required?: boolean;
-  type: PrimitiveTypes;
-}
-
-const BOOLEAN_TYPES = ['true', 'false', 'on', 'off', 'enable', 'disable'];
-
-export class Config<T> {
-  private _schema: ConfigSchema<T>;
-  private _config: T;
-
-  constructor(opts: T, schema: ConfigSchema<T>) {
-    this._config = opts;
-    this._schema = schema;
-  }
-
-  validate() {
-    for (const key in this._config) {
-      const value = this._config[key] as any;
-      const schema = this._schema[key];
-
-      core.debug(`Validating option '${key}'...`);
-      switch (schema.type) {
-        case 'string':
-          {
-            if (schema.required === true && value === '')
-              return core.setFailed(`[schema:validate:${key}] Key is required but nothing was provided`);
-
-            if (typeof value !== 'string')
-              return core.setFailed(`[schema:validate:${key}] Expected 'string', received ${typeof value}`);
-          }
-          break;
-
-        case 'boolean':
-          {
-            if (schema.required === true && value === '')
-              return core.setFailed(`[schema:validate:${key}] Key is required but nothing was provided`);
-
-            if (!BOOLEAN_TYPES.includes(value))
-              return core.setFailed(
-                `[schema:validate:${key}] Expected ${BOOLEAN_TYPES.map((v) => `"${v}"`).join(
-                  ', '
-                )} but received "${value}"`
-              );
-          }
-          break;
-
-        case 'array': {
-          if (schema.required === true && value === '')
-            return core.setFailed(`[schema:validate:${key}] Key is required but nothing was provided`);
-        }
-      }
-    }
-
-    core.info('✅ Validated configuration, can continue.');
-  }
-
-  getInput<K extends keyof T>(key: K, defaultValue: T[K]): T[K] {
-    const input = core.getInput(key as string);
-    const schema = this._schema[key];
-    if (!schema) throw new TypeError('Missing schema for key: ' + key);
-
-    if (!input) return defaultValue;
-
-    switch (schema.type) {
-      case 'string':
-        return input as unknown as T[K];
-
-      case 'boolean':
-        const truthyValue = input === 'true' || input === 'on' || input === 'enable';
-        return Boolean(truthyValue) as unknown as T[K];
-
-      case 'array':
-        return input.split(';') as unknown as T[K];
-
-      default:
-        throw new TypeError(`Invalid schema type: "${schema.type}"`);
-    }
-  }
-}

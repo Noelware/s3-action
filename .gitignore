@@ -73,17 +73,14 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
-### JetBrains+iml Patch ###
-# Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-249601023
+### JetBrains+all Patch ###
+# Ignore everything but code style settings and run configurations
+# that are supposed to be shared within teams.
 
-*.iml
-modules.xml
-.idea/misc.xml
-*.ipr
+.idea/*
 
-### NextJS ###
-# Next build dir
-.next/
+!.idea/codeStyles
+!.idea/runConfigurations
 
 ### Node ###
 # Logs
@@ -244,7 +241,22 @@ dist
 .history
 .ionide
 
-# Support for Project snippet scope
+### yarn ###
+# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+
+.yarn/*
+!.yarn/releases
+!.yarn/patches
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
+# if you are NOT using Zero-installs, then:
+# comment the following lines
+!.yarn/cache
+
+# and uncomment the following lines
+# .pnp.*
 
 ### VisualStudio ###
 ## Ignore Visual Studio temporary files, build results, and
@@ -639,5 +651,5 @@ FodyWeavers.xsd
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
-# Ignore _ in husky
-_
+.yarn/cache/
+!.yarn/releases/
