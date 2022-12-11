@@ -1,0 +1,14 @@
+{
+  "extends": "@augu/tsconfig",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "typeRoots": ["./@types", "./node_modules/@types"],
+    "types": ["node"],
+    "skipLibCheck": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules"],
+  "include": ["**/*.ts"]
+}
