@@ -11,7 +11,7 @@
 ```yaml
 steps:
   - name: Upload to Amazon S3
-    use: Noelware/s3-action@v2.0.0 # this can be `master` or a tagged release
+    use: Noelware/s3-action@v2 # this can be `master` or a tagged release
     with:
       directories: |
         ./some/directory,

@@ -78,3 +78,7 @@ inputs:
     description: If the S3 client should enforce path access style or not, recommended for instances using MinIO
     required: false
     default: 'false'
+  region:
+    description: S3 region to use
+    required: false
+    default: us-east-1
