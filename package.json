@@ -22,7 +22,7 @@
     "@aws-sdk/client-s3": "3.231.0",
     "@noelware/utils": "2.2.1",
     "mime-types": "2.1.35",
-    "zod": "3.19.1"
+    "zod": "3.20.2"
   },
   "devDependencies": {
     "@augu/eslint-config": "3.0.0",
