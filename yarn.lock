@@ -1521,6 +1521,7 @@ __metadata:
     tsup: 6.5.0
     tsx: 3.12.1
     typescript: 4.9.4
+    vite: 4.0.1
     vitest: 0.25.8
     zod: 3.20.2
   languageName: unknown
@@ -4486,7 +4487,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^3.0.0 || ^4.0.0":
+"vite@npm:4.0.1, vite@npm:^3.0.0 || ^4.0.0":
   version: 4.0.1
   resolution: "vite@npm:4.0.1"
   dependencies:
