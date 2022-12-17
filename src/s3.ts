@@ -21,12 +21,13 @@
  * SOFTWARE.
  */
 
-import { CreateBucketCommand, HeadBucketCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { CreateBucketCommand, HeadBucketCommand, S3Client } from '@aws-sdk/client-s3';
 import { parsePathFormatSyntax } from './PathFormatSyntax';
 import type { InputConfig } from './config';
 import * as core from '@actions/core';
 import { Readable } from 'stream';
 import { lookup } from 'mime-types';
+import { Upload } from '@aws-sdk/lib-storage';
 
 // only exported for tests
 export let s3Client: S3Client;
@@ -54,7 +55,7 @@ export const initS3Client = async ({
       }),
 
     forcePathStyle: enforcePathAccessStyle,
-    endpoint: endpoint || 's3.amazonaws.com',
+    endpoint: endpoint || 'https://s3.amazonaws.com',
     region
   });
 
@@ -86,19 +87,21 @@ export const upload = async ({
   acl: string;
 }) => {
   if (!s3Client) throw new Error('You need to initialize the S3 client with the #initS3Client function');
-  core.info(`Uploading object ${file}...`);
-
   const contentType = lookup(file) || 'application/octet-stream';
   const key = parsePathFormatSyntax(pathFormat || '$(prefix)/$(file)', { prefix, file });
-  await s3Client.send(
-    new PutObjectCommand({
-      ContentType: contentType,
-      Bucket: bucket,
-      Body: stream,
-      Key: key,
-      ACL: acl
-    })
-  );
 
-  core.info(`Uploaded object [${file}] with content type ${contentType}`);
+  core.info(`Uploading object [${file}] with path format [${key}] & content type [${contentType}]`);
+  const upload = new Upload({
+    client: s3Client,
+    partSize: 1024 * 1024 * 15,
+    params: {
+      Bucket: bucket,
+      Key: key,
+      Body: stream,
+      ACL: acl
+    }
+  });
+
+  upload.on('httpUploadProgress', console.log);
+  await upload.done();
 };

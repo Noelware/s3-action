@@ -1,7 +1,7 @@
 {
   "name": "@noelware/s3-action",
   "description": "☕ Simple and fast GitHub Action to upload objects to Amazon S3 easily",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "Noel <cutie@floofy.dev>",
   "private": true,
   "repository": "https://github.com/Noelware/s3-action",
@@ -20,6 +20,7 @@
     "@actions/core": "1.10.0",
     "@actions/glob": "0.3.0",
     "@aws-sdk/client-s3": "3.226.0",
+    "@aws-sdk/lib-storage": "3.231.0",
     "@noelware/utils": "2.2.1",
     "mime-types": "2.1.35",
     "zod": "3.19.1"
