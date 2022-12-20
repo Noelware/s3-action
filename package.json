@@ -8,7 +8,7 @@
   "bugs": "https://github.com/Noelware/s3-action/issues/new",
   "main": "./build/action.js",
   "types": "index.d.ts",
-  "packageManager": "yarn@3.3.0",
+  "packageManager": "yarn@3.3.1",
   "scripts": {
     "lint:ci": "tsx --tsconfig ./scripts/tsconfig.json scripts/eslint.ci.ts",
     "build": "tsx --tsconfig ./scripts/tsconfig.json scripts/build.ts",
