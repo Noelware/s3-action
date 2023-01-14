@@ -1519,7 +1519,7 @@ __metadata:
     eslint-config-prettier: 8.6.0
     mime-types: 2.1.35
     prettier: 2.8.3
-    rimraf: 4.0.4
+    rimraf: 4.0.5
     tsup: 6.5.0
     tsx: 3.12.2
     typescript: 4.9.4
@@ -4012,12 +4012,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rimraf@npm:4.0.4":
-  version: 4.0.4
-  resolution: "rimraf@npm:4.0.4"
+"rimraf@npm:4.0.5":
+  version: 4.0.5
+  resolution: "rimraf@npm:4.0.5"
   bin:
     rimraf: dist/cjs/src/bin.js
-  checksum: a3296ea15c79fe3da0bae06a484dd8b8ec1e6d3044b02f05ce27575ef23c856e37eef6e71a668ce0e263da594a05ace1e88be6f42200f1fbbf433b57121bae32
+  checksum: e99139d6460d4460125288565698ff43f5cb8734feda83694187a029b21bdd6e63c063a1cb899ae8deaccc4345fbb69fa45e655329b2fb93f21ad809da1948eb
   languageName: node
   linkType: hard
 
