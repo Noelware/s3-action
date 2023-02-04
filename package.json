@@ -30,7 +30,7 @@
     "@augu/tsconfig": "1.1.1",
     "@types/eslint": "8.21.0",
     "@types/mime-types": "2.1.1",
-    "@types/node": "18.11.18",
+    "@types/node": "18.11.19",
     "@types/rimraf": "3.0.2",
     "@typescript-eslint/eslint-plugin": "5.50.0",
     "@typescript-eslint/parser": "5.50.0",
