@@ -37,7 +37,7 @@
     "@vercel/ncc": "0.36.1",
     "eslint": "8.33.0",
     "eslint-config-prettier": "8.6.0",
-    "prettier": "2.8.3",
+    "prettier": "2.8.4",
     "rimraf": "4.1.2",
     "tsup": "6.6.0",
     "tsx": "3.12.3",
