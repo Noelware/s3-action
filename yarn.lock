@@ -1826,7 +1826,7 @@ __metadata:
     mime-types: 2.1.35
     prettier: 2.8.4
     rimraf: 4.1.2
-    tsup: 6.6.0
+    tsup: 6.6.2
     tsx: 3.12.3
     typescript: 4.9.5
     vite: 4.1.1
@@ -5064,9 +5064,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsup@npm:6.6.0":
-  version: 6.6.0
-  resolution: "tsup@npm:6.6.0"
+"tsup@npm:6.6.2":
+  version: 6.6.2
+  resolution: "tsup@npm:6.6.2"
   dependencies:
     bundle-require: ^4.0.0
     cac: ^6.7.12
@@ -5096,7 +5096,7 @@ __metadata:
   bin:
     tsup: dist/cli-default.js
     tsup-node: dist/cli-node.js
-  checksum: 202ed7a6b607190f47dd7503994e8e62ce672a35ff3ecaf4c1dc4c8a9590b99f91ce8c1303e28781b5a089450140492729a41d93874e87936aed94e205155551
+  checksum: 80d52608f187d0cda8b8029acca52ed9da5f1152915f8e8b2c23efe1fb309a90229098005740596a6e30a91b3f270b39b3d81437d5a9b7b3d3e9ff8fc0aa98e6
   languageName: node
   linkType: hard
 
