@@ -28,7 +28,7 @@
   "devDependencies": {
     "@augu/eslint-config": "3.0.0",
     "@augu/tsconfig": "1.1.1",
-    "@types/eslint": "8.21.1",
+    "@types/eslint": "8.21.2",
     "@types/mime-types": "2.1.1",
     "@types/node": "18.15.1",
     "@types/rimraf": "3.0.2",
