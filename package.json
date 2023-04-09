@@ -38,7 +38,7 @@
     "eslint": "8.38.0",
     "eslint-config-prettier": "8.8.0",
     "prettier": "2.8.7",
-    "rimraf": "4.4.1",
+    "rimraf": "5.0.0",
     "tsup": "6.7.0",
     "tsx": "3.12.6",
     "typescript": "5.0.4",
