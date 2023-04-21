@@ -164,9 +164,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-s3@npm:3.316.0":
-  version: 3.316.0
-  resolution: "@aws-sdk/client-s3@npm:3.316.0"
+"@aws-sdk/client-s3@npm:3.317.0":
+  version: 3.317.0
+  resolution: "@aws-sdk/client-s3@npm:3.317.0"
   dependencies:
     "@aws-crypto/sha1-browser": 3.0.0
     "@aws-crypto/sha256-browser": 3.0.0
@@ -222,7 +222,7 @@ __metadata:
     "@aws-sdk/xml-builder": 3.310.0
     fast-xml-parser: 4.1.2
     tslib: ^2.5.0
-  checksum: ef1f508f990e46cd3c376f7b70a5c9272bf38d35ff1c48e7af60ae701489614653c9303d2aa60b2c293f68c959087e75cf60df2d14774eec40140ddb803ef328
+  checksum: 67f6ec39adfe7913a30228ef24f05d979e6499d7650e02582ec58c9f0534696aead946f9f6b74f6ca0e5adc10fe2163fd65832b5a06c9d23845e0f1c3659155e
   languageName: node
   linkType: hard
 
@@ -579,9 +579,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/lib-storage@npm:3.316.0":
-  version: 3.316.0
-  resolution: "@aws-sdk/lib-storage@npm:3.316.0"
+"@aws-sdk/lib-storage@npm:3.317.0":
+  version: 3.317.0
+  resolution: "@aws-sdk/lib-storage@npm:3.317.0"
   dependencies:
     "@aws-sdk/middleware-endpoint": 3.310.0
     "@aws-sdk/smithy-client": 3.316.0
@@ -592,7 +592,7 @@ __metadata:
   peerDependencies:
     "@aws-sdk/abort-controller": ^3.0.0
     "@aws-sdk/client-s3": ^3.0.0
-  checksum: d8f73c204e631e1b32e3a09f680f22969497f65ca5e6dedd2245488f391bef18d4168140bebed045074275b6bd13e85238043bf3adf6c996b75d9a038473ed00
+  checksum: aeef8079a84c87b4167fdb25910cd26a5e06e845b6e6ddeda811cba55d8a86f467d80a0c5aa7096e8ad786a529a71cf9453a8c9d1a9f017c79fb8abfceca9ea7
   languageName: node
   linkType: hard
 
@@ -1825,8 +1825,8 @@ __metadata:
     "@actions/glob": 0.4.0
     "@augu/eslint-config": 3.0.0
     "@augu/tsconfig": 1.1.1
-    "@aws-sdk/client-s3": 3.316.0
-    "@aws-sdk/lib-storage": 3.316.0
+    "@aws-sdk/client-s3": 3.317.0
+    "@aws-sdk/lib-storage": 3.317.0
     "@noelware/utils": 2.2.1
     "@types/eslint": 8.37.0
     "@types/mime-types": 2.1.1
