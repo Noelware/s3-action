@@ -164,9 +164,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-s3@npm:3.329.0":
-  version: 3.329.0
-  resolution: "@aws-sdk/client-s3@npm:3.329.0"
+"@aws-sdk/client-s3@npm:3.331.0":
+  version: 3.331.0
+  resolution: "@aws-sdk/client-s3@npm:3.331.0"
   dependencies:
     "@aws-crypto/sha1-browser": 3.0.0
     "@aws-crypto/sha256-browser": 3.0.0
@@ -187,7 +187,7 @@ __metadata:
     "@aws-sdk/middleware-content-length": 3.329.0
     "@aws-sdk/middleware-endpoint": 3.329.0
     "@aws-sdk/middleware-expect-continue": 3.329.0
-    "@aws-sdk/middleware-flexible-checksums": 3.329.0
+    "@aws-sdk/middleware-flexible-checksums": 3.331.0
     "@aws-sdk/middleware-host-header": 3.329.0
     "@aws-sdk/middleware-location-constraint": 3.329.0
     "@aws-sdk/middleware-logger": 3.329.0
@@ -214,7 +214,7 @@ __metadata:
     "@aws-sdk/util-endpoints": 3.329.0
     "@aws-sdk/util-retry": 3.329.0
     "@aws-sdk/util-stream-browser": 3.329.0
-    "@aws-sdk/util-stream-node": 3.329.0
+    "@aws-sdk/util-stream-node": 3.331.0
     "@aws-sdk/util-user-agent-browser": 3.329.0
     "@aws-sdk/util-user-agent-node": 3.329.0
     "@aws-sdk/util-utf8": 3.310.0
@@ -222,7 +222,7 @@ __metadata:
     "@aws-sdk/xml-builder": 3.310.0
     fast-xml-parser: 4.1.2
     tslib: ^2.5.0
-  checksum: dd413da8c16a0ed2246e60a65c18dad143535e72f234da35ba85561dc14ec06e669f155bf37039c9dc7a15547bc6ce792d9fec89d7b0a896b37aa54ebb2ae16c
+  checksum: 0ec5faa56dc956414e1443ebafee382e90bf0bede67a23b0c5775a6e28ea2851832707d3f40a47e8d3151da293e9c85cb3131be4efc6449153df040aa6578315
   languageName: node
   linkType: hard
 
@@ -579,9 +579,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/lib-storage@npm:3.329.0":
-  version: 3.329.0
-  resolution: "@aws-sdk/lib-storage@npm:3.329.0"
+"@aws-sdk/lib-storage@npm:3.331.0":
+  version: 3.331.0
+  resolution: "@aws-sdk/lib-storage@npm:3.331.0"
   dependencies:
     "@aws-sdk/middleware-endpoint": 3.329.0
     "@aws-sdk/smithy-client": 3.329.0
@@ -592,7 +592,7 @@ __metadata:
   peerDependencies:
     "@aws-sdk/abort-controller": ^3.0.0
     "@aws-sdk/client-s3": ^3.0.0
-  checksum: 47e3ec6cc4882e6b016c3a161ca0bbfd733f3b6a89a3ee2af80df17ca14113104df79f32d901ce460899da8d01182fc7fddc1ddef3858c5e2020ffa29231ed20
+  checksum: ee45fd6215fa6ca62fbf931a31695fcc97d1bc74a3b654745cbe1dd42d9ebdaa6aa70595d7428ffc9dbabee4f0eff114ba235770194b60974973bd3107462b0e
   languageName: node
   linkType: hard
 
@@ -655,9 +655,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/middleware-flexible-checksums@npm:3.329.0":
-  version: 3.329.0
-  resolution: "@aws-sdk/middleware-flexible-checksums@npm:3.329.0"
+"@aws-sdk/middleware-flexible-checksums@npm:3.331.0":
+  version: 3.331.0
+  resolution: "@aws-sdk/middleware-flexible-checksums@npm:3.331.0"
   dependencies:
     "@aws-crypto/crc32": 3.0.0
     "@aws-crypto/crc32c": 3.0.0
@@ -666,7 +666,7 @@ __metadata:
     "@aws-sdk/types": 3.329.0
     "@aws-sdk/util-utf8": 3.310.0
     tslib: ^2.5.0
-  checksum: 06a3ca6c7dfd679c092d2f504caf8c72107243efa408f9e04055e4ce74dd32806b5f786f84dd6e9586c4ba92c81f7f3817e7191df45546c775b8f9b682e266f5
+  checksum: 3186f5902afb4bd1a9d9aab9b6f0c70869734981ef721989a778cd5b3a5d1feb6915234aceaa044b1435e3100115dbafa7034494b65f88aa41bc738410c9d089
   languageName: node
   linkType: hard
 
@@ -1116,15 +1116,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/util-stream-node@npm:3.329.0":
-  version: 3.329.0
-  resolution: "@aws-sdk/util-stream-node@npm:3.329.0"
+"@aws-sdk/util-stream-node@npm:3.331.0":
+  version: 3.331.0
+  resolution: "@aws-sdk/util-stream-node@npm:3.331.0"
   dependencies:
     "@aws-sdk/node-http-handler": 3.329.0
     "@aws-sdk/types": 3.329.0
     "@aws-sdk/util-buffer-from": 3.310.0
     tslib: ^2.5.0
-  checksum: 67e018f8a9ad7da48ceaed48419580e017d91743de3872c9a23900e104651029261d70faed4b7cf479d2c0902297d3c7385ea3393af7798d2e6a88e037a259fc
+  checksum: 5c9c6a97e8440b40d1d317d799ff4f951eb0c190e4d640eabf2a7f1c86cf057cebbada4b10944b7523bdab15fe4dc3ad4555f6dce0542599e9c4c848c63d2dca
   languageName: node
   linkType: hard
 
@@ -1825,8 +1825,8 @@ __metadata:
     "@actions/glob": 0.4.0
     "@augu/eslint-config": 3.0.0
     "@augu/tsconfig": 1.1.1
-    "@aws-sdk/client-s3": 3.329.0
-    "@aws-sdk/lib-storage": 3.329.0
+    "@aws-sdk/client-s3": 3.331.0
+    "@aws-sdk/lib-storage": 3.331.0
     "@noelware/utils": 2.3.0
     "@types/eslint": 8.37.0
     "@types/mime-types": 2.1.1
