@@ -26,7 +26,7 @@
     "zod": "3.21.4"
   },
   "devDependencies": {
-    "@augu/eslint-config": "3.0.0",
+    "@augu/eslint-config": "4.0.1",
     "@augu/tsconfig": "1.1.1",
     "@types/eslint": "8.37.0",
     "@types/mime-types": "2.1.1",
