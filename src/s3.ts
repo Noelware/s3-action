@@ -71,7 +71,7 @@ export const initS3Client = async ({
     return s3Client;
 };
 
-export const upload = ({
+export const upload = async ({
     pathFormat,
     prefix,
     stream,
@@ -108,5 +108,6 @@ export const upload = ({
         );
     });
 
-    return upload.done().then(() => core.endGroup());
+    await upload.done();
+    core.endGroup();
 };
