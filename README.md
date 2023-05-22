@@ -2,7 +2,7 @@
 
 > _Simple and fast GitHub Action to upload objects to Amazon S3 easily._
 >
-> <kbd><a href="https://github.com/Noelware/s3-action/releases/v2.0.0">v2.0.0</a></kbd> | [:scroll: **Documentation**](https://s3.noelware.org)
+> <kbd><a href="https://github.com/Noelware/s3-action/releases/v2.2.0">v2.2.0</a></kbd> | [:scroll: **Documentation**](https://s3.noelware.org)
 
 **s3-action** is a simple and easy GitHub Action to upload artifacts to any compatible Amazon S3 instances. Noelware uses Amazon S3 to host our artifacts, images and more with [:feather: Hazel](https://noelware.org/hazel).
 
