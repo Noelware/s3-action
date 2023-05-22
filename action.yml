@@ -1,5 +1,5 @@
 # ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
-# Copyright (c) 2021-2023 Noelware Team <team@noelware.org>
+# Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,65 +20,65 @@
 # SOFTWARE.
 
 name: Upload to Amazon S3 Action
-description: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
-author: Noelware Team
+description: ☕ Simple and fast GitHub Action to upload objects to Amazon S3 easily.
+author: Noelware, LLC.
 branding:
-  icon: zap
-  color: purple
+    icon: zap
+    color: purple
 runs:
-  using: node16
-  main: ./build/action.js
+    using: node16
+    main: ./build/action.js
 inputs:
-  directories:
-    required: false
-    description: Input to indicate which directories should be uploaded to Amazon S3.
-    default: ''
-  files:
-    description: Input to indicate which files should be uploaded to Amazon S3.
-    required: false
-    default: ''
-  access-key-id:
-    description: Access Key ID to use when authenticating with Amazon S3
-    required: true
-  secret-key:
-    description: Secret Key to use when authenticating with Amazon S3
-    required: true
-  path-format:
-    description: Path formatting syntax to use when uploading objects to Amazon S3.
-    required: false
-    default: '$(prefix)/$(file)'
-  endpoint:
-    description: Absolute URL (without scheme, i.e, http) to reach when conning to Amazon S3.
-    required: false
-    default: s3.amazonaws.com
-  prefix:
-    description: Prefix string to use when uploading artifacts on Amazon S3. Useful when using the "path-format" syntax.
-    required: false
-    default: /
-  bucket:
-    description: S3 bucket to place objects in
-    required: true
-  bucket-acl:
-    description: ACL for the bucket when the bucket doesn't exist on Amazon S3.
-    required: false
-    default: public-read
-  object-acl:
-    description: ACL for objects when uploading to Amazon S3.
-    required: false
-    default: public-read
-  exclude:
-    description: List of directories or files to exclude in the final output
-    required: false
-    default: ''
-  follow-symlinks:
-    description: If the action should follow symbolic link files or not
-    required: false
-    default: 'false'
-  enforce-path-access-style:
-    description: If the S3 client should enforce path access style or not, recommended for instances using MinIO
-    required: false
-    default: 'false'
-  region:
-    description: S3 region to use
-    required: false
-    default: us-east-1
+    directories:
+        required: false
+        description: Input to indicate which directories should be uploaded to Amazon S3.
+        default: ''
+    files:
+        description: Input to indicate which files should be uploaded to Amazon S3.
+        required: false
+        default: ''
+    access-key-id:
+        description: Access Key ID to use when authenticating with Amazon S3
+        required: true
+    secret-key:
+        description: Secret Key to use when authenticating with Amazon S3
+        required: true
+    path-format:
+        description: Path formatting syntax to use when uploading objects to Amazon S3.
+        required: false
+        default: '$(prefix)/$(file)'
+    endpoint:
+        description: Absolute URL (without scheme, i.e, http) to reach when conning to Amazon S3.
+        required: false
+        default: s3.amazonaws.com
+    prefix:
+        description: Prefix string to use when uploading artifacts on Amazon S3. Useful when using the "path-format" syntax.
+        required: false
+        default: /
+    bucket:
+        description: S3 bucket to place objects in
+        required: true
+    bucket-acl:
+        description: ACL for the bucket when the bucket doesn't exist on Amazon S3.
+        required: false
+        default: public-read
+    object-acl:
+        description: ACL for objects when uploading to Amazon S3.
+        required: false
+        default: public-read
+    exclude:
+        description: List of directories or files to exclude in the final output
+        required: false
+        default: ''
+    follow-symlinks:
+        description: If the action should follow symbolic link files or not
+        required: false
+        default: 'false'
+    enforce-path-access-style:
+        description: If the S3 client should enforce path access style or not, recommended for instances using MinIO
+        required: false
+        default: 'false'
+    region:
+        description: S3 region to use
+        required: false
+        default: us-east-1

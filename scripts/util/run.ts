@@ -1,6 +1,6 @@
 /*
  * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2023 Noelware Team <team@noelware.org>
+ * Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,30 +21,14 @@
  * SOFTWARE.
  */
 
-import { info, warning, error, setFailed } from '@actions/core';
-import { ESLint } from 'eslint';
-
-async function main() {
-  info('Now running ESLint...');
-
-  const linter = new ESLint({ useEslintrc: true });
-  const results = await linter.lintFiles(['src/**/*.ts']);
-
-  for (const result of results) {
-    info(`Received ${result.warningCount} warnings and ${result.errorCount} errors.`);
-
-    for (const message of result.messages) {
-      const log = message.severity === 1 ? warning : error;
-      log(`${result.filePath}:${message.line}:${message.column} <${message.ruleId}> ~ ${message.message}`, {
-        file: result.filePath,
-        endColumn: message.endColumn,
-        endLine: message.endLine,
-        startColumn: message.column,
-        startLine: message.line,
-        title: `${message.ruleId}: ${message.message}`
-      });
-    }
-  }
+export default function run<F extends (...args: any[]) => Promise<any>>(
+    func: F,
+    ...args: Parameters<F>
+): ReturnType<Awaited<F>> {
+    return func(...args)
+        .then(() => process.exit(0))
+        .catch((ex) => {
+            console.error(ex);
+            process.exit(1);
+        }) as ReturnType<Awaited<F>>;
 }
-
-main().catch((ex) => setFailed(ex));

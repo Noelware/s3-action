@@ -1,6 +1,6 @@
 /*
  * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2023 Noelware Team <team@noelware.org>
+ * Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,56 +22,56 @@
  */
 
 declare module '@vercel/ncc' {
-  export interface Options<Watch extends boolean = false> {
-    /** Custom cache path, or `false` to disable caching */
-    cache?: string | false;
+    export interface Options<Watch extends boolean = false> {
+        /** Custom cache path, or `false` to disable caching */
+        cache?: string | false;
 
-    /** External packages to leave as required of the build */
-    externals?: string[];
+        /** External packages to leave as required of the build */
+        externals?: string[];
 
-    /** Directory outside of  which never to emit assets in */
-    filterAssetBase?: string;
+        /** Directory outside of  which never to emit assets in */
+        filterAssetBase?: string;
 
-    /** Minifies the output content */
-    minify?: boolean;
+        /** Minifies the output content */
+        minify?: boolean;
 
-    /** Generates sourcemaps when building */
-    sourceMap?: boolean;
+        /** Generates sourcemaps when building */
+        sourceMap?: boolean;
 
-    /** Relative path to treat sources from into the related sourcemap */
-    sourceMapBasePrefix?: string;
+        /** Relative path to treat sources from into the related sourcemap */
+        sourceMapBasePrefix?: string;
 
-    /** When outputted, the file includes `source-map-support` in the output file; increases output by ~32KB */
-    sourceMapRegister?: boolean;
+        /** When outputted, the file includes `source-map-support` in the output file; increases output by ~32KB */
+        sourceMapRegister?: boolean;
 
-    /** Whether to watch the input files to build the finialized output */
-    watch?: Watch;
+        /** Whether to watch the input files to build the finialized output */
+        watch?: Watch;
 
-    /** Generates a licenses file in the final output */
-    license?: string;
+        /** Generates a licenses file in the final output */
+        license?: string;
 
-    quiet?: boolean;
-    debugLog?: boolean;
-    v8cache?: boolean;
-    assetBuilds?: boolean;
-  }
+        quiet?: boolean;
+        debugLog?: boolean;
+        v8cache?: boolean;
+        assetBuilds?: boolean;
+    }
 
-  export interface OutputResult {
-    code: string;
-    map?: string;
-    assets: Record<string, { source: Buffer; permissions?: any }>;
-    symlinks: Record<string, any>;
-    stats: any;
-  }
+    export interface OutputResult {
+        code: string;
+        map?: string;
+        assets: Record<string, { source: Buffer; permissions?: any }>;
+        symlinks: Record<string, any>;
+        stats: any;
+    }
 
-  export interface Watcher {
-    handler({ err, code, map, assets }: OutputResult & { err?: Error }): void;
-    rebuild(callback: () => void): void;
-    close(): void;
-  }
+    export interface Watcher {
+        handler({ err, code, map, assets }: OutputResult & { err?: Error }): void;
+        rebuild(callback: () => void): void;
+        close(): void;
+    }
 
-  function ncc(input: string, options: Options<false>): Promise<OutputResult>;
-  function ncc(input: string, options: Options<true>): Promise<Watcher>;
+    function ncc(input: string, options: Options<false>): Promise<OutputResult>;
+    function ncc(input: string, options: Options<true>): Promise<Watcher>;
 
-  export default ncc;
+    export default ncc;
 }

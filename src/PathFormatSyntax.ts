@@ -1,6 +1,6 @@
 /*
  * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2023 Noelware Team <team@noelware.org>
+ * Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,37 +28,37 @@ import { warning } from '@actions/core';
  * Represents the list of matchers that are available.
  */
 export interface Matchers {
-  branch(): string;
-  prefix: boolean;
-  tag(): string;
-  file: boolean;
+    branch(): string;
+    prefix: boolean;
+    tag(): string;
+    file: boolean;
 }
 
 /**
  * Represents a object of given {@link Matchers}.
  */
 export const MATCHERS: Matchers = {
-  branch() {
-    try {
-      return execSync('', { encoding: 'utf-8' }).trim();
-    } catch {
-      return '';
-    }
-  },
+    branch() {
+        try {
+            return execSync('', { encoding: 'utf-8' }).trim();
+        } catch {
+            return '';
+        }
+    },
 
-  tag() {
-    const ref = process.env.GITHUB_REF;
-    if (!ref) return '';
-    if (!ref.startsWith('ref/tags/')) {
-      warning(`Unable to determine if [${ref}] is a tagged reference (reason: didn't start with refs/tags/)`);
-      return '';
-    }
+    tag() {
+        const ref = process.env.GITHUB_REF;
+        if (!ref) return '';
+        if (!ref.startsWith('ref/tags/')) {
+            warning(`Unable to determine if [${ref}] is a tagged reference (reason: didn't start with refs/tags/)`);
+            return '';
+        }
 
-    return ref.replace(/^refs\/tags\//, '');
-  },
+        return ref.replace(/^refs\/tags\//, '');
+    },
 
-  prefix: true,
-  file: true
+    prefix: true,
+    file: true
 };
 
 /**
@@ -78,27 +78,27 @@ export const MATCHERS: Matchers = {
  * ```
  */
 export const parsePathFormatSyntax = (syntax: string, { prefix, file }: Record<'prefix' | 'file', string>) => {
-  const result = syntax.replace(/[$]\(([\w\.]+)\)/g, (_, key) => {
-    const matcher = MATCHERS[key] as boolean | (() => string);
-    if (!matcher) return key;
+    const result = syntax.replace(/[$]\(([\w\.]+)\)/g, (_, key) => {
+        const matcher = MATCHERS[key] as boolean | (() => string);
+        if (!matcher) return key;
 
-    if (typeof matcher === 'boolean' && matcher === true) {
-      switch (key) {
-        case 'prefix':
-          return prefix;
-        case 'file':
-          return file;
-        default:
-          throw new TypeError(`Unknown matcher [${key}]`);
-      }
-    } else {
-      return matcher();
+        if (typeof matcher === 'boolean' && matcher === true) {
+            switch (key) {
+                case 'prefix':
+                    return prefix;
+                case 'file':
+                    return file;
+                default:
+                    throw new TypeError(`Unknown matcher [${key}]`);
+            }
+        } else {
+            return matcher();
+        }
+    });
+
+    if (result[0] === prefix && result[1] === prefix) {
+        return result.substring(1);
     }
-  });
 
-  if (result[0] === prefix && result[1] === prefix) {
-    return result.substring(1);
-  }
-
-  return result;
+    return result;
 };

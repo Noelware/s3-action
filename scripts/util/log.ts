@@ -1,6 +1,6 @@
 /*
  * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2023 Noelware Team <team@noelware.org>
+ * Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,10 +21,18 @@
  * SOFTWARE.
  */
 
-import { defineConfig } from 'vitest/config';
+import { tryRequire } from '@noelware/utils';
 
-export default defineConfig({
-    test: {
-        dir: './tests'
-    }
-});
+const { Signale } = tryRequire<typeof import('signale')>('signale');
+export default function getLogger(...paths: string[]) {
+    const scope = `s3-upload:action${paths.length ? `:${paths.join(':')}` : ''}`;
+
+    return new Signale({
+        scope,
+        config: {
+            displayBadge: true,
+            displayLabel: true,
+            displayDate: true
+        }
+    });
+}

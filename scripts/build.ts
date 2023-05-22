@@ -1,6 +1,6 @@
 /*
  * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2023 Noelware Team <team@noelware.org>
+ * Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,35 +21,35 @@
  * SOFTWARE.
  */
 
+import { __dirname as dirname } from './util/esm';
 import { mkdir, writeFile } from 'fs/promises';
 import { join, resolve } from 'path';
 import { existsSync } from 'fs';
-import rimraf from 'rimraf';
+import { rimraf } from 'rimraf';
+import getLogger from './util/log';
 import ncc from '@vercel/ncc';
+import run from './util/run';
 
-async function main() {
-  // Remove the `build` directory when building
-  rimraf.sync(join(process.cwd(), 'build'));
+const __dirname = dirname.get();
+const log = getLogger('build');
 
-  console.log('Building @noelware/s3-action with @vercel/ncc...');
-  const result = await ncc(resolve(process.cwd(), 'src/main.ts'), {
-    minify: true,
-    cache: false,
-    license: 'LICENSE'
-  });
+run(async () => {
+    await rimraf(join(__dirname, 'build'));
 
-  const took = result.stats.compilation.endTime - result.stats.compilation.startTime;
-  console.log(`--> Build took ~${took}ms to complete`);
+    log.await('Building @noelware/s3-action with @vercel/ncc!');
+    const result = await ncc(resolve(process.cwd(), 'src/main.ts'), {
+        minify: true,
+        cache: false,
+        license: 'LICENSE'
+    });
 
-  if (!existsSync(join(process.cwd(), 'build'))) await mkdir(join(process.cwd(), 'build'));
-  await writeFile(join(process.cwd(), 'build', 'action.js'), result.code);
+    const took = result.stats.compilation.endTime - result.stats.compilation.startTime;
+    log.success(`Took ~${took}ms to complete build!`);
 
-  for (const [file, { source }] of Object.entries(result.assets)) {
-    await writeFile(join(process.cwd(), 'build', file), source);
-  }
-}
+    if (!existsSync(join(process.cwd(), 'build'))) await mkdir(join(process.cwd(), 'build'));
+    await writeFile(join(process.cwd(), 'build', 'action.js'), result.code);
 
-main().catch((ex) => {
-  console.error(ex);
-  process.exit(1);
+    for (const [file, { source }] of Object.entries(result.assets)) {
+        await writeFile(join(process.cwd(), 'build', file), source);
+    }
 });

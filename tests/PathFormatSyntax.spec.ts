@@ -25,6 +25,6 @@ import { parsePathFormatSyntax } from '../src/PathFormatSyntax';
 import { test, expect } from 'vitest';
 
 test('if parsePathFormatSyntax resolves correctly', () => {
-  expect(parsePathFormatSyntax('$(prefix)/$(file)', { prefix: '/', file: 'src/main.ts' })).toBe('/src/main.ts');
-  expect(parsePathFormatSyntax('$(prefix)', { prefix: '/', file: 'src/main.ts' })).toBe('/');
+    expect(parsePathFormatSyntax('$(prefix)/$(file)', { prefix: '/', file: 'src/main.ts' })).toBe('/src/main.ts');
+    expect(parsePathFormatSyntax('$(prefix)', { prefix: '/', file: 'src/main.ts' })).toBe('/');
 });

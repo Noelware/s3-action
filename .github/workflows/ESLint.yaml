@@ -1,5 +1,5 @@
 # ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
-# Copyright (c) 2021-2023 Noelware Team <team@noelware.org>
+# Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,80 +21,80 @@
 
 name: ESLint Pipeline
 on:
-  workflow_dispatch: {}
-  pull_request:
-    types: [synchronize, opened]
-    branches:
-      - 'issue/gh-**'
-      - 'feat/**'
-      - master
+    workflow_dispatch: {}
+    pull_request:
+        types: [synchronize]
+        branches:
+            - 'issue/gh-**'
+            - 'feat/**'
+            - master
 
-    paths-ignore:
-      - '.github/**'
-      - '.husky/**'
-      - '.vscode/**'
-      - 'assets/**'
-      - 'locales/**'
-      - 'docker/**'
-      - '.dockerignore'
-      - '.eslintignore'
-      - '.gitignore'
-      - '**.md'
-      - 'LICENSE'
-      - 'renovate.json'
-  push:
-    branches:
-      - 'issue/gh-**'
-      - 'feat/**'
-      - master
+        paths-ignore:
+            - '.github/**'
+            - '.husky/**'
+            - '.vscode/**'
+            - 'assets/**'
+            - 'locales/**'
+            - 'docker/**'
+            - '.dockerignore'
+            - '.eslintignore'
+            - '.gitignore'
+            - '**.md'
+            - 'LICENSE'
+            - 'renovate.json'
+    push:
+        branches:
+            - 'issue/gh-**'
+            - 'feat/**'
+            - master
 
-    paths-ignore:
-      - '.github/**'
-      - '.husky/**'
-      - '.vscode/**'
-      - 'assets/**'
-      - 'locales/**'
-      - 'docker/**'
-      - '.dockerignore'
-      - '.eslintignore'
-      - '.gitignore'
-      - '**.md'
-      - 'LICENSE'
-      - 'renovate.json'
+        paths-ignore:
+            - '.github/**'
+            - '.husky/**'
+            - '.vscode/**'
+            - 'assets/**'
+            - 'locales/**'
+            - 'docker/**'
+            - '.dockerignore'
+            - '.eslintignore'
+            - '.gitignore'
+            - '**.md'
+            - 'LICENSE'
+            - 'renovate.json'
 jobs:
-  eslint:
-    name: Linting Pipeline [Node ${{matrix.node-version}}]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x, 19.x]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
+    eslint:
+        name: Linting Pipeline [Node ${{matrix.node-version}}]
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [16.x, 19.x]
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+              with:
+                  submodules: recursive
 
-      - name: Setup Node.js v${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
+            - name: Setup Node.js v${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
 
-      - name: Setup Yarn and node_modules cache
-        uses: auguwu/node-pm-action@master
-        id: yarn-cache
-        with:
-          node-modules: ./node_modules
+            - name: Setup Yarn and node_modules cache
+              uses: auguwu/node-pm-action@master
+              id: yarn-cache
+              with:
+                  node-modules: ./node_modules
 
-      - name: Install dependencies
-        if: ${{steps.outputs.yarn-cache.cache-hit != 'true'}}
-        run: yarn install --immutable
+            - name: Install dependencies
+              if: ${{ steps.yarn-cache.outputs.cache-hit != 'true' }}
+              run: yarn install --immutable
 
-      - name: Run ESLint
-        run: yarn lint:ci
+            - name: Run ESLint
+              run: yarn lint
 
-      - name: Run unit tests
-        run: yarn test
-        env:
-          S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
-          S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
-          S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
+            - name: Run unit tests
+              run: yarn test
+              env:
+                  S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+                  S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+                  S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}

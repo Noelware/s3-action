@@ -1,3 +1,20 @@
 {
-  "extends": ["prettier", "@augu/eslint-config/ts.js"]
+    "extends": ["prettier"],
+    "ignorePatterns": ["LICENSE", "**/*.md"],
+    "overrides": [
+        {
+            "files": ["**/*.ts", "**/*.spec.ts"],
+            "extends": ["prettier", "@augu/eslint-config/ts.js"],
+            "parserOptions": {
+                "project": "./tsconfig.json"
+            }
+        },
+        {
+            "files": ["./scripts/**/*.ts"],
+            "extends": ["prettier", "@augu/eslint-config/ts.js"],
+            "parserOptions": {
+                "project": "./scripts/tsconfig.json"
+            }
+        }
+    ]
 }

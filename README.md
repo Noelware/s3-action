@@ -10,19 +10,19 @@
 
 ```yaml
 steps:
-  - name: Upload to Amazon S3
-    use: Noelware/s3-action@v2 # this can be `master` or a tagged release
-    with:
-      directories: |
-        ./some/directory,
-        ./some/other/directory
+    - name: Upload to Amazon S3
+      use: Noelware/s3-action@v2 # this can be `master` or a tagged release
+      with:
+          directories: |
+              ./some/directory,
+              ./some/other/directory
 
-      access-key-id: { access key id here }
-      path-format: '/$(tag)'
-      secret-key: { some secret key here }
-      endpoint: s3.amazonaws.com
-      prefix: /artifacts
-      region: us-east-1
+          access-key-id: { access key id here }
+          path-format: '/$(tag)'
+          secret-key: { some secret key here }
+          endpoint: s3.amazonaws.com
+          prefix: /artifacts
+          region: us-east-1
 ```
 
 ## Inputs
@@ -47,16 +47,16 @@ access-key-id: ${{ secrets.S3_ACCESS_KEY_ID }}
 
 **path-format** is a special field, it handles how the path should be formatted when uploading to Amazon S3. The library provides with multiple "keys" encapsulated in `$()` to use.
 
-- `$(file)`: The file name that is being uploaded, returns as the relative path.
-- `$(prefix)`: The prefix that is configured to use, i.e, `/artifacts`.
-- `$(branch)`: Returns the current branch the action is being ran in, examples: `master`, `main`, `trunk`, etc.
-- `$(tag)`: Returns the current release tag if it can be found, it will not attempt to put the actual release tag if the action isn't running with the `release` event.
+-   `$(file)`: The file name that is being uploaded, returns as the relative path.
+-   `$(prefix)`: The prefix that is configured to use, i.e, `/artifacts`.
+-   `$(branch)`: Returns the current branch the action is being ran in, examples: `master`, `main`, `trunk`, etc.
+-   `$(tag)`: Returns the current release tag if it can be found, it will not attempt to put the actual release tag if the action isn't running with the `release` event.
 
 #### Examples
 
-- `$(prefix)/$(branch)/$(file)` -> /artifacts/trunk/charted/server/v0.1.tar.gz
-- `$(branch)/$(file)` -> /trunk/charted/server/v0.1.tar.gz
-- `$(prefix)/$(file)` (default) -> /artifacts/charted/server/v0.1.tar.gz
+-   `$(prefix)/$(branch)/$(file)` -> /artifacts/trunk/charted/server/v0.1.tar.gz
+-   `$(branch)/$(file)` -> /trunk/charted/server/v0.1.tar.gz
+-   `$(prefix)/$(file)` (default) -> /artifacts/charted/server/v0.1.tar.gz
 
 ### endpoint: `URL` (Required: No, Default: `s3.amazonaws.com`)
 

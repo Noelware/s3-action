@@ -31,44 +31,44 @@ const accessKeyId = process.env.S3_ACCESS_KEY;
 const secretAccessKey = process.env.S3_SECRET_KEY;
 
 if (accessKeyId !== undefined && secretAccessKey !== undefined) {
-  test('if we can init the s3 client correctly', async () => {
-    await expect(
-      s3.initS3Client({
-        accessKeyId,
-        secretKey: secretAccessKey,
-        bucket: 'august',
-        bucketAcl: 'public-read',
-        endpoint: process.env.S3_ENDPOINT ?? 'https://s3.amazonaws.com',
-        region: process.env.S3_REGION ?? 'us-east-1',
-        enforcePathAccessStyle: true
-      })
-    ).resolves.toBeTruthy();
-  });
+    test('if we can init the s3 client correctly', async () => {
+        await expect(
+            s3.initS3Client({
+                accessKeyId,
+                secretKey: secretAccessKey,
+                bucket: 'august',
+                bucketAcl: 'public-read',
+                endpoint: process.env.S3_ENDPOINT ?? 'https://s3.amazonaws.com',
+                region: process.env.S3_REGION ?? 'us-east-1',
+                enforcePathAccessStyle: true
+            })
+        ).resolves.toBeTruthy();
+    });
 
-  test('if we can upload file', async () => {
-    await expect(
-      s3.upload({
-        pathFormat: '$(prefix)/$(file)',
-        prefix: '/',
-        stream: createReadStream(resolve(__dirname, '__fixtures__/wuff.json')),
-        bucket: 'august',
-        file: 'wuff.json',
-        acl: 'public-read'
-      })
-    ).resolves.toBeUndefined();
+    test('if we can upload file', async () => {
+        await expect(
+            s3.upload({
+                pathFormat: '$(prefix)/$(file)',
+                prefix: '/',
+                stream: createReadStream(resolve(__dirname, '__fixtures__/wuff.json')),
+                bucket: 'august',
+                file: 'wuff.json',
+                acl: 'public-read'
+            })
+        ).resolves.toBeUndefined();
 
-    // we need to delete it so we don't override the same thing lol
-    await expect(
-      s3.s3Client.send(
-        new DeleteObjectCommand({
-          Bucket: 'august',
-          Key: '/wuff.json'
-        })
-      )
-    ).resolves.toBeTruthy();
-  });
+        // we need to delete it so we don't override the same thing lol
+        await expect(
+            s3.s3Client.send(
+                new DeleteObjectCommand({
+                    Bucket: 'august',
+                    Key: '/wuff.json'
+                })
+            )
+        ).resolves.toBeTruthy();
+    });
 } else {
-  test('simple test because no env variables were defined', () => {
-    expect(1 + 1).toBe(2);
-  });
+    test('simple test because no env variables were defined', () => {
+        expect(1 + 1).toBe(2);
+    });
 }

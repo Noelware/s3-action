@@ -1,6 +1,6 @@
 /*
  * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2023 Noelware Team <team@noelware.org>
+ * Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,75 +33,80 @@ import { Upload } from '@aws-sdk/lib-storage';
 export let s3Client: S3Client;
 
 export const initS3Client = async ({
-  accessKeyId,
-  secretKey,
-  bucket,
-  endpoint,
-  region,
-  bucketAcl,
-  enforcePathAccessStyle
+    accessKeyId,
+    secretKey,
+    bucket,
+    endpoint,
+    region,
+    bucketAcl,
+    enforcePathAccessStyle
 }: Pick<
-  InputConfig,
-  'accessKeyId' | 'secretKey' | 'endpoint' | 'bucket' | 'region' | 'bucketAcl' | 'enforcePathAccessStyle'
+    InputConfig,
+    'accessKeyId' | 'secretKey' | 'endpoint' | 'bucket' | 'region' | 'bucketAcl' | 'enforcePathAccessStyle'
 >) => {
-  if (s3Client !== undefined) return s3Client;
+    if (s3Client !== undefined) return s3Client;
 
-  core.info(`Initializing S3 client with bucket ${bucket} on endpoint ${endpoint}...`);
-  s3Client = new S3Client({
-    credentialDefaultProvider: () => () =>
-      Promise.resolve({
-        secretAccessKey: secretKey,
-        accessKeyId
-      }),
+    core.info(`Initializing S3 client with bucket ${bucket} on endpoint ${endpoint}...`);
+    s3Client = new S3Client({
+        credentialDefaultProvider: () => () =>
+            Promise.resolve({
+                secretAccessKey: secretKey,
+                accessKeyId
+            }),
 
-    forcePathStyle: enforcePathAccessStyle,
-    endpoint: endpoint || 'https://s3.amazonaws.com',
-    region
-  });
+        forcePathStyle: enforcePathAccessStyle,
+        endpoint: endpoint || 'https://s3.amazonaws.com',
+        region
+    });
 
-  core.info(`Initialized S3 client! Checking if bucket ${bucket} exists...`);
-  const resp = await s3Client.send(new HeadBucketCommand({ Bucket: bucket }));
-  if (resp.$metadata.httpStatusCode === 404) {
-    core.info(`Bucket ${bucket} doesn't exist! Creating...`);
-    await s3Client.send(new CreateBucketCommand({ Bucket: bucket, ACL: bucketAcl }));
-  } else if (resp.$metadata.httpStatusCode === 200) {
-    core.info(`Bucket ${bucket} does exist!`);
-  }
+    core.info(`Initialized S3 client! Checking if bucket ${bucket} exists...`);
+    const resp = await s3Client.send(new HeadBucketCommand({ Bucket: bucket }));
+    if (resp.$metadata.httpStatusCode === 404) {
+        core.info(`Bucket ${bucket} doesn't exist! Creating...`);
+        await s3Client.send(new CreateBucketCommand({ Bucket: bucket, ACL: bucketAcl }));
+    } else if (resp.$metadata.httpStatusCode === 200) {
+        core.info(`Bucket ${bucket} does exist!`);
+    }
 
-  return s3Client;
+    return s3Client;
 };
 
-export const upload = async ({
-  pathFormat,
-  prefix,
-  stream,
-  bucket,
-  file,
-  acl
+export const upload = ({
+    pathFormat,
+    prefix,
+    stream,
+    bucket,
+    file,
+    acl
 }: {
-  pathFormat: string;
-  stream: Readable;
-  prefix: string;
-  bucket: string;
-  file: string;
-  acl: string;
+    pathFormat: string;
+    stream: Readable;
+    prefix: string;
+    bucket: string;
+    file: string;
+    acl: string;
 }) => {
-  if (!s3Client) throw new Error('You need to initialize the S3 client with the #initS3Client function');
-  const contentType = lookup(file) || 'application/octet-stream';
-  const key = parsePathFormatSyntax(pathFormat || '$(prefix)/$(file)', { prefix, file });
+    if (!s3Client) throw new Error('You need to initialize the S3 client with the #initS3Client function');
+    const contentType = lookup(file) || 'application/octet-stream';
+    const key = parsePathFormatSyntax(pathFormat || '$(prefix)/$(file)', { prefix, file });
 
-  core.info(`Uploading object [${file}] with path format [${key}] & content type [${contentType}]`);
-  const upload = new Upload({
-    client: s3Client,
-    partSize: 1024 * 1024 * 15,
-    params: {
-      Bucket: bucket,
-      Key: key,
-      Body: stream,
-      ACL: acl
-    }
-  });
+    core.startGroup(`Object [${file} ~> ${key}] upload with content type ${contentType}`);
+    const upload = new Upload({
+        client: s3Client,
+        partSize: 1024 * 1024 * 15,
+        params: {
+            Bucket: bucket,
+            Key: key,
+            Body: stream,
+            ACL: acl
+        }
+    });
 
-  upload.on('httpUploadProgress', console.log);
-  await upload.done();
+    upload.on('httpUploadProgress', (progress) => {
+        core.info(
+            `~> ${progress.Key} in ${progress.Bucket} :: part=${progress.part} loaded=${progress.loaded} total=${progress.total}`
+        );
+    });
+
+    return upload.done().then(() => core.endGroup());
 };
