@@ -29,7 +29,7 @@
         "@augu/tsconfig": "1.1.1",
         "@types/eslint": "8.37.0",
         "@types/mime-types": "2.1.1",
-        "@types/node": "18.16.14",
+        "@types/node": "18.17.4",
         "@types/prettier": "2.7.2",
         "@types/rimraf": "3.0.2",
         "@types/signale": "1.4.4",

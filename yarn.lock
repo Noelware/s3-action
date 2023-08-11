@@ -1374,7 +1374,7 @@ __metadata:
     "@noelware/utils": 2.4.0
     "@types/eslint": 8.37.0
     "@types/mime-types": 2.1.1
-    "@types/node": 18.16.14
+    "@types/node": 18.17.4
     "@types/prettier": 2.7.2
     "@types/rimraf": 3.0.2
     "@types/signale": 1.4.4
@@ -2039,10 +2039,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:18.16.14":
-  version: 18.16.14
-  resolution: "@types/node@npm:18.16.14"
-  checksum: c11cb3c787236414efe58240ae71854971592554d82ff9d201876ce7cafd51c37aaa001c63602d002e8238614d7331bd6d48ac4c1c0caa826799980b6846fb08
+"@types/node@npm:18.17.4":
+  version: 18.17.4
+  resolution: "@types/node@npm:18.17.4"
+  checksum: d4c458202d82c999f38d85ca9ae8a2d3e521645c7f1b908cd6a0303d0e13c7d5eb3f888c41f584ba029ecf802d0a0005b7816c149400371a3c035abc4bd9a4c5
   languageName: node
   linkType: hard
 
