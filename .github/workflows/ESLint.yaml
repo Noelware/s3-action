@@ -25,8 +25,7 @@ on:
     pull_request:
         types: [synchronize]
         branches:
-            - 'issue/gh-**'
-            - 'feat/**'
+            - master
 
         paths-ignore:
             - '.github/**'
@@ -78,7 +77,6 @@ jobs:
               id: yarn-cache
 
             - name: Install dependencies
-              if: steps.yarn-cache.outputs.cache-hit != 'true' || steps.yarn-cache.outputs.node-modules-cache-hit != 'true'
               run: yarn install --immutable
 
             - name: Run ESLint
