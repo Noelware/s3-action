@@ -51,6 +51,8 @@ access-key-id: ${{ secrets.S3_ACCESS_KEY_ID }}
 -   `$(prefix)`: The prefix that is configured to use, i.e, `/artifacts`.
 -   `$(branch)`: Returns the current branch the action is being ran in, examples: `master`, `main`, `trunk`, etc.
 -   `$(tag)`: Returns the current release tag if it can be found, it will not attempt to put the actual release tag if the action isn't running with the `release` event.
+-   `$(os)`: Returns the operating system name.
+-   `$(arch)`: Returns the host CPU architecture name.
 
 #### Examples
 
@@ -58,9 +60,9 @@ access-key-id: ${{ secrets.S3_ACCESS_KEY_ID }}
 -   `$(branch)/$(file)` -> /trunk/charted/server/v0.1.tar.gz
 -   `$(prefix)/$(file)` (default) -> /artifacts/charted/server/v0.1.tar.gz
 
-### endpoint: `URL` (Required: No, Default: `s3.amazonaws.com`)
+### endpoint: `URL` (Required: No, Default: `https://s3.amazonaws.com`)
 
-The endpoint URL (without the scheme) to reach when connecting to Amazon S3. By default, it will use the official S3 server (`s3.amazonaws.com`).
+The endpoint URL to reach when connecting to Amazon S3. By default, it will use the official S3 server (`https://s3.amazonaws.com`).
 
 #### Recepies
 

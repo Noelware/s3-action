@@ -29,8 +29,11 @@ import { warning } from '@actions/core';
  */
 export interface Matchers {
     branch(): string;
-    prefix: boolean;
+    arch(): string;
     tag(): string;
+    os(): string;
+
+    prefix: boolean;
     file: boolean;
 }
 
@@ -40,9 +43,22 @@ export interface Matchers {
 export const MATCHERS: Matchers = {
     branch() {
         try {
-            return execSync('', { encoding: 'utf-8' }).trim();
+            return execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim();
         } catch {
             return '';
+        }
+    },
+
+    arch() {
+        switch (process.arch) {
+            case 'x64':
+                return 'amd64';
+
+            case 'arm64':
+                return 'aarch64';
+
+            default:
+                return process.platform;
         }
     },
 
@@ -55,6 +71,19 @@ export const MATCHERS: Matchers = {
         }
 
         return ref.replace(/^refs\/tags\//, '');
+    },
+
+    os() {
+        switch (process.platform) {
+            case 'win32':
+                return 'windows';
+
+            case 'darwin':
+                return 'macos';
+
+            default:
+                return process.platform;
+        }
     },
 
     prefix: true,

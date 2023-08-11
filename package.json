@@ -1,7 +1,7 @@
 {
     "name": "@noelware/s3-action",
     "description": "☕ Simple and fast GitHub Action to upload objects to Amazon S3 easily",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "author": "Noel <cutie@floofy.dev>",
     "private": true,
     "repository": "https://github.com/Noelware/s3-action",
@@ -18,9 +18,9 @@
     "dependencies": {
         "@actions/core": "1.10.0",
         "@actions/glob": "0.4.0",
-        "@aws-sdk/client-s3": "3.335.0",
-        "@aws-sdk/lib-storage": "3.335.0",
-        "@noelware/utils": "2.3.0",
+        "@aws-sdk/client-s3": "3.388.0",
+        "@aws-sdk/lib-storage": "3.388.0",
+        "@noelware/utils": "2.4.0",
         "mime-types": "2.1.35",
         "zod": "3.21.4"
     },
