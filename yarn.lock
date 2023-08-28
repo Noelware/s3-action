@@ -1124,7 +1124,7 @@ __metadata:
     "@noelware/utils": 2.4.0
     "@types/eslint": 8.44.2
     "@types/mime-types": 2.1.1
-    "@types/node": 20.5.4
+    "@types/node": 20.5.7
     "@types/signale": 1.4.4
     "@typescript-eslint/eslint-plugin": 6.4.1
     "@typescript-eslint/parser": 6.4.1
@@ -1879,10 +1879,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.5.4":
-  version: 20.5.4
-  resolution: "@types/node@npm:20.5.4"
-  checksum: 18de76c990e1c298183661cfc7cf16c9384531538c8090cc27bc3cab801e7c46b9f6943591ab0433955dd57961601684cc0fb19ba2deee9609e137c91afd2e25
+"@types/node@npm:20.5.7":
+  version: 20.5.7
+  resolution: "@types/node@npm:20.5.7"
+  checksum: fc284c8e16ddc04569730d58e87eae349eb1c3dd9020cb79a1862d9d9add6f04e7367a236f3252db8db2572f90278e250f4cd43d27d264972b54394eaba1ed76
   languageName: node
   linkType: hard
 
