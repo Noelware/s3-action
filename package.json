@@ -38,7 +38,7 @@
         "eslint-config-prettier": "9.0.0",
         "globby": "13.2.2",
         "prettier": "3.0.3",
-        "rimraf": "5.0.1",
+        "rimraf": "5.0.5",
         "signale": "1.4.0",
         "tsx": "3.13.0",
         "typescript": "5.2.2",
