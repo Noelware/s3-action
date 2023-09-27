@@ -1104,7 +1104,7 @@ __metadata:
     "@types/eslint": 8.44.3
     "@types/mime-types": 2.1.1
     "@types/node": 20.6.5
-    "@types/signale": 1.4.4
+    "@types/signale": 1.4.5
     "@typescript-eslint/eslint-plugin": 6.7.2
     "@typescript-eslint/parser": 6.7.2
     "@vercel/ncc": 0.38.0
@@ -1916,12 +1916,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/signale@npm:1.4.4":
-  version: 1.4.4
-  resolution: "@types/signale@npm:1.4.4"
+"@types/signale@npm:1.4.5":
+  version: 1.4.5
+  resolution: "@types/signale@npm:1.4.5"
   dependencies:
     "@types/node": "*"
-  checksum: da244d14b069311afe0d800446e13ccc2f9e37492188cf632dffc5061fa662886a1eee8907f2c6e45643119dc574902fccf09a3d2b3385b858fdcda266ca4161
+  checksum: d0a965ce3548e052f4da69e5c21e6661c8ce98b31f50ecfe0e3808e3ceee94afe6d2fd6e122192febd7cc9b64442a30209bd5943f7af599e399655732187c207
   languageName: node
   linkType: hard
 
