@@ -1101,7 +1101,7 @@ __metadata:
     "@aws-sdk/client-s3": 3.430.0
     "@aws-sdk/lib-storage": 3.430.0
     "@noelware/utils": 2.4.0
-    "@types/eslint": 8.44.4
+    "@types/eslint": 8.44.5
     "@types/mime-types": 2.1.2
     "@types/node": 20.8.6
     "@types/signale": 1.4.5
@@ -1852,13 +1852,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint@npm:8.44.4":
-  version: 8.44.4
-  resolution: "@types/eslint@npm:8.44.4"
+"@types/eslint@npm:8.44.5":
+  version: 8.44.5
+  resolution: "@types/eslint@npm:8.44.5"
   dependencies:
     "@types/estree": "*"
     "@types/json-schema": "*"
-  checksum: 15bafdaba800e2995f38d3a2a929d8e9303035315e8d3535523a21cd719b6769a45884afa955f0b845ffa545a4150429b0178e2c44feeedf59ebb285eeae9825
+  checksum: 0fba768ecffbd9eccf07207979ffa82e748bfb67203be107d8fb6c9b1215054d57ca12062577878e73353ef8feb43591951c2a750452fde639858f501e03304a
   languageName: node
   linkType: hard
 
