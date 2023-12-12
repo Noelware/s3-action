@@ -11,7 +11,7 @@
 ```yaml
 steps:
     - name: Upload to Amazon S3
-      use: Noelware/s3-action@v2 # this can be `master` or a tagged release
+      use: Noelware/s3-action@2 # this can be `master` or a tagged release
       with:
           directories: |
               ./some/directory,
@@ -23,6 +23,7 @@ steps:
           endpoint: s3.amazonaws.com
           prefix: /artifacts
           region: us-east-1
+          bucket: { some bucket name here }
 ```
 
 ## Inputs
