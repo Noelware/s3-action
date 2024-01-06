@@ -1,6 +1,6 @@
 /*
  * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
+ * Copyright (c) 2021-2024 Noelware, LLC. <team@noelware.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,7 @@ const configSchema = z
         bucketAcl: z.string().default('public-read'),
         objectAcl: z.string().default('public-read'),
         endpoint: z.string().default('s3.amazonaws.com'),
+        partSize: z.number().default(15),
         exclude: z.array(z.string()).default([]),
         region: z.string().default('us-east-1'),
         prefix: z.string().startsWith('/', '`prefix` must start with /'),
@@ -81,6 +82,7 @@ export const inferOptions = () => {
     const prefix = getInput('prefix', { trimWhitespace: true });
     const bucket = getInput('bucket', { trimWhitespace: true, required: true });
     const region = getInput('region', { trimWhitespace: true });
+    const partSize = getInput('part-size', { trimWhitespace: true });
     const exclude = getInput('exclude', { trimWhitespace: true })
         .split(',')
         .map((i) => i.trim());
@@ -100,6 +102,7 @@ export const inferOptions = () => {
             objectAcl,
             secretKey,
             endpoint,
+            partSize,
             exclude,
             prefix,
             bucket,

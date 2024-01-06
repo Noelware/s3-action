@@ -1,6 +1,6 @@
 /*
  * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
+ * Copyright (c) 2021-2024 Noelware, LLC. <team@noelware.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,12 +21,39 @@
  * SOFTWARE.
  */
 
-import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
-import { Lazy } from '@noelware/utils';
 
-/** Alias for CommonJS' `__filename` */
-export const __filename = new Lazy(() => fileURLToPath(import.meta.url));
+// Node (`ESLINT_FLAT_CONFIG=1 npx eslint`):
+//      > import('@augu/eslint-config'):
+//      [Module: null prototype] {
+//        default: {
+//          default: [Getter],
+//          javascript: [Getter],
+//          perfectionist: [Getter],
+//          typescript: [Getter],
+//          vue: [Getter]
+//        },
+//        javascript: [Function: javascript],
+//        perfectionist: [AsyncFunction: perfectionist],
+//        typescript: [AsyncFunction: typescript],
+//        vue: [AsyncFunction: vue]
+//      }
+//
+// Bun:
+//     > bun run lint
+//     Module {
+//       default: [Function: noel],
+//       javascript: [Function: javascript],
+//       perfectionist: [Function: perfectionist],
+//       typescript: [Function: typescript],
+//       vue: [Function: vue],
+//     }
+const noel = await import('@augu/eslint-config').then((mod) =>
+    typeof Bun !== 'undefined' ? mod.default : mod.default.default
+);
 
-/** Alias for CommonJS' `__dirname` */
-export const __dirname = new Lazy(() => dirname(resolve(__filename.get(), '..')));
+export default noel({
+    typescript: {
+        tsconfig: fileURLToPath(new URL('.', import.meta.url))
+    }
+});

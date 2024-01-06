@@ -1,6 +1,6 @@
 /*
  * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
+ * Copyright (c) 2021-2024 Noelware, LLC. <team@noelware.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,59 +21,91 @@
  * SOFTWARE.
  */
 
-import { warning, error, startGroup, endGroup } from '@actions/core';
-import { __dirname as dirname } from './util/esm';
-import { relative } from 'path';
-import { ESLint } from 'eslint';
-import getLogger from './util/log';
-import run from './util/run';
+import { fileURLToPath } from 'node:url';
+import type { ESLint } from 'eslint';
+import { readFile } from 'node:fs/promises';
+import * as colors from 'colorette';
+import { resolve } from 'node:path';
+import { globby } from 'globby';
+import * as log from './util/logging';
 
-const __dirname = dirname.get();
-const paths = ['src/**/*.ts', 'tests/**/*.spec.ts', 'scripts/**/*.ts'] as const;
-const isCI = process.env.CI !== undefined;
-const log = getLogger('eslint');
+export async function main() {
+    const ROOT = fileURLToPath(new URL('..', import.meta.url));
+    log.info(`root directory: ${ROOT}`);
 
-run(async () => {
-    const eslint = new ESLint({
-        useEslintrc: true,
-        fix: !isCI
+    const eslint = await import('eslint/use-at-your-own-risk');
+
+    // @ts-ignore
+    const linter: ESLint = new eslint.default.FlatESLint({
+        allowInlineConfig: true,
+        fix: !log.ci,
+        cwd: ROOT
     });
 
-    for (const glob of paths) {
-        isCI && startGroup(`Linting for pattern [${glob}]`);
-        {
-            log.info(`Starting ESLint on pattern [${glob}]`);
+    const formatter = await linter.loadFormatter('codeframe');
+    let hasFailed = false;
 
-            const results = await eslint.lintFiles([glob]);
+    log.startGroup(`linting directory [${resolve(ROOT)}]`);
+    for (const file of await globby('**/*.ts')) {
+        if (file.includes('node_modules') || file.includes('dist')) {
+            continue;
+        }
+
+        log.info(
+            `${colors.isColorSupported ? colors.bold(colors.magenta('START')) : 'START'}   ${resolve(ROOT, file)}`
+        );
+
+        const contents = await readFile(resolve(ROOT, file), 'utf-8');
+        const results: ESLint.LintResult[] = await linter.lintText(contents, {
+            filePath: resolve(ROOT, file)
+        });
+
+        if (!log.ci) {
+            const shouldPrint = await formatter.format(results);
+            shouldPrint.length > 0 && console.log(shouldPrint);
+        } else {
             for (const result of results) {
-                const path = result.filePath.includes('scripts/')
-                    ? `scripts/${relative(__dirname, result.filePath).replaceAll('../', '')}`
-                    : relative(__dirname, result.filePath).replaceAll('../', '');
+                for (const msg of result.messages) {
+                    switch (msg.severity) {
+                        case 0:
+                            continue;
 
-                const hasErrors = result.errorCount > 0;
-                const hasWarnings = result.warningCount > 0;
-                const level = hasErrors ? log.error : hasWarnings ? log.warn : log.success;
+                        case 1:
+                            log.warn(
+                                `[${msg.ruleId || '(unknown rule)'}] ${msg.message} (line ${msg.line}:${msg.column})`
+                            );
+                            continue;
 
-                level(path);
-                for (const message of result.messages) {
-                    if (isCI) {
-                        const logSeverity = message.severity === 1 ? warning : error;
-                        logSeverity(`${message.message} (${message.ruleId})`, {
-                            endColumn: message.endColumn,
-                            endLine: message.endLine,
-                            file: result.filePath,
-                            startLine: message.line,
-                            startColumn: message.column
-                        });
-                    } else {
-                        const logSeverity = message.severity === 1 ? log.warn : log.error;
-                        logSeverity(
-                            `   [${message.ruleId}] ${message.message} (file ${result.filePath}:${message.line}:${message.column})`
-                        );
+                        case 2:
+                            hasFailed = true;
+                            log.error(
+                                `${
+                                    colors.isColorSupported ? colors.bold(colors.red('FAILED')) : 'FAILED'
+                                } file [${file}] has failed to lint properly; run \`bun run lint\` outside of CI to fix it: ${
+                                    msg.ruleId || '(unknown rule)'
+                                }: ${msg.message}`,
+                                {
+                                    startColumn: msg.endColumn,
+                                    endColumn: msg.endColumn,
+                                    startLine: msg.line,
+                                    endLine: msg.endLine,
+                                    title: `[${msg.ruleId || '(unknown)'}] ${msg.message}`,
+                                    file: file
+                                }
+                            );
                     }
                 }
             }
         }
-        isCI && endGroup();
+
+        log.info(`${colors.isColorSupported ? colors.bold(colors.magenta('END')) : 'END'}     ${resolve(ROOT, file)}`);
     }
+
+    log.endGroup();
+    process.exit(hasFailed ? 1 : 0);
+}
+
+main().catch((ex) => {
+    log.error(ex);
+    process.exit(1);
 });

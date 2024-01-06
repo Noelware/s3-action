@@ -1,6 +1,6 @@
 /*
  * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
+ * Copyright (c) 2021-2024 Noelware, LLC. <team@noelware.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,8 @@
 
 import { create as createGlobPattern } from '@actions/glob';
 import { info, setFailed, warning } from '@actions/core';
-import { initS3Client, upload } from './s3';
 import { createReadStream } from 'fs';
+import { init, upload } from './s3';
 import { inferOptions } from './config';
 import { readdir } from '@noelware/utils';
 import { resolve } from 'path';
@@ -32,7 +32,7 @@ import { lstat } from 'fs/promises';
 
 async function main() {
     const config = await inferOptions();
-    await initS3Client(config);
+    await init(config);
 
     const excludedPatterns = await createGlobPattern(config.exclude.join('\n'), {
         followSymbolicLinks: config.followSymlinks
@@ -62,6 +62,7 @@ async function main() {
 
                 await upload({
                     pathFormat: config.pathFormat,
+                    partSize: config.partSize,
                     prefix: config.prefix,
                     bucket: config.bucket,
                     stream: createReadStream(file),
@@ -80,6 +81,7 @@ async function main() {
 
         await upload({
             pathFormat: config.pathFormat,
+            partSize: config.partSize,
             prefix: config.prefix,
             bucket: config.bucket,
             stream: createReadStream(path),

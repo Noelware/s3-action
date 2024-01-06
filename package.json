@@ -1,14 +1,15 @@
 {
     "name": "@noelware/s3-action",
     "description": "☕ Simple and fast GitHub Action to upload objects to Amazon S3 easily",
-    "version": "2.2.1",
-    "author": "Noel <cutie@floofy.dev>",
+    "version": "2.2.2",
+    "type": "module",
+    "author": "Noel Towa <cutie@floofy.dev>",
     "private": true,
     "repository": "https://github.com/Noelware/s3-action",
     "bugs": "https://github.com/Noelware/s3-action/issues/new",
     "main": "./build/action.js",
     "types": "index.d.ts",
-    "packageManager": "yarn@3.7.0",
+    "packageManager": "yarn@4.0.2",
     "scripts": {
         "build": "tsx --tsconfig ./scripts/tsconfig.json scripts/build.ts",
         "lint": "tsx --tsconfig ./scripts/tsconfig.json scripts/eslint.ts",
@@ -25,23 +26,22 @@
         "zod": "3.22.4"
     },
     "devDependencies": {
-        "@augu/eslint-config": "4.0.1",
+        "@augu/eslint-config": "5.0.0",
         "@augu/tsconfig": "1.2.0",
         "@types/eslint": "8.56.1",
         "@types/mime-types": "2.1.4",
         "@types/node": "20.10.6",
-        "@types/signale": "1.4.7",
-        "@typescript-eslint/eslint-plugin": "6.17.0",
-        "@typescript-eslint/parser": "6.17.0",
+        "@typescript-eslint/eslint-plugin": "6.18.0",
+        "@typescript-eslint/parser": "6.18.0",
         "@vercel/ncc": "0.38.1",
+        "colorette": "2.0.20",
         "eslint": "8.56.0",
         "eslint-config-prettier": "9.1.0",
         "globby": "14.0.0",
         "prettier": "3.1.1",
         "rimraf": "5.0.5",
-        "signale": "1.4.0",
         "tsx": "4.7.0",
         "typescript": "5.3.3",
-        "vitest": "1.1.2"
+        "vitest": "1.1.3"
     }
 }

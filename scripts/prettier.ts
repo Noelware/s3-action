@@ -1,6 +1,6 @@
 /*
  * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
+ * Copyright (c) 2021-2024 Noelware, LLC. <team@noelware.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,50 +22,84 @@
  */
 
 import { readFile, writeFile } from 'fs/promises';
-import { relative, resolve } from 'path';
+import { fileURLToPath } from 'url';
 import * as prettier from 'prettier';
+import * as colors from 'colorette';
+import { resolve } from 'node:path';
 import { globby } from 'globby';
-import getLogger from './util/log';
-import assert from 'assert';
-import run from './util/run';
+import * as log from './util/logging';
 
-const log = getLogger('prettier');
-const ext = ['.json', '.yaml', '.yml', '.js', '.md', '.ts'] as const;
+export async function main() {
+    const ROOT = fileURLToPath(new URL('..', import.meta.url));
+    log.info(`root directory: ${ROOT}`);
 
-run(async () => {
-    log.info('Resolving Prettier configuration...');
+    const config = await prettier.resolveConfig(resolve(ROOT, '.prettierrc.json'));
+    if (config === null) {
+        throw new Error(`was unable to resolve Prettier config in [${resolve(ROOT, '.prettierrc.json')}] ?!`);
+    }
 
-    const config = await prettier.resolveConfig(resolve(process.cwd(), '.prettierrc.json'));
-    assert(config !== null, ".prettierrc.json doesn't exist?");
-
-    const files = await globby(
-        ext.map((f) => `**/*${f}`),
-        {
-            onlyFiles: true,
-            throwErrorOnBrokenSymbolicLink: true,
-            gitignore: true
-        }
-    );
-
-    for (const file of files) {
-        const start = Date.now();
-        const fileInfo = await prettier.getFileInfo(file, {
-            resolveConfig: true,
-            ignorePath: resolve(__dirname, '..', '.prettierignore')
-        });
-
-        const contents = await readFile(file, 'utf-8');
-        if (fileInfo.ignored || fileInfo.inferredParser === null) {
+    let hasFailed = false;
+    for (const file of await globby('**/*.{ts,js,md,yaml,yml,json}')) {
+        if (file.includes('node_modules') || file.includes('build')) {
             continue;
         }
 
-        log.await(`   ${relative(resolve(__dirname, '..'), file)}`);
-        const source = await prettier.format(contents, {
-            ...config,
-            parser: fileInfo.inferredParser!
-        });
+        log.info(
+            `${colors.isColorSupported ? colors.bold(colors.magenta('START')) : 'START'}   ${resolve(ROOT, file)}`
+        );
 
-        await writeFile(resolve(resolve(__dirname, '..'), file), source, { encoding: 'utf-8' });
-        log.success(`   ${file} [${Date.now() - start}ms]`);
+        const info = await prettier.getFileInfo(resolve(ROOT, file));
+        if (info.inferredParser === null) {
+            log.warn(
+                `${colors.isColorSupported ? colors.bold(colors.gray('IGNORED')) : 'IGNORED'}   ${resolve(ROOT, file)}`
+            );
+
+            continue;
+        }
+
+        const contents = await readFile(resolve(ROOT, file), 'utf-8');
+        if (log.ci) {
+            const correct = await prettier.check(contents, {
+                parser: info.inferredParser,
+                ...config
+            });
+
+            if (!correct) {
+                log.error(
+                    `${
+                        colors.isColorSupported ? colors.bold(colors.red('FAILED')) : 'FAILED'
+                    } file was not properly formatted. run \`yarn lint\` outside of CI`,
+                    {
+                        file: resolve(ROOT, file)
+                    }
+                );
+
+                hasFailed = true;
+                break;
+            }
+
+            log.info(
+                `${colors.isColorSupported ? colors.bold(colors.magenta('END')) : 'END'}     ${resolve(ROOT, file)}`
+            );
+        } else {
+            const formatted = await prettier.format(contents, {
+                parser: info.inferredParser,
+                ...config
+            });
+
+            await writeFile(resolve(ROOT, file), formatted);
+
+            log.info(
+                `${colors.isColorSupported ? colors.bold(colors.magenta('END')) : 'END'}     ${resolve(ROOT, file)}`
+            );
+        }
     }
+
+    log.endGroup();
+    process.exit(hasFailed ? 1 : 0);
+}
+
+main().catch((ex) => {
+    log.error(ex);
+    process.exit(1);
 });

@@ -1,6 +1,6 @@
 /*
  * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2023 Noelware, LLC. <team@noelware.org>
+ * Copyright (c) 2021-2024 Noelware, LLC. <team@noelware.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,35 +21,47 @@
  * SOFTWARE.
  */
 
-import { __dirname as dirname } from './util/esm';
 import { mkdir, writeFile } from 'fs/promises';
-import { join, resolve } from 'path';
+import { fileURLToPath } from 'url';
 import { existsSync } from 'fs';
-import { rimraf } from 'rimraf';
-import getLogger from './util/log';
+import * as colors from 'colorette';
+import { basename, resolve } from 'path';
+import * as log from './util/logging';
 import ncc from '@vercel/ncc';
-import run from './util/run';
 
-const __dirname = dirname.get();
-const log = getLogger('build');
+async function main() {
+    const ROOT = fileURLToPath(new URL('..', import.meta.url));
+    log.info(`root directory: ${ROOT}`);
 
-run(async () => {
-    await rimraf(join(__dirname, 'build'));
+    log.startGroup('Building @noelware/s3-action');
+    {
+        const result = await ncc(resolve(ROOT, 'src/main.ts'), {
+            minify: true,
+            cache: false,
+            license: resolve(ROOT, 'LICENSE')
+        });
 
-    log.await('Building @noelware/s3-action with @vercel/ncc!');
-    const result = await ncc(resolve(process.cwd(), 'src/main.ts'), {
-        minify: true,
-        cache: false,
-        license: 'LICENSE'
-    });
+        const took = result.stats.compilation.endTime - result.stats.compilation.startTime;
+        log.info(
+            `${colors.isColorSupported ? colors.bold(colors.green('SUCCESS')) : 'SUCCESS'}   built successfully ${
+                colors.isColorSupported ? colors.bold(`[${took}ms]`) : `[${took}ms]`
+            }`
+        );
 
-    const took = result.stats.compilation.endTime - result.stats.compilation.startTime;
-    log.success(`Took ~${took}ms to complete build!`);
+        if (!existsSync(resolve(ROOT, 'build'))) {
+            await mkdir(resolve(ROOT, 'build'));
+        }
 
-    if (!existsSync(join(process.cwd(), 'build'))) await mkdir(join(process.cwd(), 'build'));
-    await writeFile(join(process.cwd(), 'build', 'action.js'), result.code);
-
-    for (const [file, { source }] of Object.entries(result.assets)) {
-        await writeFile(join(process.cwd(), 'build', file), source);
+        await writeFile(resolve(ROOT, 'build/action.js'), result.code);
+        for (const [file, { source }] of Object.entries(result.assets)) {
+            await writeFile(resolve(ROOT, 'build', basename(file)), source);
+        }
     }
+
+    log.endGroup();
+}
+
+main().catch((ex) => {
+    log.error(ex);
+    process.exit(1);
 });
