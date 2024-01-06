@@ -1280,8 +1280,8 @@ __metadata:
     colorette: "npm:2.0.20"
     eslint: "npm:8.56.0"
     eslint-config-prettier: "npm:9.1.0"
-    eslint-formatter-codeframe: "npm:^7.32.1"
-    eslint-plugin-perfectionist: "npm:^2.5.0"
+    eslint-formatter-codeframe: "npm:7.32.1"
+    eslint-plugin-perfectionist: "npm:2.5.0"
     globby: "npm:14.0.0"
     mime-types: "npm:2.1.35"
     prettier: "npm:3.1.1"
@@ -3241,7 +3241,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-formatter-codeframe@npm:^7.32.1":
+"eslint-formatter-codeframe@npm:7.32.1":
   version: 7.32.1
   resolution: "eslint-formatter-codeframe@npm:7.32.1"
   dependencies:
@@ -3260,7 +3260,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-perfectionist@npm:2.5.0, eslint-plugin-perfectionist@npm:^2.5.0":
+"eslint-plugin-perfectionist@npm:2.5.0":
   version: 2.5.0
   resolution: "eslint-plugin-perfectionist@npm:2.5.0"
   dependencies:
