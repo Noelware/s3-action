@@ -1315,7 +1315,7 @@ __metadata:
     "@noelware/utils": "npm:2.4.0"
     "@types/eslint": "npm:8.56.2"
     "@types/mime-types": "npm:2.1.4"
-    "@types/node": "npm:20.11.16"
+    "@types/node": "npm:20.11.18"
     "@typescript-eslint/eslint-plugin": "npm:6.21.0"
     "@typescript-eslint/parser": "npm:6.21.0"
     "@vercel/ncc": "npm:0.38.1"
@@ -2090,12 +2090,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.11.16":
-  version: 20.11.16
-  resolution: "@types/node@npm:20.11.16"
+"@types/node@npm:20.11.18":
+  version: 20.11.18
+  resolution: "@types/node@npm:20.11.18"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10/751f50ec5c9332b11515e82fe37c71479ac4449b711280aa3c7910edf67b1e3f5ac00041512add543f9a892096a68356406998bf02a2c809a73d176c44c28414
+  checksum: 10/eeaa55032e6702867e96d7b6f98df1d60af09d37ab72f2b905b349ec7e458dfb9c4d9cfc562962f5a51b156a968eea773d8025688f88b735944c81e3ac0e3b7f
   languageName: node
   linkType: hard
 
