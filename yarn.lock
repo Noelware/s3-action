@@ -1312,7 +1312,7 @@ __metadata:
     "@augu/tsconfig": "npm:1.2.0"
     "@aws-sdk/client-s3": "npm:3.515.0"
     "@aws-sdk/lib-storage": "npm:3.515.0"
-    "@noelware/utils": "npm:2.4.0"
+    "@noelware/utils": "npm:2.5.0"
     "@types/eslint": "npm:8.56.2"
     "@types/mime-types": "npm:2.1.4"
     "@types/node": "npm:20.11.19"
@@ -1339,6 +1339,13 @@ __metadata:
   version: 2.4.0
   resolution: "@noelware/utils@npm:2.4.0"
   checksum: 10/0e1d76e6a4f4186aca3238b513475e43f6750d9e6d15bcaf87fd860dda9985489e7742a115402a12df8da0bf2bfb65f19849958bb350b3cf6014bf7efce2c958
+  languageName: node
+  linkType: hard
+
+"@noelware/utils@npm:2.5.0":
+  version: 2.5.0
+  resolution: "@noelware/utils@npm:2.5.0"
+  checksum: 10/e13ded4fd40634120c3f6a2852fe85675bb64b03dc491046b1caa373a8da39d719b90a2171a6b1c444ce8320a0ae20c408099dfd7f7f52825bf3d2359aa6af10
   languageName: node
   linkType: hard
 
