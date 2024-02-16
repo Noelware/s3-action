@@ -21,7 +21,7 @@
         "@actions/glob": "0.4.0",
         "@aws-sdk/client-s3": "3.515.0",
         "@aws-sdk/lib-storage": "3.515.0",
-        "@noelware/utils": "2.4.0",
+        "@noelware/utils": "2.5.0",
         "mime-types": "2.1.35",
         "zod": "3.22.4"
     },
