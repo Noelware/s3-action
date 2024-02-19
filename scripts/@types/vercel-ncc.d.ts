@@ -24,7 +24,7 @@
 declare module '@vercel/ncc' {
     export interface Options<Watch extends boolean = false> {
         /** Custom cache path, or `false` to disable caching */
-        cache?: string | false;
+        cache?: false | string;
 
         /** External packages to leave as required of the build */
         externals?: string[];
@@ -59,7 +59,7 @@ declare module '@vercel/ncc' {
     export interface OutputResult {
         code: string;
         map?: string;
-        assets: Record<string, { source: Buffer; permissions?: any }>;
+        assets: Record<string, { permissions?: any; source: Buffer }>;
         symlinks: Record<string, any>;
         stats: any;
     }
