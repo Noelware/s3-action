@@ -21,18 +21,18 @@
  * SOFTWARE.
  */
 
-import { BucketCannedACL, CreateBucketCommand, HeadBucketCommand, ObjectCannedACL, S3Client } from '@aws-sdk/client-s3';
-import type { InputConfig } from './config';
-import * as core from '@actions/core';
-import { Readable } from 'stream';
-import { lookup } from 'mime-types';
+import { CreateBucketCommand, HeadBucketCommand, BucketCannedACL, ObjectCannedACL, S3Client } from '@aws-sdk/client-s3';
 import { parsePathFormatSyntax } from './PathFormatSyntax';
 import { Upload } from '@aws-sdk/lib-storage';
+import type { InputConfig } from './config';
+import * as core from '@actions/core';
+import { lookup } from 'mime-types';
+import { Readable } from 'stream';
 
 interface InitProps
     extends Pick<
         InputConfig,
-        'accessKeyId' | 'secretKey' | 'endpoint' | 'bucket' | 'region' | 'bucketAcl' | 'enforcePathAccessStyle'
+        'accessKeyId' | 'bucket' | 'bucketAcl' | 'endpoint' | 'enforcePathAccessStyle' | 'region' | 'secretKey'
     > {}
 
 interface UploadProps {

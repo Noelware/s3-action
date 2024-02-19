@@ -21,13 +21,12 @@
  * SOFTWARE.
  */
 
-import { readFile, writeFile } from 'fs/promises';
-import { fileURLToPath } from 'url';
+import { writeFile, readFile } from 'node:fs/promises';
+import * as log from './util/logging';
 import * as prettier from 'prettier';
+import { fileURLToPath } from 'url';
 import * as colors from 'colorette';
 import { resolve } from 'node:path';
-import { globby } from 'globby';
-import * as log from './util/logging';
 
 export async function main() {
     const ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -39,7 +38,8 @@ export async function main() {
     }
 
     let hasFailed = false;
-    for (const file of await globby('**/*.{ts,js,md,yaml,yml,json}')) {
+    const glob = new Bun.Glob('**/*.{ts,js,json,yaml,yml,md}');
+    for await (const file of glob.scan({ cwd: ROOT })) {
         if (file.includes('node_modules') || file.includes('build')) {
             continue;
         }

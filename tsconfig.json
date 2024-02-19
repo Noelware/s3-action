@@ -3,7 +3,7 @@
     "compilerOptions": {
         "moduleResolution": "node",
         "typeRoots": ["./src/@types", "./node_modules/@types"],
-        "types": ["node"],
+        "types": ["node", "bun"],
         "outDir": "./build",
         "skipLibCheck": true,
         "noEmit": true, // @vercel/ncc will compile it, so TypeScript won't.

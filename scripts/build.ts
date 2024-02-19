@@ -21,12 +21,12 @@
  * SOFTWARE.
  */
 
-import { mkdir, writeFile } from 'fs/promises';
-import { fileURLToPath } from 'url';
-import { existsSync } from 'fs';
-import * as colors from 'colorette';
+import { writeFile, mkdir } from 'node:fs/promises';
 import { basename, resolve } from 'path';
 import * as log from './util/logging';
+import { fileURLToPath } from 'url';
+import * as colors from 'colorette';
+import { existsSync } from 'fs';
 import ncc from '@vercel/ncc';
 
 async function main() {

@@ -67,26 +67,20 @@ jobs:
               with:
                   submodules: recursive
 
-            - name: Setup Node.js 20.x
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20.x
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v1
 
-            - name: Setup Yarn and node_modules cache
-              uses: auguwu/node-pm-action@master
-              id: yarn-cache
-
-            - name: Install dependencies
-              run: yarn install --immutable
+            - name: Install packages
+              run: bun install
 
             - name: Run formatting
-              run: yarn fmt
+              run: bun fmt
 
             - name: Run ESLint
-              run: yarn lint
+              run: bun lint
 
             - name: Run unit tests
-              run: yarn test
+              run: bun test
               env:
                   S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
                   S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}

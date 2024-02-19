@@ -21,19 +21,19 @@
  * SOFTWARE.
  */
 
-import { BucketCannedACL, DeleteObjectCommand, ObjectCannedACL } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, BucketCannedACL, ObjectCannedACL } from '@aws-sdk/client-s3';
+import { expect, test } from 'bun:test';
 import { createReadStream } from 'fs';
-import { resolve } from 'path';
-import { test, expect } from 'vitest';
 import * as s3 from '../src/s3';
+import { resolve } from 'path';
 
 const accessKeyId = process.env.S3_ACCESS_KEY;
 const secretAccessKey = process.env.S3_SECRET_KEY;
 
-test.runIf(accessKeyId !== undefined && secretAccessKey !== undefined)(
+test.if(accessKeyId !== undefined && secretAccessKey !== undefined)(
     'if we can init the s3 client correctly',
     async () => {
-        await expect(
+        expect(
             s3.init({
                 accessKeyId: accessKeyId!,
                 secretKey: secretAccessKey!,
@@ -47,8 +47,8 @@ test.runIf(accessKeyId !== undefined && secretAccessKey !== undefined)(
     }
 );
 
-test.runIf(accessKeyId !== undefined && secretAccessKey !== undefined)('if we can upload file', async () => {
-    await expect(
+test.if(accessKeyId !== undefined && secretAccessKey !== undefined)('if we can upload file', async () => {
+    expect(
         s3.upload({
             pathFormat: '$(prefix)/$(file)',
             partSize: 15,
@@ -61,7 +61,7 @@ test.runIf(accessKeyId !== undefined && secretAccessKey !== undefined)('if we ca
     ).resolves.toBeUndefined();
 
     // we need to delete it so we don't override the same thing lol
-    await expect(
+    expect(
         s3.s3Client!.send(
             new DeleteObjectCommand({
                 Bucket: 'august',
@@ -72,9 +72,9 @@ test.runIf(accessKeyId !== undefined && secretAccessKey !== undefined)('if we ca
 });
 
 test.each(Object.values(ObjectCannedACL))('fromObjectCannedAcl(%s) should not fail', (acl) => {
-    expect(() => s3.fromObjectCannedAcl(acl)).not.toThrowError();
+    expect(() => s3.fromObjectCannedAcl(acl)).not.toThrow(Error);
 });
 
 test.each(Object.values(BucketCannedACL))('fromBucketCannedAcl(%s) should not fail', (acl) => {
-    expect(() => s3.fromObjectCannedAcl(acl)).not.toThrowError();
+    expect(() => s3.fromObjectCannedAcl(acl)).not.toThrow(Error);
 });

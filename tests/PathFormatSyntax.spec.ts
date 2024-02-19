@@ -22,7 +22,7 @@
  */
 
 import { parsePathFormatSyntax } from '../src/PathFormatSyntax';
-import { test, expect } from 'vitest';
+import { expect, test } from 'bun:test';
 
 test('if parsePathFormatSyntax resolves correctly', () => {
     expect(parsePathFormatSyntax('$(prefix)/$(file)', { prefix: '/', file: 'src/main.ts' })).toBe('/src/main.ts');

@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-import { getInput, InputOptions } from '@actions/core';
+import { type InputOptions, getInput } from '@actions/core';
 import z from 'zod';
 
 const configSchema = z
@@ -35,7 +35,7 @@ const configSchema = z
         bucketAcl: z.string().default('public-read'),
         objectAcl: z.string().default('public-read'),
         endpoint: z.string().default('s3.amazonaws.com'),
-        partSize: z.number().default(15),
+        partSize: z.coerce.number().default(15),
         exclude: z.array(z.string()).default([]),
         region: z.string().default('us-east-1'),
         prefix: z.string().startsWith('/', '`prefix` must start with /'),

@@ -22,13 +22,13 @@
  */
 
 import { create as createGlobPattern } from '@actions/glob';
-import { info, setFailed, warning } from '@actions/core';
-import { createReadStream } from 'fs';
-import { init, upload } from './s3';
-import { inferOptions } from './config';
+import { setFailed, warning, info } from '@actions/core';
 import { readdir } from '@noelware/utils';
-import { resolve } from 'path';
+import { inferOptions } from './config';
+import { createReadStream } from 'fs';
+import { upload, init } from './s3';
 import { lstat } from 'fs/promises';
+import { resolve } from 'path';
 
 async function main() {
     const config = await inferOptions();

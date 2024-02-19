@@ -21,22 +21,21 @@
  * SOFTWARE.
  */
 
-import { fileURLToPath } from 'node:url';
-import type { ESLint } from 'eslint';
 import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import * as log from './util/logging';
+import type { ESLint } from 'eslint';
 import * as colors from 'colorette';
 import { resolve } from 'node:path';
-import { globby } from 'globby';
-import * as log from './util/logging';
 
 export async function main() {
     const ROOT = fileURLToPath(new URL('..', import.meta.url));
     log.info(`root directory: ${ROOT}`);
 
-    const eslint = await import('eslint/use-at-your-own-risk');
+    const { default: eslint } = await import('eslint/use-at-your-own-risk');
 
     // @ts-ignore
-    const linter: ESLint = new eslint.default.FlatESLint({
+    const linter: ESLint = new eslint.FlatESLint({
         allowInlineConfig: true,
         fix: !log.ci,
         cwd: ROOT
@@ -46,8 +45,10 @@ export async function main() {
     let hasFailed = false;
 
     log.startGroup(`linting directory [${resolve(ROOT)}]`);
-    for (const file of await globby('**/*.ts')) {
-        if (file.includes('node_modules') || file.includes('dist')) {
+
+    const glob = new Bun.Glob('**/*.ts');
+    for await (const file of glob.scan({ cwd: ROOT })) {
+        if (file.includes('node_modules') || file.includes('build')) {
             continue;
         }
 
