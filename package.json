@@ -29,7 +29,7 @@
         "@augu/eslint-config": "5.1.2",
         "@augu/tsconfig": "1.2.0",
         "@types/bun": "1.0.8",
-        "@types/eslint": "8.56.3",
+        "@types/eslint": "8.56.5",
         "@types/mime-types": "2.1.4",
         "@types/node": "20.11.22",
         "@typescript-eslint/eslint-plugin": "7.1.0",
