@@ -23,12 +23,13 @@
 
 import { create as createGlobPattern } from '@actions/glob';
 import { setFailed, warning, info } from '@actions/core';
-import { readdir } from '@noelware/utils';
-import { inferOptions } from './config';
 import { createReadStream } from 'fs';
 import { upload, init } from './s3';
-import { lstat } from 'fs/promises';
+import { inferOptions } from './config';
+import { basename } from 'node:path';
+import { readdir } from 'node:fs/promises';
 import { resolve } from 'path';
+import { lstat } from 'node:fs/promises';
 
 async function main() {
     const config = await inferOptions();
@@ -57,7 +58,7 @@ async function main() {
 
             const files = await readdir(d);
             for (const file of files) {
-                const filename = file.replace(d, '');
+                const filename = basename(file);
                 if (excluded.includes(filename)) continue;
 
                 await upload({

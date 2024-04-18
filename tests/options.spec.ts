@@ -21,10 +21,31 @@
  * SOFTWARE.
  */
 
-import { defineConfig } from 'vitest/config';
+import { test, expect, beforeEach } from 'bun:test';
+import { inferOptions } from '../src/config';
 
-export default defineConfig({
-    test: {
-        dir: './tests'
-    }
+beforeEach(() => {
+    process.env = Object.keys(process.env).reduce((acc, curr) => {
+        if (!curr.startsWith('INPUT_')) acc[curr] = process.env[curr];
+
+        return acc;
+    }, {});
 });
+
+test('resolve default options', async () => {
+    setInput('access-key-id', 'blah');
+    setInput('secret-key', 'blah');
+    setInput('bucket', 'noel');
+
+    const options = await inferOptions();
+    expect(options).toMatchSnapshot();
+});
+
+// See: https://github.com/actions/toolkit/blob/a1b068ec31a042ff1e10a522d8fdf0b8869d53ca/packages/core/src/core.ts#L89
+function getInputName(name: string) {
+    return `INPUT_${name.replace(/ /g, '_').toUpperCase()}`;
+}
+
+function setInput(name: string, value: string) {
+    process.env[getInputName(name)] = value;
+}

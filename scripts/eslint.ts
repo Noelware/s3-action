@@ -24,7 +24,7 @@
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import * as log from './util/logging';
-import type { ESLint } from 'eslint';
+import { ESLint } from 'eslint';
 import * as colors from 'colorette';
 import { resolve } from 'node:path';
 
@@ -32,10 +32,7 @@ export async function main() {
     const ROOT = fileURLToPath(new URL('..', import.meta.url));
     log.info(`root directory: ${ROOT}`);
 
-    const { default: eslint } = await import('eslint/use-at-your-own-risk');
-
-    // @ts-ignore
-    const linter: ESLint = new eslint.FlatESLint({
+    const linter = new ESLint({
         allowInlineConfig: true,
         fix: !log.ci,
         cwd: ROOT
@@ -44,7 +41,7 @@ export async function main() {
     const formatter = await linter.loadFormatter('codeframe');
     let hasFailed = false;
 
-    log.startGroup(`linting directory [${resolve(ROOT)}]`);
+    using _ = log.group(`linting directory [${resolve(ROOT)}]`);
 
     const glob = new Bun.Glob('**/*.ts');
     for await (const file of glob.scan({ cwd: ROOT })) {
@@ -102,7 +99,6 @@ export async function main() {
         log.info(`${colors.isColorSupported ? colors.bold(colors.magenta('END')) : 'END'}     ${resolve(ROOT, file)}`);
     }
 
-    log.endGroup();
     process.exit(hasFailed ? 1 : 0);
 }
 

@@ -109,14 +109,7 @@ export async function init({
         core.info(`Bucket [${bucket}] doesn't exist`);
         await s3Client.send(new CreateBucketCommand({ Bucket: bucket, ACL: fromBucketCannedAcl(bucketAcl) }));
     } else if (resp.$metadata.httpStatusCode === 200) {
-        // do nothing{
-        //     pathFormat: string;
-        //     stream: Readable;
-        //     prefix: string;
-        //     bucket: string;
-        //     file: string;
-        //     acl: string;
-        // }
+        /* do nothing */
     } else {
         throw new Error(
             `Received HTTP status code [${resp.$metadata.httpStatusCode || '(unknown?)'}]; ${resp.$metadata.requestId}`

@@ -1,7 +1,7 @@
 {
     "name": "@noelware/s3-action",
     "description": "☕ Simple and fast GitHub Action to upload objects to Amazon S3 easily",
-    "version": "2.2.3",
+    "version": "2.2.4",
     "type": "module",
     "author": "Noel Towa <cutie@floofy.dev>",
     "private": true,
@@ -9,38 +9,37 @@
     "bugs": "https://github.com/Noelware/s3-action/issues/new",
     "main": "./build/action.js",
     "types": "index.d.ts",
-    "packageManager": "yarn@4.1.1",
     "scripts": {
         "build": "bun run scripts/build.ts",
         "lint": "bun run scripts/eslint.ts",
-        "test": "vitest run",
+        "test": "bun test",
         "fmt": "bun run scripts/prettier.ts"
     },
     "dependencies": {
         "@actions/core": "1.10.1",
         "@actions/glob": "0.4.0",
-        "@aws-sdk/client-s3": "3.535.0",
-        "@aws-sdk/lib-storage": "3.535.0",
-        "@noelware/utils": "2.5.0",
+        "@aws-sdk/client-s3": "3.556.0",
+        "@aws-sdk/lib-storage": "3.556.0",
+        "@noelware/utils": "2.5.1",
         "mime-types": "2.1.35",
         "zod": "3.22.4"
     },
     "devDependencies": {
-        "@augu/eslint-config": "5.2.0",
+        "@augu/eslint-config": "5.2.4",
         "@augu/tsconfig": "1.2.0",
-        "@types/bun": "1.0.8",
-        "@types/eslint": "8.56.5",
+        "@types/bun": "1.1.0",
+        "@types/eslint": "8.56.9",
         "@types/mime-types": "2.1.4",
-        "@types/node": "20.11.28",
-        "@typescript-eslint/eslint-plugin": "7.2.0",
-        "@typescript-eslint/parser": "7.2.0",
+        "@types/node": "20.12.7",
+        "@typescript-eslint/eslint-plugin": "^7.7.0",
+        "@typescript-eslint/parser": "^7.7.0",
         "@vercel/ncc": "0.38.1",
         "colorette": "2.0.20",
-        "eslint": "8.57.0",
+        "eslint": "9.0.0",
         "eslint-config-prettier": "9.1.0",
         "eslint-formatter-codeframe": "7.32.1",
-        "eslint-plugin-perfectionist": "2.7.0",
+        "eslint-plugin-perfectionist": "2.9.0",
         "prettier": "3.2.5",
-        "typescript": "5.4.2"
+        "typescript": "5.4.5"
     }
 }

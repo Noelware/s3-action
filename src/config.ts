@@ -38,7 +38,7 @@ const configSchema = z
         partSize: z.coerce.number().default(15),
         exclude: z.array(z.string()).default([]),
         region: z.string().default('us-east-1'),
-        prefix: z.string().startsWith('/', '`prefix` must start with /'),
+        prefix: z.string(),
         bucket: z.string(),
         files: z.array(z.string()).default([])
     })
@@ -81,8 +81,8 @@ export const inferOptions = () => {
     const endpoint = getInput('endpoint', { trimWhitespace: true });
     const prefix = getInput('prefix', { trimWhitespace: true });
     const bucket = getInput('bucket', { trimWhitespace: true, required: true });
-    const region = getInput('region', { trimWhitespace: true });
-    const partSize = getInput('part-size', { trimWhitespace: true });
+    const region = getInput('region', { trimWhitespace: true }) || 'us-east-1';
+    const partSize = getInput('part-size', { trimWhitespace: true }) || '15';
     const exclude = getInput('exclude', { trimWhitespace: true })
         .split(',')
         .map((i) => i.trim());

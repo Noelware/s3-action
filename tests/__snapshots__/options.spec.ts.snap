@@ -1,0 +1,21 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`resolve default options 1`] = `
+{
+  "accessKeyId": "blah",
+  "bucket": "noel",
+  "bucketAcl": "",
+  "directories": [],
+  "endpoint": "",
+  "enforcePathAccessStyle": false,
+  "exclude": [],
+  "files": [],
+  "followSymlinks": false,
+  "objectAcl": "",
+  "partSize": 15,
+  "pathFormat": "",
+  "prefix": "",
+  "region": "us-east-1",
+  "secretKey": "blah",
+}
+`;

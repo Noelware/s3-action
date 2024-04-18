@@ -21,44 +21,40 @@
  * SOFTWARE.
  */
 
-import { writeFile, mkdir } from 'node:fs/promises';
 import { basename, resolve } from 'path';
-import * as log from './util/logging';
+import { writeFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'url';
-import * as colors from 'colorette';
 import { existsSync } from 'fs';
+import * as colors from 'colorette';
+import * as log from './util/logging';
 import ncc from '@vercel/ncc';
 
 async function main() {
     const ROOT = fileURLToPath(new URL('..', import.meta.url));
     log.info(`root directory: ${ROOT}`);
 
-    log.startGroup('Building @noelware/s3-action');
-    {
-        const result = await ncc(resolve(ROOT, 'src/main.ts'), {
-            minify: true,
-            cache: false,
-            license: resolve(ROOT, 'LICENSE')
-        });
+    using _ = log.group('Building @noelware/s3-action');
+    const result = await ncc(resolve(ROOT, 'src/main.ts'), {
+        minify: true,
+        cache: false,
+        license: resolve(ROOT, 'LICENSE')
+    });
 
-        const took = result.stats.compilation.endTime - result.stats.compilation.startTime;
-        log.info(
-            `${colors.isColorSupported ? colors.bold(colors.green('SUCCESS')) : 'SUCCESS'}   built successfully ${
-                colors.isColorSupported ? colors.bold(`[${took}ms]`) : `[${took}ms]`
-            }`
-        );
+    const took = result.stats.compilation.endTime - result.stats.compilation.startTime;
+    log.info(
+        `${colors.isColorSupported ? colors.bold(colors.green('SUCCESS')) : 'SUCCESS'}   built successfully ${
+            colors.isColorSupported ? colors.bold(`[${took}ms]`) : `[${took}ms]`
+        }`
+    );
 
-        if (!existsSync(resolve(ROOT, 'build'))) {
-            await mkdir(resolve(ROOT, 'build'));
-        }
-
-        await writeFile(resolve(ROOT, 'build/action.js'), result.code);
-        for (const [file, { source }] of Object.entries(result.assets)) {
-            await writeFile(resolve(ROOT, 'build', basename(file)), source);
-        }
+    if (!existsSync(resolve(ROOT, 'build'))) {
+        await mkdir(resolve(ROOT, 'build'));
     }
 
-    log.endGroup();
+    await writeFile(resolve(ROOT, 'build/action.js'), result.code);
+    for (const [file, { source }] of Object.entries(result.assets)) {
+        await writeFile(resolve(ROOT, 'build', basename(file)), source);
+    }
 }
 
 main().catch((ex) => {
