@@ -30,6 +30,7 @@ import { basename } from 'node:path';
 import { readdir } from 'node:fs/promises';
 import { resolve } from 'path';
 import { lstat } from 'node:fs/promises';
+import { EOL } from 'node:os';
 
 async function main() {
     const config = await inferOptions();
@@ -56,7 +57,7 @@ async function main() {
                 continue;
             }
 
-            const files = await readdir(d);
+            const files = await readdir(d).then((files) => files.map((s) => `${d}${EOL}${s}`));
             for (const file of files) {
                 const filename = basename(file);
                 if (excluded.includes(filename)) continue;
