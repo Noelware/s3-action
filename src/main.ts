@@ -22,15 +22,15 @@
  */
 
 import { create as createGlobPattern } from '@actions/glob';
-import { setFailed, warning, info } from '@actions/core';
+import { warning, info, debug, error, ExitCode } from '@actions/core';
 import { createReadStream } from 'fs';
+import { join, resolve } from 'path';
+import { assertIsError } from '@noelware/utils';
 import { upload, init } from './s3';
 import { inferOptions } from './config';
 import { basename } from 'node:path';
 import { readdir } from 'node:fs/promises';
-import { resolve } from 'path';
 import { lstat } from 'node:fs/promises';
-import { EOL } from 'node:os';
 
 async function main() {
     const config = await inferOptions();
@@ -57,10 +57,10 @@ async function main() {
                 continue;
             }
 
-            const files = await readdir(d).then((files) => files.map((s) => `${d}${EOL}${s}`));
+            const files = await readdir(d).then((files) => files.map((s) => join(d, s)));
             for (const file of files) {
-                const filename = basename(file);
-                if (excluded.includes(filename)) continue;
+                debug(`Uploading file ${file} (from directory ${d})`);
+                if (excluded.includes(file)) continue;
 
                 await upload({
                     pathFormat: config.pathFormat,
@@ -68,7 +68,7 @@ async function main() {
                     prefix: config.prefix,
                     bucket: config.bucket,
                     stream: createReadStream(file),
-                    file: filename,
+                    file: basename(file),
                     acl: config.objectAcl
                 });
             }
@@ -93,4 +93,15 @@ async function main() {
     }
 }
 
-main().catch((ex) => setFailed(ex));
+main().catch((ex) => {
+    try {
+        assertIsError(ex);
+
+        error(`failed to run \`noelware/s3-action\`: ${ex.message}`);
+        if (ex.stack) debug(ex.stack);
+    } catch {
+        error(`failed to run \`noelware/s3-action\`: ${JSON.stringify(ex)}`);
+    }
+
+    process.exitCode = ExitCode.Failure;
+});
