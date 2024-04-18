@@ -23,4 +23,4 @@
 
 import noel from '@augu/eslint-config';
 
-export default (typeof noel === 'function' ? noel : noel.default)();
+export default (typeof noel === 'function' ? noel : noel.default)({ perfectionist: false });
