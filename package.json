@@ -27,7 +27,7 @@
     "devDependencies": {
         "@augu/eslint-config": "5.2.4",
         "@augu/tsconfig": "1.2.0",
-        "@types/bun": "1.1.1",
+        "@types/bun": "1.1.2",
         "@types/eslint": "8.56.10",
         "@types/mime-types": "2.1.4",
         "@types/node": "20.12.11",
