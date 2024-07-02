@@ -40,6 +40,6 @@
         "eslint-formatter-codeframe": "7.32.1",
         "eslint-plugin-perfectionist": "2.11.0",
         "prettier": "3.3.2",
-        "typescript": "5.5.2"
+        "typescript": "5.5.3"
     }
 }
