@@ -34,7 +34,7 @@ const configSchema = z
         secretKey: z.string(),
         bucketAcl: z.string().default('public-read'),
         objectAcl: z.string().default('public-read'),
-        endpoint: z.string().default('s3.amazonaws.com'),
+        endpoint: z.string().default('https://s3.amazonaws.com'),
         partSize: z.coerce.number().default(15),
         exclude: z.array(z.string()).default([]),
         region: z.string().default('us-east-1'),
