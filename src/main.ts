@@ -97,7 +97,7 @@ main().catch((ex) => {
     try {
         assertIsError(ex);
 
-        error(`failed to run \`noelware/s3-action\`: ${ex.message}`);
+        error(`failed to run \`noelware/s3-action\`: ${ex.name ? ex.name + ': ' : ''}${ex.message}`);
         if (ex.stack) debug(ex.stack);
     } catch {
         error(`failed to run \`noelware/s3-action\`: ${JSON.stringify(ex)}`);
