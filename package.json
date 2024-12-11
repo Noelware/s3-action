@@ -22,7 +22,7 @@
         "@aws-sdk/lib-storage": "3.705.0",
         "@noelware/utils": "2.5.1",
         "mime-types": "2.1.35",
-        "zod": "3.23.8"
+        "zod": "3.24.1"
     },
     "devDependencies": {
         "@augu/eslint-config": "5.2.4",
