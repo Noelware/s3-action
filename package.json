@@ -25,7 +25,7 @@
         "zod": "3.24.2"
     },
     "devDependencies": {
-        "@augu/eslint-config": "5.2.4",
+        "@augu/eslint-config": "5.3.1",
         "@augu/tsconfig": "1.2.0",
         "@types/bun": "1.2.2",
         "@types/eslint": "9.6.1",
