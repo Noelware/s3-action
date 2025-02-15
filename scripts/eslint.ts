@@ -1,6 +1,6 @@
 /*
  * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2024 Noelware, LLC. <team@noelware.org>
+ * Copyright (c) 2021-2025 Noelware, LLC. <team@noelware.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,9 @@
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import * as log from './util/logging';
-import { ESLint } from 'eslint';
 import * as colors from 'colorette';
 import { resolve } from 'node:path';
+import { ESLint } from 'eslint';
 
 export async function main() {
     const ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -65,9 +65,6 @@ export async function main() {
             for (const result of results) {
                 for (const msg of result.messages) {
                     switch (msg.severity) {
-                        case 0:
-                            continue;
-
                         case 1:
                             log.warn(
                                 `[${msg.ruleId || '(unknown rule)'}] ${msg.message} (line ${msg.line}:${msg.column})`
