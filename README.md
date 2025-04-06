@@ -2,7 +2,7 @@
 
 > _Simple and fast GitHub Action to upload objects to Amazon S3 easily._
 >
-> <kbd><a href="https://github.com/Noelware/s3-action/releases/v2.2.0">v2.2.0</a></kbd> | [:scroll: **Documentation**](https://s3.noelware.org)
+> <kbd><a href="https://github.com/Noelware/s3-action/releases/2.3.0">v2.3.0</a></kbd>
 
 **s3-action** is a simple and easy GitHub Action to upload artifacts to any compatible Amazon S3 instances. Noelware uses Amazon S3 to host our artifacts, images and more with [:feather: Hazel](https://noelware.org/hazel).
 
@@ -48,18 +48,18 @@ access-key-id: ${{ secrets.S3_ACCESS_KEY_ID }}
 
 **path-format** is a special field, it handles how the path should be formatted when uploading to Amazon S3. The library provides with multiple "keys" encapsulated in `$()` to use.
 
--   `$(file)`: The file name that is being uploaded, returns as the relative path.
--   `$(prefix)`: The prefix that is configured to use, i.e, `/artifacts`.
--   `$(branch)`: Returns the current branch the action is being ran in, examples: `master`, `main`, `trunk`, etc.
--   `$(tag)`: Returns the current release tag if it can be found, it will not attempt to put the actual release tag if the action isn't running with the `release` event.
--   `$(os)`: Returns the operating system name.
--   `$(arch)`: Returns the host CPU architecture name.
+- `$(file)`: The file name that is being uploaded, returns as the relative path.
+- `$(prefix)`: The prefix that is configured to use, i.e, `/artifacts`.
+- `$(branch)`: Returns the current branch the action is being ran in, examples: `master`, `main`, `trunk`, etc.
+- `$(tag)`: Returns the current release tag if it can be found, it will not attempt to put the actual release tag if the action isn't running with the `release` event.
+- `$(os)`: Returns the operating system name.
+- `$(arch)`: Returns the host CPU architecture name.
 
 #### Examples
 
--   `$(prefix)/$(branch)/$(file)` -> /artifacts/trunk/charted/server/v0.1.tar.gz
--   `$(branch)/$(file)` -> /trunk/charted/server/v0.1.tar.gz
--   `$(prefix)/$(file)` (default) -> /artifacts/charted/server/v0.1.tar.gz
+- `$(prefix)/$(branch)/$(file)` -> /artifacts/trunk/charted/server/v0.1.tar.gz
+- `$(branch)/$(file)` -> /trunk/charted/server/v0.1.tar.gz
+- `$(prefix)/$(file)` (default) -> /artifacts/charted/server/v0.1.tar.gz
 
 ### endpoint: `URL` (Required: No, Default: `https://s3.amazonaws.com`)
 
