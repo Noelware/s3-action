@@ -31,15 +31,11 @@
         "@types/eslint": "9.6.1",
         "@types/mime-types": "2.1.4",
         "@types/node": "22.13.17",
-        "@typescript-eslint/eslint-plugin": "8.29.0",
-        "@typescript-eslint/parser": "8.29.0",
-        "@vercel/ncc": "0.38.3",
-        "colorette": "2.0.20",
         "eslint": "9.23.0",
         "eslint-config-prettier": "10.1.1",
         "eslint-formatter-codeframe": "7.32.1",
-        "eslint-plugin-perfectionist": "4.10.1",
         "prettier": "3.3.3",
+        "typescript-eslint": "8.29.0",
         "typescript": "5.8.2"
     }
 }
