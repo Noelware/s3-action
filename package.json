@@ -1,7 +1,7 @@
 {
     "name": "@noelware/s3-action",
     "description": "☕ Simple and fast GitHub Action to upload objects to Amazon S3 easily",
-    "version": "2.2.7",
+    "version": "2.3.0",
     "type": "module",
     "author": "Noel Towa <cutie@floofy.dev>",
     "private": true,
@@ -10,10 +10,9 @@
     "main": "./build/action.js",
     "types": "index.d.ts",
     "scripts": {
-        "build": "bun run scripts/build.ts",
-        "lint": "bun run scripts/eslint.ts",
-        "test": "bun test",
-        "fmt": "bun run scripts/prettier.ts"
+        "build": "bun lint && bun fmt && bun build src/main.ts --outfile=build/index.js --minify --target=node",
+        "lint": "eslint --format codeframe --exit-on-fatal-error --stats",
+        "fmt": "prettier --write **/*.{js,ts,json,yml,yaml,md}"
     },
     "dependencies": {
         "@actions/core": "1.11.1",
