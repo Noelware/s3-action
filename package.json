@@ -31,7 +31,7 @@
         "@types/mime-types": "2.1.4",
         "@types/node": "22.14.0",
         "eslint": "9.24.0",
-        "eslint-config-prettier": "10.1.1",
+        "eslint-config-prettier": "10.1.2",
         "eslint-formatter-codeframe": "7.32.1",
         "prettier": "3.5.3",
         "typescript-eslint": "8.29.1",
