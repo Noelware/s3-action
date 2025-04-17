@@ -27,7 +27,7 @@ branding:
     color: purple
 runs:
     using: node20
-    main: ./build/action.js
+    main: ./build/index.js
 inputs:
     directories:
         required: false
