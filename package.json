@@ -30,7 +30,7 @@
         "@types/bun": "1.2.11",
         "@types/mime-types": "2.1.4",
         "@types/node": "22.15.3",
-        "eslint": "9.25.1",
+        "eslint": "9.26.0",
         "eslint-config-prettier": "10.1.2",
         "eslint-formatter-codeframe": "7.32.1",
         "prettier": "3.5.3",
