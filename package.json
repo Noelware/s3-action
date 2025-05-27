@@ -29,7 +29,7 @@
         "@stylistic/eslint-plugin": "4.4.0",
         "@types/bun": "1.2.14",
         "@types/mime-types": "2.1.4",
-        "@types/node": "22.15.21",
+        "@types/node": "22.15.23",
         "eslint": "9.27.0",
         "eslint-config-prettier": "10.1.5",
         "eslint-formatter-codeframe": "7.32.1",
