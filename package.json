@@ -27,7 +27,7 @@
         "@augu/eslint-config": "5.3.1",
         "@augu/tsconfig": "1.2.0",
         "@stylistic/eslint-plugin": "5.2.3",
-        "@types/bun": "1.2.19",
+        "@types/bun": "1.2.20",
         "@types/mime-types": "3.0.1",
         "@types/node": "24.2.1",
         "eslint": "9.33.0",
