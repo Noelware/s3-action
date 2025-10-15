@@ -95,13 +95,52 @@ export async function init({
         return s3Client;
     }
 
-    core.info(`Initializing S3 client with bucket [${bucket}] that is from endpoint [${endpoint}]`);
-    s3Client = new S3Client({
-        credentialDefaultProvider: () => () => Promise.resolve({ secretAccessKey: secretKey, accessKeyId }),
-        forcePathStyle: enforcePathAccessStyle,
-        endpoint,
-        region
-    });
+    if (!endpoint.startsWith('http')) {
+        // Try either `http://` or `https://` to see if we are correct
+        core.info(`Endpoint "${endpoint}" doesn't start with \`http://\` or \`https://\`, checking to see what works`);
+
+        for (const point of [`https://${endpoint}`, `http://${endpoint}`]) {
+            // First, check if `endpoint` points to valid data
+            try {
+                new URL(point);
+            } catch (ex) {
+                core.error(
+                    `skipping endpoint [${point}] as it is not a valid URI: ${ex instanceof Error ? ex.stack! : JSON.stringify(ex)}`
+                );
+
+                continue;
+            }
+
+            s3Client = new S3Client({
+                forcePathStyle: enforcePathAccessStyle,
+                credentials: { secretAccessKey: secretKey, accessKeyId: accessKeyId },
+                endpoint: point,
+                region
+            });
+
+            try {
+                await s3Client.send(new HeadBucketCommand({ Bucket: bucket }));
+            } catch (ex) {
+                core.error(
+                    `skipping endpoint [${point}] as an error was thrown when checking if bucket '${bucket}' exists: ${ex instanceof Error ? ex.stack! : JSON.stringify(ex)}`
+                );
+
+                s3Client = undefined;
+            }
+        }
+    } else {
+        core.info(`Initializing S3 client with bucket [${bucket}] that is from endpoint [${endpoint}]`);
+        s3Client = new S3Client({
+            forcePathStyle: enforcePathAccessStyle,
+            credentials: { secretAccessKey: secretKey, accessKeyId: accessKeyId },
+            endpoint,
+            region
+        });
+    }
+
+    if (s3Client === undefined) {
+        throw new Error('No S3 client was constructed at this point -- check your inputs');
+    }
 
     core.info(`initialized s3 client! checking if bucket [${bucket}] exists`);
     const resp = await s3Client.send(new HeadBucketCommand({ Bucket: bucket }));

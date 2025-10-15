@@ -53,7 +53,18 @@ jobs:
             - run: bun lint
             - run: bunx prettier --check **/*.{js,ts,json,yml,yaml,md}
             - run: bun test
-              env:
-                  S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
-                  S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
-                  S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
+            # TODO(@auguwu): switch to Noelware's S3 server at some point.
+            #   env:
+            #       S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+            #       S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+            #       S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
+
+            - run: bun run build
+            - uses: EndBug/add-and-commit@v9
+              with:
+                  add: 'build'
+                  author_name: 'Noel[bot]'
+                  author_email: noelbot@users.noreply.github.com
+                  default_author: user_info
+                  message: '[skip ci] :sparkles: Update build artifacts'
+                  push: true

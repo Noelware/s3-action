@@ -1,7 +1,7 @@
 {
     "name": "@noelware/s3-action",
     "description": "☕ Simple and fast GitHub Action to upload objects to Amazon S3 easily",
-    "version": "2.3.1",
+    "version": "2.3.2",
     "type": "module",
     "author": "Noel Towa <cutie@floofy.dev>",
     "private": true,

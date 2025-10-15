@@ -37,9 +37,32 @@ test.if(accessKeyId !== undefined && secretAccessKey !== undefined)(
             s3.init({
                 accessKeyId: accessKeyId!,
                 secretKey: secretAccessKey!,
-                bucket: 'august',
+                bucket: 'noelware',
                 bucketAcl: 'public-read',
                 endpoint: process.env.S3_ENDPOINT ?? 'https://s3.amazonaws.com',
+                region: process.env.S3_REGION ?? 'us-east-1',
+                enforcePathAccessStyle: true
+            })
+        ).resolves.toBeTruthy();
+    }
+);
+
+test.if(accessKeyId !== undefined && secretAccessKey !== undefined)(
+    'if we can init the s3 client correctly (with `endpoint` not having `http://` or `https://`',
+    async () => {
+        let url = process.env.S3_ENDPOINT ?? 'https://s3.amazonaws.com';
+        if (url.startsWith('http')) {
+            const idx = url.startsWith('https') ? 5 : 4;
+            url = url.substring(idx + 3 /* http:// = 7, https:// = 8 */);
+        }
+
+        expect(
+            s3.init({
+                accessKeyId: accessKeyId!,
+                secretKey: secretAccessKey!,
+                bucket: 'noelware',
+                bucketAcl: 'public-read',
+                endpoint: url,
                 region: process.env.S3_REGION ?? 'us-east-1',
                 enforcePathAccessStyle: true
             })
@@ -54,7 +77,7 @@ test.if(accessKeyId !== undefined && secretAccessKey !== undefined)('if we can u
             partSize: 15,
             prefix: '/',
             stream: createReadStream(resolve(__dirname, '__fixtures__/wuff.json')),
-            bucket: 'august',
+            bucket: 'noelware',
             file: 'wuff.json',
             acl: 'public-read'
         })
@@ -64,7 +87,7 @@ test.if(accessKeyId !== undefined && secretAccessKey !== undefined)('if we can u
     expect(
         s3.s3Client!.send(
             new DeleteObjectCommand({
-                Bucket: 'august',
+                Bucket: 'noelware',
                 Key: '/wuff.json'
             })
         )
