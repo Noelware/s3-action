@@ -20,7 +20,7 @@ steps:
           access-key-id: { access key id here }
           path-format: '/$(tag)'
           secret-key: { some secret key here }
-          endpoint: s3.amazonaws.com
+          endpoint: https://s3.amazonaws.com
           prefix: /artifacts
           region: us-east-1
           bucket: { some bucket name here }
