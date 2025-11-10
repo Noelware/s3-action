@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "@noelware/s3-action",
@@ -21,7 +22,7 @@
         "@types/node": "24.9.1",
         "eslint": "9.38.0",
         "eslint-config-prettier": "10.1.8",
-        "eslint-formatter-codeframe": "7.32.1",
+        "eslint-formatter-codeframe": "7.32.2",
         "prettier": "3.6.2",
         "typescript": "5.9.3",
         "typescript-eslint": "8.46.2",
@@ -353,7 +354,7 @@
 
     "eslint-config-prettier": ["eslint-config-prettier@10.1.8", "", { "peerDependencies": { "eslint": ">=7.0.0" }, "bin": { "eslint-config-prettier": "bin/cli.js" } }, "sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w=="],
 
-    "eslint-formatter-codeframe": ["eslint-formatter-codeframe@7.32.1", "", { "dependencies": { "@babel/code-frame": "7.12.11", "chalk": "^4.0.0" } }, "sha512-DK/3Q3+zVKq/7PdSYiCxPrsDF8H/TRMK5n8Hziwr4IMkMy+XiKSwbpj25AdajS63I/B61Snetq4uVvX9fOLyAg=="],
+    "eslint-formatter-codeframe": ["eslint-formatter-codeframe@7.32.2", "", { "dependencies": { "@babel/code-frame": "7.12.11", "chalk": "^4.0.0" } }, "sha512-0X5vEQeNniQRbGm+ec9Ow6LWj4RqZEcjPSfZ+t8qLPWqwyaBa67GrNetTxd0aYKoHrpbZeoRRlvA2gz9HujiEg=="],
 
     "eslint-scope": ["eslint-scope@8.4.0", "", { "dependencies": { "esrecurse": "^4.3.0", "estraverse": "^5.2.0" } }, "sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg=="],
 
