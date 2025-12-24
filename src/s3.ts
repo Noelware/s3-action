@@ -38,11 +38,10 @@ import { Readable } from 'stream';
 import { assertIsError } from '@noelware/utils';
 import { inspect } from 'util';
 
-interface InitProps
-    extends Pick<
-        InputConfig,
-        'accessKeyId' | 'bucket' | 'bucketAcl' | 'endpoint' | 'enforcePathAccessStyle' | 'region' | 'secretKey'
-    > {}
+interface InitProps extends Pick<
+    InputConfig,
+    'accessKeyId' | 'bucket' | 'bucketAcl' | 'endpoint' | 'enforcePathAccessStyle' | 'region' | 'secretKey'
+> {}
 
 interface UploadProps {
     pathFormat: string;
