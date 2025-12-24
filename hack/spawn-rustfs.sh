@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+#--------------------------------------------------------------------------------
 # ☕ S3 Action: GitHub Action to upload objects to Amazon S3
 # Copyright (c) 2021-2026 Noelware, LLC. <team@noelware.org>, et al.
 #
@@ -18,12 +20,19 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-let
-  lockfile = builtins.fromJSON (builtins.readFile ./flake.lock);
-  rev = lockfile.nodes.flake-compat.locked;
-  compat = builtins.fetchTarball {
-    url = "https://github.com/${rev.owner}/${rev.repo}/archive/${rev.rev}.tar.gz";
-    sha256 = rev.narHash;
-  };
-in
-  (import compat {src = ../.;}).defaultNix.default
+#--------------------------------------------------------------------------------
+
+if ! command -v docker >/dev/null; then
+    echo "==> \`docker\` is required."
+    exit 1
+fi
+
+time docker run -d \
+    --name rustfs-test \
+    -p 9000:9000 \
+    -p 9001:9001 \
+    -e RUSTFS_ADDRESS=:9000 \
+    -e RUSTFS_ACCESS_KEY=rustfsadmin \
+    -e RUSTFS_SECRET_KEY=rustfsadmin \
+    -e RUSTFS_CONSOLE_ENABLE=true \
+    rustfs/rustfs

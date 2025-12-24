@@ -1,5 +1,5 @@
-# ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
-# Copyright (c) 2021-2025 Noelware, LLC. <team@noelware.org>
+# ☕ S3 Action: GitHub Action to upload objects to Amazon S3
+# Copyright (c) 2021-2026 Noelware, LLC. <team@noelware.org>, et al.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal

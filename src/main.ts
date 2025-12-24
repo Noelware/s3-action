@@ -1,6 +1,6 @@
 /*
- * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2025 Noelware, LLC. <team@noelware.org>
+ * ☕ S3 Action: GitHub Action to upload objects to Amazon S3
+ * Copyright (c) 2021-2026 Noelware, LLC. <team@noelware.org>, et al.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,8 @@
  * SOFTWARE.
  */
 
-import { create as createGlobPattern } from '@actions/glob';
 import { warning, info, debug, error, ExitCode } from '@actions/core';
+import { create as createGlobPattern } from '@actions/glob';
 import { createReadStream } from 'fs';
 import { join, resolve } from 'path';
 import { assertIsError } from '@noelware/utils';
@@ -57,7 +57,7 @@ async function main() {
                 continue;
             }
 
-            const files = await readdir(d).then((files) => files.map((s) => join(d, s)));
+            const files = await readdir(d, { recursive: true }).then((files) => files.map((s) => join(d, s)));
             for (const file of files) {
                 debug(`Uploading file ${file} (from directory ${d})`);
                 if (excluded.includes(file)) continue;

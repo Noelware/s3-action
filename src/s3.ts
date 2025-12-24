@@ -1,6 +1,6 @@
 /*
- * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2025 Noelware, LLC. <team@noelware.org>
+ * ☕ S3 Action: GitHub Action to upload objects to Amazon S3
+ * Copyright (c) 2021-2026 Noelware, LLC. <team@noelware.org>, et al.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,22 @@
  * SOFTWARE.
  */
 
-import { CreateBucketCommand, HeadBucketCommand, BucketCannedACL, ObjectCannedACL, S3Client } from '@aws-sdk/client-s3';
+import {
+    CreateBucketCommand,
+    HeadBucketCommand,
+    BucketCannedACL,
+    ObjectCannedACL,
+    S3Client,
+    NotFound
+} from '@aws-sdk/client-s3';
 import { parsePathFormatSyntax } from './PathFormatSyntax';
 import { Upload } from '@aws-sdk/lib-storage';
 import type { InputConfig } from './config';
 import * as core from '@actions/core';
 import { lookup } from 'mime-types';
 import { Readable } from 'stream';
+import { assertIsError } from '@noelware/utils';
+import { inspect } from 'util';
 
 interface InitProps
     extends Pick<
@@ -47,6 +56,63 @@ interface UploadProps {
 
 // this is only exported for tests
 export let s3Client: S3Client | undefined;
+
+const logger: NonNullable<ConstructorParameters<typeof S3Client>[0]>['logger'] = {
+    info(..._) {
+        return;
+    },
+    warn(...args) {
+        const message = args
+            .map((arg) => {
+                if (typeof arg === 'string') {
+                    return arg;
+                }
+
+                if (arg instanceof Error) {
+                    return `${arg.name}: ${arg.message}${arg.stack !== undefined ? `\n${arg.stack}` : ''}`;
+                }
+
+                return inspect(arg, { depth: 3 });
+            })
+            .join('\n');
+
+        return core.warning(`S3: ${message}`);
+    },
+    error(...args) {
+        const message = args
+            .map((arg) => {
+                if (typeof arg === 'string') {
+                    return arg;
+                }
+
+                if (arg instanceof Error) {
+                    return `${arg.name}: ${arg.message}${arg.stack !== undefined ? `\n${arg.stack}` : ''}`;
+                }
+
+                return inspect(arg, { depth: 3 });
+            })
+            .join('\n');
+
+        return core.error(`S3: ${message}`);
+    },
+    debug(...args) {
+        const message = args
+            .map((arg) => {
+                if (typeof arg === 'string') {
+                    return arg;
+                }
+
+                if (arg instanceof Error) {
+                    return `${arg.name}: ${arg.message}${arg.stack !== undefined ? `\n${arg.stack}` : ''}`;
+                }
+
+                return inspect(arg, { depth: 3 });
+            })
+            .join('\n');
+
+        return core.debug(`S3: ${message}`);
+    }
+};
 
 /**
  * Translates the `acl` string into a {@link BucketCannedACL `BucketCannedACL`} property.
@@ -111,16 +177,19 @@ export async function init({
                 continue;
             }
 
+            console.log(`~> trying endpoint ${point}...`);
             s3Client = new S3Client({
                 forcePathStyle: enforcePathAccessStyle,
                 credentials: { secretAccessKey: secretKey, accessKeyId: accessKeyId },
                 endpoint: point,
-                region
+                region,
+                logger
             });
 
             try {
                 await s3Client.send(new HeadBucketCommand({ Bucket: bucket }));
             } catch (ex) {
+                assertIsError(ex);
                 core.error(
                     `skipping endpoint [${point}] as an error was thrown when checking if bucket '${bucket}' exists: ${ex instanceof Error ? ex.stack! : JSON.stringify(ex)}`
                 );
@@ -134,7 +203,8 @@ export async function init({
             forcePathStyle: enforcePathAccessStyle,
             credentials: { secretAccessKey: secretKey, accessKeyId: accessKeyId },
             endpoint,
-            region
+            region,
+            logger
         });
     }
 
@@ -143,16 +213,26 @@ export async function init({
     }
 
     core.info(`initialized s3 client! checking if bucket [${bucket}] exists`);
-    const resp = await s3Client.send(new HeadBucketCommand({ Bucket: bucket }));
-    if (resp.$metadata.httpStatusCode === 404) {
-        core.info(`Bucket [${bucket}] doesn't exist`);
-        await s3Client.send(new CreateBucketCommand({ Bucket: bucket, ACL: fromBucketCannedAcl(bucketAcl) }));
-    } else if (resp.$metadata.httpStatusCode === 200) {
-        /* do nothing */
-    } else {
-        throw new Error(
-            `Received HTTP status code [${resp.$metadata.httpStatusCode || '(unknown?)'}]; ${resp.$metadata.requestId}`
-        );
+    try {
+        const resp = await s3Client.send(new HeadBucketCommand({ Bucket: bucket }));
+        if (resp.$metadata.httpStatusCode === 404) {
+            core.info(`Bucket [${bucket}] doesn't exist`);
+            await s3Client.send(new CreateBucketCommand({ Bucket: bucket, ACL: fromBucketCannedAcl(bucketAcl) }));
+        } else if (resp.$metadata.httpStatusCode === 200) {
+            /* do nothing */
+        } else {
+            throw new Error(
+                `Received HTTP status code [${resp.$metadata.httpStatusCode || '(unknown?)'}]; ${resp.$metadata.requestId}`
+            );
+        }
+    } catch (ex) {
+        assertIsError(ex);
+        if (ex instanceof NotFound) {
+            core.info(`Bucket [${bucket}] doesn't exist! creating...`);
+            await s3Client.send(new CreateBucketCommand({ Bucket: bucket, ACL: fromBucketCannedAcl(bucketAcl) }));
+        } else {
+            throw ex;
+        }
     }
 
     return s3Client;
@@ -175,9 +255,10 @@ export async function upload({ pathFormat, stream, prefix, bucket, file, acl, pa
         client: s3Client,
         partSize: 1024 * 1024 * partSize,
         params: {
+            ContentType: contentType,
             Bucket: bucket,
             Body: stream,
-            Key: key,
+            Key: key.startsWith('/') ? key.slice(1) : key,
             ACL: fromObjectCannedAcl(acl)
         }
     });

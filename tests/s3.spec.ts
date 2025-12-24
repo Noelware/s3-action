@@ -1,6 +1,6 @@
 /*
- * ☕ @noelware/s3-action: Simple and fast GitHub Action to upload objects to Amazon S3 easily.
- * Copyright (c) 2021-2025 Noelware, LLC. <team@noelware.org>
+ * ☕ S3 Action: GitHub Action to upload objects to Amazon S3
+ * Copyright (c) 2021-2026 Noelware, LLC. <team@noelware.org>, et al.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@
 import { DeleteObjectCommand, BucketCannedACL, ObjectCannedACL } from '@aws-sdk/client-s3';
 import { expect, test } from 'bun:test';
 import { createReadStream } from 'fs';
-import * as s3 from '../src/s3';
 import { resolve } from 'path';
+import * as s3 from '../src/s3';
 
 const accessKeyId = process.env.S3_ACCESS_KEY;
 const secretAccessKey = process.env.S3_SECRET_KEY;
@@ -37,7 +37,7 @@ test.if(accessKeyId !== undefined && secretAccessKey !== undefined)(
             s3.init({
                 accessKeyId: accessKeyId!,
                 secretKey: secretAccessKey!,
-                bucket: 'noelware',
+                bucket: 'noel',
                 bucketAcl: 'public-read',
                 endpoint: process.env.S3_ENDPOINT ?? 'https://s3.amazonaws.com',
                 region: process.env.S3_REGION ?? 'us-east-1',
@@ -60,7 +60,7 @@ test.if(accessKeyId !== undefined && secretAccessKey !== undefined)(
             s3.init({
                 accessKeyId: accessKeyId!,
                 secretKey: secretAccessKey!,
-                bucket: 'noelware',
+                bucket: 'noel',
                 bucketAcl: 'public-read',
                 endpoint: url,
                 region: process.env.S3_REGION ?? 'us-east-1',
@@ -77,7 +77,7 @@ test.if(accessKeyId !== undefined && secretAccessKey !== undefined)('if we can u
             partSize: 15,
             prefix: '/',
             stream: createReadStream(resolve(__dirname, '__fixtures__/wuff.json')),
-            bucket: 'noelware',
+            bucket: 'noel',
             file: 'wuff.json',
             acl: 'public-read'
         })
@@ -87,7 +87,7 @@ test.if(accessKeyId !== undefined && secretAccessKey !== undefined)('if we can u
     expect(
         s3.s3Client!.send(
             new DeleteObjectCommand({
-                Bucket: 'noelware',
+                Bucket: 'noel',
                 Key: '/wuff.json'
             })
         )
