@@ -15,7 +15,7 @@
         "fmt": "prettier --write **/*.{js,ts,json,yml,yaml,md}"
     },
     "dependencies": {
-        "@actions/core": "2.0.1",
+        "@actions/core": "3.0.0",
         "@actions/glob": "0.5.0",
         "@aws-sdk/client-s3": "3.958.0",
         "@aws-sdk/lib-storage": "3.958.0",
